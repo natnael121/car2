@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { VehicleFormWizard } from './components/VehicleFormWizard';
 import { VehicleList } from './components/VehicleList';
-import { Plus, List } from 'lucide-react';
+import { AdminInventory } from './components/AdminInventory';
+import { Plus, List, LayoutDashboard } from 'lucide-react';
 
 function App() {
-  const [activeView, setActiveView] = useState<'list' | 'add'>('list');
+  const [activeView, setActiveView] = useState<'list' | 'add' | 'admin'>('list');
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -25,6 +26,17 @@ function App() {
                 }`}
               >
                 <List size={20} />
+                Browse Cars
+              </button>
+              <button
+                onClick={() => setActiveView('admin')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition ${
+                  activeView === 'admin'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                <LayoutDashboard size={20} />
                 Inventory
               </button>
               <button
@@ -44,7 +56,9 @@ function App() {
       </header>
 
       <main className="max-w-7xl mx-auto px-6 py-8">
-        {activeView === 'list' ? <VehicleList /> : <VehicleFormWizard />}
+        {activeView === 'list' && <VehicleList />}
+        {activeView === 'admin' && <AdminInventory />}
+        {activeView === 'add' && <VehicleFormWizard />}
       </main>
     </div>
   );

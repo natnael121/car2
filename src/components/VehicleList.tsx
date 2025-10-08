@@ -183,7 +183,7 @@ export const VehicleList: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-1">Vehicle Inventory</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-1">Available Cars</h2>
         <p className="text-gray-600">
           Showing {filteredVehicles.length} of {vehicles.length}{' '}
           {vehicles.length === 1 ? 'vehicle' : 'vehicles'}
