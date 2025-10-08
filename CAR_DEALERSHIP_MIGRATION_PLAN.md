@@ -146,83 +146,104 @@ Enhance the admin product management to become a comprehensive vehicle inventory
 
 ### Tasks
 
-#### 2.1 Enhanced Vehicle Form (ProductEditModal.tsx)
-- Multi-step form wizard:
-  - Step 1: Basic Info (make, model, year, VIN)
-  - Step 2: Specifications (engine, transmission, mileage, colors)
-  - Step 3: Condition & History (accidents, owners, service records)
-  - Step 4: Pricing & Availability (asking price, cost, negotiability)
-  - Step 5: Photos & Documents (multiple angles, documents)
-  - Step 6: Features & Options (checkboxes for common features)
-  - Step 7: Review & Publish
+#### 2.1 Enhanced Vehicle Form - Part A: Form Structure (≈50,000 tokens)
+- Create multi-step form wizard component
+- Implement step navigation (next/previous/jump to step)
+- Add progress indicator
+- Create form state management across steps
+- Implement step validation system
 
-- VIN decoder integration (if possible via free API)
-- Form validation for automotive-specific fields
-- Auto-save draft functionality
-- Duplicate listing detection (same VIN)
+#### 2.1 Enhanced Vehicle Form - Part B: Basic Steps (≈60,000 tokens)
+- Step 1: Basic Info form fields (make, model, year, VIN)
+- Step 2: Specifications form (engine, transmission, mileage, colors)
+- Step 3: Condition & History form (accidents, owners, service records)
+- Add field-level validation
+- Create reusable form input components
 
-#### 2.2 Enhanced Vehicle Card (ProductCard.tsx)
-- Display key vehicle specs prominently:
-  - Year, Make, Model
-  - Mileage badge
-  - Transmission badge
-  - Price with strikethrough for deals
-  - Condition badge (new/used/CPO)
-  - Days on lot indicator
-  - Photo carousel preview
+#### 2.1 Enhanced Vehicle Form - Part C: Advanced Steps (≈60,000 tokens)
+- Step 4: Pricing & Availability (asking price, cost, negotiability)
+- Step 5: Photos & Documents upload
+- Step 6: Features & Options checkboxes
+- Step 7: Review & Publish summary
+- Implement auto-save draft functionality
 
-- Quick actions:
-  - Schedule test drive
-  - Request trade-in evaluation
-  - Apply for financing
-  - Share listing
-  - Mark as featured/special offer
+#### 2.1 Enhanced Vehicle Form - Part D: Integrations (≈40,000 tokens)
+- VIN decoder integration (free API)
+- Duplicate VIN detection system
+- Form data persistence
+- Error handling and recovery
 
-#### 2.3 Vehicle Inventory Dashboard
-- Filtering system:
-  - Price range slider
-  - Make/model dropdowns
-  - Year range
-  - Mileage range
-  - Body type
-  - Transmission
-  - Fuel type
-  - Color
-  - Condition
+#### 2.2 Enhanced Vehicle Card - Part A: Display (≈40,000 tokens)
+- Redesign card layout for vehicle specs
+- Add Year, Make, Model prominent display
+- Add badge components (mileage, transmission, condition)
+- Implement price display with strikethrough for deals
+- Add days on lot indicator
+- Create photo carousel preview
 
-- Sorting options:
-  - Price (low to high / high to low)
-  - Newest first
-  - Mileage (low to high)
-  - Year (newest to oldest)
-  - Most viewed
-  - Recently added
+#### 2.2 Enhanced Vehicle Card - Part B: Actions (≈30,000 tokens)
+- Quick action buttons
+- Schedule test drive modal trigger
+- Request trade-in evaluation link
+- Apply for financing link
+- Share listing functionality
+- Mark as featured/special offer toggle
 
-- Bulk actions:
-  - Mark multiple as featured
-  - Update status (available/sold/pending)
-  - Export to CSV
-  - Print window stickers
+#### 2.3 Vehicle Inventory Dashboard - Part A: Filters (≈50,000 tokens)
+- Price range slider component
+- Make/model dropdown filters
+- Year range filter
+- Mileage range filter
+- Body type filter
+- Transmission filter
+- Fuel type filter
+- Color filter
+- Condition filter
+- Filter state management
 
-- Inventory analytics:
-  - Total vehicles by status
-  - Average days on lot
-  - Price distribution chart
-  - Most viewed vehicles
-  - Conversion rate
+#### 2.3 Vehicle Inventory Dashboard - Part B: Sorting & Display (≈30,000 tokens)
+- Sorting dropdown component
+- Price sorting (low to high / high to low)
+- Date sorting (newest first)
+- Mileage sorting
+- Year sorting
+- View count sorting
+- Recently added sorting
 
-#### 2.4 Vehicle Detail View Enhancement (ProductDetails.tsx)
-- Comprehensive vehicle information display
-- Photo gallery with zoom/fullscreen
-- 360° view support (if images available)
+#### 2.3 Vehicle Inventory Dashboard - Part C: Bulk Actions (≈30,000 tokens)
+- Bulk selection checkbox system
+- Mark multiple as featured
+- Batch status updates (available/sold/pending)
+- Export to CSV functionality
+- Print window stickers (multiple)
+
+#### 2.3 Vehicle Inventory Dashboard - Part D: Analytics (≈30,000 tokens)
+- Total vehicles by status widget
+- Average days on lot calculation
+- Price distribution chart component
+- Most viewed vehicles list
+- Conversion rate tracking
+
+#### 2.4 Vehicle Detail View - Part A: Core Display (≈50,000 tokens)
+- Comprehensive vehicle information layout
+- Photo gallery component with zoom
+- Fullscreen image viewer
 - Detailed specifications table
-- Vehicle history timeline
-- Comparison tool (compare with similar vehicles)
+- Vehicle history timeline component
+
+#### 2.4 Vehicle Detail View - Part B: Interactive Features (≈50,000 tokens)
+- 360° view support (if images available)
+- Comparison tool widget (compare with similar vehicles)
 - Finance calculator widget
-- Test drive scheduling form
-- Trade-in inquiry form
-- Print/download vehicle spec sheet
-- QR code for easy sharing
+- Test drive scheduling form embedded
+- Trade-in inquiry form embedded
+
+#### 2.4 Vehicle Detail View - Part C: Actions & Export (≈30,000 tokens)
+- Print vehicle spec sheet
+- Download spec sheet as PDF
+- QR code generation for sharing
+- Social share buttons
+- Save to favorites functionality
 
 ### Deliverables
 - Enhanced vehicle listing form
@@ -242,104 +263,119 @@ Create comprehensive customer-facing features and lead management system.
 
 ### Tasks
 
-#### 3.1 Test Drive Management System
-- Customer-facing test drive request form:
-  - Vehicle selection
-  - Preferred date/time picker
-  - Driver's license upload
-  - Contact preferences
-  - Special requirements
+#### 3.1 Test Drive Management - Part A: Customer Form (≈40,000 tokens)
+- Create test drive request form component
+- Vehicle selection dropdown
+- Date/time picker widget
+- Driver's license upload field
+- Contact preferences checkboxes
+- Special requirements text area
+- Form validation and submission
 
-- Admin test drive dashboard:
-  - Calendar view of scheduled test drives
-  - Drag-and-drop rescheduling
-  - Status management
-  - Automated reminders (Telegram notifications)
-  - Driver verification checklist
-  - Post-drive follow-up system
+#### 3.1 Test Drive Management - Part B: Admin Calendar (≈50,000 tokens)
+- Calendar view component for scheduled test drives
+- Day/week/month view toggle
+- Time slot visualization
+- Status indicators (pending/scheduled/completed/cancelled)
+- Driver verification checklist modal
+- Basic appointment details display
 
-- Automated workflows:
-  - Confirmation messages
-  - Reminder notifications (24hr, 2hr before)
-  - Post-drive feedback request
-  - Sales follow-up sequence
+#### 3.1 Test Drive Management - Part C: Advanced Features (≈40,000 tokens)
+- Drag-and-drop rescheduling functionality
+- Status update system
+- Post-drive follow-up tracking
+- Notes and feedback forms
+- Sales rep assignment
 
-#### 3.2 Trade-In Evaluation System
-- Customer trade-in submission form:
-  - Vehicle year, make, model
-  - VIN (optional)
-  - Mileage
-  - Condition assessment (dropdown)
-  - Photo upload (exterior, interior, odometer)
-  - Known issues
-  - Asking price expectation
+#### 3.1 Test Drive Management - Part D: Automation (≈30,000 tokens)
+- Confirmation message templates
+- 24-hour reminder notification system
+- 2-hour reminder notification system
+- Post-drive feedback request automation
+- Sales follow-up sequence templates
 
-- Admin evaluation dashboard:
-  - Pending evaluations queue
-  - Quick valuation tools integration
-  - Condition scoring system
-  - Offer calculator
-  - Approval workflow
-  - Automated offer notifications
+#### 3.2 Trade-In Evaluation - Part A: Submission Form (≈40,000 tokens)
+- Create trade-in submission form
+- Vehicle info fields (year, make, model, VIN)
+- Mileage input
+- Condition assessment dropdown
+- Photo upload (exterior, interior, odometer)
+- Known issues text area
+- Asking price expectation field
+- Form validation and submission
 
-- Integration with CRM for trade-in leads
+#### 3.2 Trade-In Evaluation - Part B: Admin Dashboard (≈40,000 tokens)
+- Pending evaluations queue view
+- Evaluation detail page
+- Condition scoring form
+- Offer calculator component
+- Status management system
+- Photo gallery view
 
-#### 3.3 Financing Application System
-- Multi-step financing form:
-  - Personal information
-  - Employment details
-  - Income verification
-  - Co-applicant info (optional)
-  - Trade-in details
-  - Down payment amount
-  - Desired terms
+#### 3.2 Trade-In Evaluation - Part C: Integration (≈30,000 tokens)
+- Quick valuation tools API integration
+- Approval workflow system
+- Automated offer notification system
+- CRM integration for trade-in leads
+- Document generation for offers
 
-- Admin financing dashboard:
-  - Application queue
-  - Status tracking (submitted/reviewing/approved/declined)
-  - Credit score integration (if possible)
-  - Lender routing system
-  - Document collection checklist
-  - Approval notifications
+#### 3.3 Financing Application - Part A: Customer Form (≈50,000 tokens)
+- Multi-step financing form wizard
+- Personal information step
+- Employment details step
+- Income verification step
+- Co-applicant info step (optional)
+- Trade-in details step
+- Down payment and terms step
+- Form validation across steps
 
-- Finance calculator for customers:
-  - Monthly payment estimator
-  - Interest rate ranges
-  - Down payment scenarios
-  - Trade-in value application
-  - Tax and fees inclusion
+#### 3.3 Financing Application - Part B: Admin Dashboard (≈40,000 tokens)
+- Application queue view
+- Application detail page
+- Status tracking system (submitted/reviewing/approved/declined)
+- Document collection checklist
+- Lender routing interface
+- Approval notification system
 
-#### 3.4 Enhanced CRM for Automotive Sales
-- Lead scoring system:
-  - Engagement score
-  - Urgency indicators (trade-in pending, financing pre-approved)
-  - Budget qualification
-  - Timeline to purchase
+#### 3.3 Financing Application - Part C: Calculator (≈30,000 tokens)
+- Finance calculator widget
+- Monthly payment estimator
+- Interest rate range inputs
+- Down payment scenario calculator
+- Trade-in value application
+- Tax and fees calculator
+- Amortization schedule display
 
-- Automated lead nurturing:
-  - New inventory alerts based on preferences
-  - Price drop notifications
-  - Similar vehicle suggestions
-  - Monthly market updates
-  - Seasonal promotions
+#### 3.4 Enhanced CRM - Part A: Lead Scoring (≈40,000 tokens)
+- Lead scoring algorithm
+- Engagement score calculation
+- Urgency indicators (trade-in pending, financing pre-approved)
+- Budget qualification assessment
+- Timeline to purchase tracking
+- Lead priority dashboard
 
-- Customer journey tracking:
-  - Browsing history
-  - Saved vehicles
-  - Test drives completed
-  - Trade-in status
-  - Financing status
-  - Communication timeline
+#### 3.4 Enhanced CRM - Part B: Automation (≈40,000 tokens)
+- New inventory alerts based on preferences
+- Price drop notification system
+- Similar vehicle suggestion engine
+- Monthly market update templates
+- Seasonal promotion automation
 
-- Sales pipeline stages:
-  - Initial inquiry
-  - Test drive scheduled
-  - Test drive completed
-  - Financing approved
-  - Negotiation
-  - Deal pending
-  - Sold
-  - Delivered
+#### 3.4 Enhanced CRM - Part C: Journey Tracking (≈40,000 tokens)
+- Browsing history tracking
+- Saved vehicles management
+- Test drives completed tracking
+- Trade-in status display
+- Financing status display
+- Communication timeline view
+
+#### 3.4 Enhanced CRM - Part D: Sales Pipeline (≈30,000 tokens)
+- Sales pipeline visualization
+- Pipeline stages (Initial inquiry → Delivered)
+- Drag-and-drop stage management
+- Stage conversion analytics
+- Deal progress tracking
+- Won/lost reason tracking
 
 ### Deliverables
 - Test drive management system
@@ -359,70 +395,96 @@ Add complete service department functionality for vehicle maintenance and repair
 
 ### Tasks
 
-#### 4.1 Service Appointment Booking
-- Customer booking interface:
-  - Vehicle VIN entry or selection
-  - Service type selection:
-    - Oil change
-    - Tire rotation
-    - Brake service
-    - Engine diagnostics
-    - Inspection
-    - Custom service
-  - Preferred date/time
-  - Detailed issue description
-  - Upload photos of issues
-  - Service history display
+#### 4.1 Service Booking - Part A: Customer Interface (≈40,000 tokens)
+- Customer booking form component
+- Vehicle VIN entry or selection dropdown
+- Service type selection checkboxes (oil change, tire rotation, brake service, etc.)
+- Preferred date/time picker
+- Issue description text area
+- Photo upload for issues
+- Form validation and submission
 
-- Admin service calendar:
-  - Service bay capacity management
-  - Technician scheduling
-  - Appointment duration estimation
-  - Status updates (checked-in/in-progress/completed)
-  - Service advisor assignment
-  - Parts ordering integration
+#### 4.1 Service Booking - Part B: Service History Display (≈30,000 tokens)
+- Service history display on booking page
+- Past service records list
+- Service details modal
+- Recommended service suggestions
+- Mileage-based service alerts
 
-#### 4.2 Service History Tracking
-- Complete service records per vehicle:
-  - Service date
-  - Mileage at service
-  - Work performed
-  - Parts replaced
-  - Labor hours
-  - Cost breakdown
-  - Technician notes
-  - Photos (before/after)
-  - Next service recommendations
+#### 4.1 Service Booking - Part C: Admin Calendar (≈50,000 tokens)
+- Service calendar view component
+- Service bay capacity management
+- Technician scheduling interface
+- Appointment duration estimation
+- Service advisor assignment
+- Drag-and-drop appointment management
 
-- Customer service history view:
-  - All past services
-  - Upcoming maintenance reminders
-  - Service interval tracking
-  - Warranty information
-  - Service plan details
+#### 4.1 Service Booking - Part D: Status Management (≈40,000 tokens)
+- Status update system (checked-in/in-progress/completed)
+- Check-in workflow
+- Progress tracking interface
+- Completion notifications
+- Parts ordering integration hooks
 
-#### 4.3 Maintenance Reminders System
-- Automated reminder notifications:
-  - Mileage-based reminders
-  - Time-based reminders
-  - Inspection due dates
-  - Registration renewal
-  - Insurance expiration
-  - Warranty expiration
+#### 4.2 Service History - Part A: Record Management (≈50,000 tokens)
+- Service record creation form
+- Service date and mileage tracking
+- Work performed text editor
+- Parts replaced list builder
+- Labor hours tracking
+- Cost breakdown calculator
+- Technician notes field
+- Before/after photo upload
 
+#### 4.2 Service History - Part B: Customer View (≈40,000 tokens)
+- Customer service history page
+- All past services list view
+- Service detail cards
+- Service interval tracking
+- Warranty information display
+- Service plan details
+- Next service recommendations
+
+#### 4.2 Service History - Part C: Reporting (≈30,000 tokens)
+- Service history export to PDF
+- Service summary reports
+- Cost analysis by vehicle
+- Service frequency analytics
+- Customer service value tracking
+
+#### 4.3 Maintenance Reminders - Part A: Reminder Logic (≈40,000 tokens)
+- Mileage-based reminder calculation
+- Time-based reminder calculation
+- Inspection due date tracking
+- Registration renewal tracking
+- Insurance expiration tracking
+- Warranty expiration tracking
+- Reminder scheduling system
+
+#### 4.3 Maintenance Reminders - Part B: Delivery System (≈30,000 tokens)
 - Customizable reminder templates
-- Multi-channel delivery (Telegram, SMS, Email)
+- Telegram notification delivery
+- Email delivery (if configured)
+- SMS delivery (if configured)
+- Reminder preferences management
+- Delivery log tracking
 
-#### 4.4 Service Package Management
-- Pre-configured service packages:
-  - Basic maintenance package
-  - Premium service package
-  - Seasonal packages (winter prep, summer check)
-  - Vehicle inspection packages
-  - Extended warranty packages
-
+#### 4.4 Service Packages - Part A: Package Creation (≈30,000 tokens)
+- Service package builder interface
+- Basic maintenance package template
+- Premium service package template
+- Seasonal packages (winter prep, summer check)
+- Vehicle inspection packages
+- Extended warranty packages
 - Package pricing management
-- Special offers for existing customers
+
+#### 4.4 Service Packages - Part B: Customer Features (≈30,000 tokens)
+- Package selection interface
+- Package comparison tool
+- Special offers display
+- Package purchase workflow
+- Existing customer discount system
+- Package benefits display
 
 ### Deliverables
 - Service booking system
@@ -441,69 +503,95 @@ Implement intelligent vehicle search, comparison tools, and recommendation engin
 
 ### Tasks
 
-#### 5.1 Advanced Search & Filter System
-- Intelligent search:
-  - Natural language search ("red SUV under $30k with low mileage")
-  - Voice search support (Telegram voice messages)
-  - Search history and saved searches
-  - Search suggestions
-  - Recently viewed vehicles
+#### 5.1 Advanced Search - Part A: Search Interface (≈40,000 tokens)
+- Natural language search input
+- Voice search support (Telegram voice messages)
+- Search suggestions dropdown
+- Recently viewed vehicles section
+- Search history display
+- Clear/delete search history
 
-- Smart filters:
-  - Multi-select filters with AND/OR logic
-  - Filter combinations saving
-  - Filter presets (family vehicles, luxury, economy, etc.)
-  - Dynamic filter options based on inventory
-  - "More like this" filter generation
+#### 5.1 Advanced Search - Part B: Smart Filters (≈50,000 tokens)
+- Multi-select filters with AND/OR logic
+- Filter preset builder (family vehicles, luxury, economy)
+- Dynamic filter options based on inventory
+- "More like this" filter generation
+- Filter state persistence
+- Active filters display
 
-- Search results:
-  - Grid/list view toggle
-  - Sort by relevance
-  - Save search for alerts
-  - Export results
-  - Share filtered results
+#### 5.1 Advanced Search - Part C: Search Results (≈40,000 tokens)
+- Grid/list view toggle
+- Sort by relevance algorithm
+- Save search for alerts functionality
+- Export results to CSV
+- Share filtered results link
+- Pagination or infinite scroll
 
-#### 5.2 Vehicle Comparison Tool
-- Side-by-side comparison (up to 4 vehicles):
-  - Specifications comparison table
-  - Price comparison
-  - Feature matrix
-  - Photo gallery comparison
-  - Pros/cons highlighting
-  - Similar vehicles suggestions
-  - Value rating
+#### 5.1 Advanced Search - Part D: Saved Searches (≈30,000 tokens)
+- Saved searches management page
+- Search alert configuration
+- Edit saved search
+- Delete saved search
+- Alert notification delivery
 
-- Comparison sharing:
-  - Generate comparison link
-  - Export as PDF
-  - Share via Telegram
-  - Email comparison
+#### 5.2 Vehicle Comparison - Part A: Comparison UI (≈50,000 tokens)
+- Side-by-side comparison layout (up to 4 vehicles)
+- Add/remove vehicles from comparison
+- Specifications comparison table
+- Price comparison section
+- Photo gallery comparison
+- Highlight differences feature
 
-#### 5.3 Recommendation Engine
-- Personalized recommendations based on:
-  - Browsing history
-  - Budget indicators
-  - Saved vehicles
-  - Test drive history
-  - Stated preferences
-  - Similar customer profiles
+#### 5.2 Vehicle Comparison - Part B: Advanced Features (≈40,000 tokens)
+- Feature matrix visualization
+- Pros/cons highlighting system
+- Similar vehicles suggestions
+- Value rating algorithm
+- Winner/best value indicator
 
-- Smart suggestions:
-  - "Customers who viewed this also viewed..."
-  - "Better value alternatives"
-  - "Similar vehicles at lower prices"
-  - "Upgraded options within budget"
-  - "Recently reduced prices on saved vehicles"
+#### 5.2 Vehicle Comparison - Part C: Sharing (≈30,000 tokens)
+- Generate comparison link
+- Export comparison as PDF
+- Share via Telegram
+- Email comparison functionality
+- Save comparison for later
 
-- Recommendation notifications via Telegram
+#### 5.3 Recommendation Engine - Part A: Algorithm (≈50,000 tokens)
+- Browsing history tracking
+- Budget indicators detection
+- Saved vehicles analysis
+- Test drive history integration
+- Stated preferences tracking
+- Similar customer profiles matching
+- Recommendation scoring algorithm
 
-#### 5.4 Wishlist & Favorites
-- Customer wishlist functionality:
-  - Save unlimited vehicles
-  - Organize into collections (favorites, considering, compare later)
-  - Price drop alerts on saved vehicles
-  - Vehicle sold notifications
-  - Similar vehicle alerts when saved vehicle sells
+#### 5.3 Recommendation Engine - Part B: Suggestions (≈40,000 tokens)
+- "Customers who viewed this also viewed..." widget
+- "Better value alternatives" suggestions
+- "Similar vehicles at lower prices" finder
+- "Upgraded options within budget" recommender
+- "Recently reduced prices on saved vehicles" alerts
+
+#### 5.3 Recommendation Engine - Part C: Notifications (≈30,000 tokens)
+- Recommendation notification templates
+- Telegram notification delivery
+- Notification frequency management
+- Opt-in/opt-out preferences
+- Notification performance tracking
+
+#### 5.4 Wishlist & Favorites - Part A: Core Features (≈40,000 tokens)
+- Wishlist creation and management
+- Add/remove vehicles from wishlist
+- Organize into collections (favorites, considering, compare later)
+- Collection management interface
+- Wishlist sharing
+
+#### 5.4 Wishlist & Favorites - Part B: Alerts (≈30,000 tokens)
+- Price drop alerts on saved vehicles
+- Vehicle sold notifications
+- Similar vehicle alerts when saved vehicle sells
+- Alert preferences configuration
+- Alert history tracking
 
 ### Deliverables
 - Advanced search system
@@ -522,94 +610,95 @@ Create comprehensive analytics and reporting system for dealership management.
 
 ### Tasks
 
-#### 6.1 Inventory Analytics Dashboard
-- Real-time inventory metrics:
-  - Total inventory value
-  - Average vehicle age (days on lot)
-  - Inventory turnover rate
-  - Aging inventory alerts
-  - Stock levels by category
-  - Price positioning analysis
-  - Market competitiveness score
+#### 6.1 Inventory Analytics - Part A: Metrics (≈40,000 tokens)
+- Total inventory value calculation
+- Average vehicle age (days on lot) tracker
+- Inventory turnover rate calculator
+- Aging inventory alerts system
+- Stock levels by category counter
+- Price positioning analysis algorithm
+- Market competitiveness score
 
-- Visual analytics:
-  - Inventory composition pie charts
-  - Price distribution histograms
-  - Age distribution charts
-  - Make/model breakdown
-  - Condition breakdown
-  - Monthly inventory trends
+#### 6.1 Inventory Analytics - Part B: Visualizations (≈40,000 tokens)
+- Inventory composition pie charts
+- Price distribution histograms
+- Age distribution charts
+- Make/model breakdown charts
+- Condition breakdown graphs
+- Monthly inventory trends line charts
+- Interactive dashboard layout
 
-#### 6.2 Sales Performance Analytics
-- Sales metrics:
-  - Total sales volume (units)
-  - Total revenue
-  - Average sale price
-  - Gross profit margins
-  - Conversion rates (leads to sales)
-  - Average days to sale
-  - Sales by vehicle type
-  - Sales by salesperson
-  - Month-over-month growth
-  - Year-over-year comparison
+#### 6.2 Sales Analytics - Part A: Metrics Dashboard (≈50,000 tokens)
+- Total sales volume (units) display
+- Total revenue calculator
+- Average sale price tracker
+- Gross profit margins calculator
+- Conversion rates (leads to sales) tracker
+- Average days to sale metric
+- Sales by vehicle type breakdown
+- Sales by salesperson leaderboard
+- Month-over-month growth comparison
+- Year-over-year comparison charts
 
-- Sales funnel visualization:
-  - Lead generation
-  - Test drives scheduled
-  - Test drives completed
-  - Financing applications
-  - Offers made
-  - Deals closed
-  - Drop-off analysis at each stage
+#### 6.2 Sales Analytics - Part B: Funnel Visualization (≈40,000 tokens)
+- Sales funnel visualization component
+- Lead generation stage
+- Test drives scheduled stage
+- Test drives completed stage
+- Financing applications stage
+- Offers made stage
+- Deals closed stage
+- Drop-off analysis at each stage
+- Conversion rate between stages
 
-#### 6.3 Customer Analytics
-- Customer insights:
-  - Total customers
-  - New vs returning customers
-  - Customer acquisition cost
-  - Customer lifetime value
-  - Average transaction value
-  - Repeat purchase rate
-  - Customer satisfaction scores
-  - Referral rates
+#### 6.3 Customer Analytics - Part A: Insights (≈40,000 tokens)
+- Total customers counter
+- New vs returning customers ratio
+- Customer acquisition cost calculator
+- Customer lifetime value estimator
+- Average transaction value tracker
+- Repeat purchase rate calculator
+- Customer satisfaction scores aggregator
+- Referral rates tracker
 
-- Demographic analysis:
-  - Age distribution
-  - Location mapping
-  - Vehicle preference by segment
-  - Buying patterns
+#### 6.3 Customer Analytics - Part B: Demographics (≈30,000 tokens)
+- Age distribution chart
+- Location mapping visualization
+- Vehicle preference by segment analysis
+- Buying patterns identification
+- Customer segmentation dashboard
 
-#### 6.4 Marketing Performance
-- Campaign tracking:
-  - Lead source tracking
-  - Campaign ROI
-  - Engagement metrics (Telegram messages, views, clicks)
-  - Promotion effectiveness
-  - Best performing channels
-  - Cost per lead by channel
+#### 6.4 Marketing Analytics - Part A: Campaigns (≈40,000 tokens)
+- Lead source tracking system
+- Campaign ROI calculator
+- Engagement metrics (Telegram messages, views, clicks)
+- Promotion effectiveness analyzer
+- Best performing channels identification
+- Cost per lead by channel tracker
 
-- Vehicle listing performance:
-  - Most viewed vehicles
-  - View-to-inquiry conversion
-  - Time to first inquiry
-  - Photo impact analysis
-  - Price change effectiveness
+#### 6.4 Marketing Analytics - Part B: Listing Performance (≈35,000 tokens)
+- Most viewed vehicles list
+- View-to-inquiry conversion tracker
+- Time to first inquiry calculator
+- Photo impact analysis
+- Price change effectiveness analyzer
+- Listing optimization recommendations
 
-#### 6.5 Financial Reports
-- Financial dashboards:
-  - Revenue by period
-  - Profit margins
-  - Commission tracking
-  - Department revenue (sales vs service)
-  - Financing income
-  - Trade-in profitability
+#### 6.5 Financial Reports - Part A: Dashboards (≈40,000 tokens)
+- Revenue by period charts
+- Profit margins calculator
+- Commission tracking system
+- Department revenue comparison (sales vs service)
+- Financing income tracker
+- Trade-in profitability analyzer
 
-- Exportable reports:
-  - Daily sales report
-  - Weekly inventory report
-  - Monthly P&L statement
-  - Tax documentation
-  - Compliance reports
+#### 6.5 Financial Reports - Part B: Export Reports (≈40,000 tokens)
+- Daily sales report generator
+- Weekly inventory report generator
+- Monthly P&L statement generator
+- Tax documentation exporter
+- Compliance reports builder
+- Custom report builder interface
 
 ### Deliverables
 - Inventory analytics dashboard
@@ -629,117 +718,138 @@ Integrate external services, optimize performance, add final features, and polis
 
 ### Tasks
 
-#### 7.1 External Service Integrations
-- VIN decoder API integration:
-  - Auto-populate vehicle specs from VIN
-  - Validate VIN numbers
-  - Fetch standard features list
-  - Get market value estimates
+#### 7.1 External Integrations - Part A: VIN & Valuation (≈40,000 tokens)
+- VIN decoder API integration
+- Auto-populate vehicle specs from VIN
+- VIN validation system
+- Fetch standard features list
+- Get market value estimates API
+- Error handling for API failures
 
-- SMS/Email notifications (if not using only Telegram):
-  - Twilio for SMS
-  - SendGrid for emails
-  - Multi-channel notification preferences
+#### 7.1 External Integrations - Part B: Communications (≈40,000 tokens)
+- Twilio SMS integration (if needed)
+- SendGrid email integration (if needed)
+- Multi-channel notification preferences
+- Notification delivery tracking
+- Fallback notification system
 
-- Payment gateway integration (if handling deposits):
-  - Stripe integration for deposits
-  - Online payment for service appointments
-  - Secure payment processing
+#### 7.1 External Integrations - Part C: Payments & Maps (≈40,000 tokens)
+- Stripe integration for deposits
+- Online payment for service appointments
+- Secure payment processing
+- Map integration for dealership location
+- Directions to dealership
+- Service area visualization
 
-- Map integration:
-  - Dealership location on maps
-  - Directions to dealership
-  - Service area visualization
+#### 7.2 Document Management - Part A: Generation (≈50,000 tokens)
+- Vehicle window stickers generator
+- Bill of sale templates
+- Trade-in appraisal forms generator
+- Service invoices generator
+- Warranty documents builder
+- Buyer's guides generator
+- PDF generation library integration
 
-#### 7.2 Document Management System
-- Document generation:
-  - Vehicle window stickers
-  - Bill of sale templates
-  - Trade-in appraisal forms
-  - Service invoices
-  - Warranty documents
-  - Buyer's guides
+#### 7.2 Document Management - Part B: Storage (≈40,000 tokens)
+- Customer documents storage (license, insurance)
+- Vehicle documents storage (title, registration)
+- Service records storage
+- Inspection reports storage
+- Financial documents storage
+- Document search and retrieval
+- Document access control
 
-- Document storage:
-  - Customer documents (license, insurance)
-  - Vehicle documents (title, registration)
-  - Service records
-  - Inspection reports
-  - Financial documents
+#### 7.2 Document Management - Part C: E-Signature (≈30,000 tokens)
+- E-signature API integration
+- Signature workflow builder
+- Signature status tracking
+- Signed document storage
+- Legal compliance features
 
-- E-signature support (if possible via API)
+#### 7.3 Mobile Optimization - Part A: Responsive Design (≈40,000 tokens)
+- Touch-optimized interfaces
+- Mobile-first layouts review
+- Improved gesture controls
+- Mobile navigation optimization
+- Responsive breakpoint refinement
+- Mobile-specific UI adjustments
 
-#### 7.3 Mobile Optimization
-- Responsive design refinement:
-  - Touch-optimized interfaces
-  - Mobile-first layouts
-  - Improved gesture controls
-  - Faster mobile loading
-  - Reduced data usage
+#### 7.3 Mobile Optimization - Part B: PWA Features (≈40,000 tokens)
+- Offline capability for key features
+- Add to home screen prompt
+- Push notifications setup
+- Background sync implementation
+- Service worker configuration
+- App manifest creation
 
-- Progressive Web App features:
-  - Offline capability for key features
-  - Add to home screen
-  - Push notifications
-  - Background sync
+#### 7.4 Performance - Part A: Database (≈40,000 tokens)
+- Firebase indexing for common queries
+- Query optimization review
+- Data caching strategies implementation
+- Image optimization and lazy loading
+- CDN integration for assets
 
-#### 7.4 Performance Optimization
-- Database optimization:
-  - Indexing for common queries
-  - Query optimization
-  - Data caching strategies
-  - Image optimization and lazy loading
+#### 7.4 Performance - Part B: Code (≈40,000 tokens)
+- Component code splitting
+- Lazy loading routes implementation
+- Bundle size reduction
+- Performance monitoring setup (Web Vitals)
+- Lighthouse optimization
+- Memory leak detection
 
-- Code optimization:
-  - Component code splitting
-  - Lazy loading routes
-  - Bundle size reduction
-  - Performance monitoring
+#### 7.5 Security - Part A: Data Protection (≈35,000 tokens)
+- Customer PII encryption
+- Secure document storage implementation
+- Access control refinement
+- Audit logging system
+- Security headers configuration
 
-#### 7.5 Security Enhancements
-- Data protection:
-  - Customer PII encryption
-  - Secure document storage
-  - Access control refinement
-  - Audit logging
+#### 7.5 Security - Part B: Compliance (≈35,000 tokens)
+- GDPR compliance (if applicable)
+- Data retention policies implementation
+- Privacy policy page
+- Terms of service page
+- Cookie consent management
+- Data export/deletion features
 
-- Compliance:
-  - GDPR compliance (if applicable)
-  - Data retention policies
-  - Privacy policy implementation
-  - Terms of service
+#### 7.6 UX Polish - Part A: Onboarding (≈30,000 tokens)
+- Customer tutorial creation
+- Admin walkthrough
+- Feature tooltips system
+- Help documentation pages
+- Interactive tours
 
-#### 7.6 User Experience Polish
-- Onboarding:
-  - Customer tutorial
-  - Admin walkthrough
-  - Feature tooltips
-  - Help documentation
+#### 7.6 UX Polish - Part B: UI Improvements (≈40,000 tokens)
+- Consistent design language review
+- Improved animations and transitions
+- Better error messages
+- Loading states polish
+- Empty states design
+- Success confirmations
+- Micro-interactions
 
-- UI/UX improvements:
-  - Consistent design language
-  - Improved animations
-  - Better error messages
-  - Loading states
-  - Empty states
-  - Success confirmations
+#### 7.6 UX Polish - Part C: Accessibility (≈30,000 tokens)
+- Keyboard navigation testing
+- Screen reader support
+- ARIA labels implementation
+- Color contrast compliance
+- Alt text for all images
+- Focus management
 
-- Accessibility:
-  - Keyboard navigation
-  - Screen reader support
-  - Color contrast compliance
-  - Alt text for images
+#### 7.7 Testing & QA - Part A: Automated Testing (≈40,000 tokens)
+- Unit tests for critical functions
+- Integration tests setup
+- E2E testing key workflows
+- Test coverage reporting
+- CI/CD pipeline integration
 
-#### 7.7 Testing & Quality Assurance
-- Comprehensive testing:
-  - Unit tests for critical functions
-  - Integration tests
-  - E2E testing key workflows
-  - Performance testing
-  - Security testing
-  - Browser compatibility testing
-
-- Bug fixes and stability improvements
+#### 7.7 Testing & QA - Part B: Manual Testing (≈30,000 tokens)
+- Performance testing
+- Security testing
+- Browser compatibility testing
+- Device testing (mobile/tablet/desktop)
+- Bug tracking and fixes
+- Stability improvements
 
 ### Deliverables
 - External integrations
