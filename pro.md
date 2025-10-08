@@ -1,0 +1,1 @@
+a fully functional Telegram Mini App for a car dealership. Follow the detailed steps outlined in README.md, focusing on completing Phase 2  only 2.3 A . Requirements: Use Firebase only After completing the tasks for Phase 2 from 2.3 A , update the README.md file with only the work that was actually completed during this phase.
