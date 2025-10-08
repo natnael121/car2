@@ -8,16 +8,32 @@ import {
   ChevronLeft,
   ChevronRight,
   MapPin,
-  Eye
+  Eye,
+  Car,
+  DollarSign,
+  Share2,
+  Star,
+  CreditCard
 } from 'lucide-react';
+import { TestDriveModal } from './TestDriveModal';
+import { TradeInModal } from './TradeInModal';
+import { FinancingModal } from './FinancingModal';
+import { db } from '../lib/firebase';
+import { doc, updateDoc } from 'firebase/firestore';
 
 interface VehicleCardProps {
   vehicle: Vehicle;
   onViewDetails?: (vehicleId: string) => void;
+  onUpdate?: () => void;
 }
 
-export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onViewDetails }) => {
+export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onViewDetails, onUpdate }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [showTestDriveModal, setShowTestDriveModal] = useState(false);
+  const [showTradeInModal, setShowTradeInModal] = useState(false);
+  const [showFinancingModal, setShowFinancingModal] = useState(false);
+  const [isFeatured, setIsFeatured] = useState(false);
+  const [isTogglingFeatured, setIsTogglingFeatured] = useState(false);
 
   const images = vehicle.imageUrl ? [vehicle.imageUrl] : [];
 
@@ -78,6 +94,49 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onViewDetails
     if (days <= 30) return 'text-green-600';
     if (days <= 60) return 'text-yellow-600';
     return 'text-orange-600';
+  };
+
+  const handleToggleFeatured = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsTogglingFeatured(true);
+    try {
+      const newFeaturedStatus = !isFeatured;
+      await updateDoc(doc(db, 'vehicles', vehicle.id), {
+        isFeatured: newFeaturedStatus,
+        updatedAt: new Date().toISOString(),
+      });
+      setIsFeatured(newFeaturedStatus);
+      onUpdate?.();
+    } catch (error) {
+      console.error('Error toggling featured status:', error);
+    } finally {
+      setIsTogglingFeatured(false);
+    }
+  };
+
+  const handleShare = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const shareData = {
+      title: `${vehicle.year} ${vehicle.make} ${vehicle.model}`,
+      text: `Check out this ${vehicle.year} ${vehicle.make} ${vehicle.model} for ${formatPrice(vehicle.price)}!`,
+      url: window.location.href,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (error) {
+        console.log('Error sharing:', error);
+      }
+    } else {
+      navigator.clipboard.writeText(`${shareData.title} - ${shareData.text} ${shareData.url}`);
+      alert('Link copied to clipboard!');
+    }
+  };
+
+  const handleActionClick = (e: React.MouseEvent, action: () => void) => {
+    e.stopPropagation();
+    action();
   };
 
   return (
@@ -203,12 +262,72 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onViewDetails
         )}
 
         <div className="pt-4 border-t border-gray-200">
-          <div className="flex items-center justify-between text-xs text-gray-500">
+          <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
             <span>VIN: {vehicle.vin.substring(0, 8)}...</span>
             <span className="capitalize">{vehicle.bodyType}</span>
           </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              onClick={(e) => handleActionClick(e, () => setShowTestDriveModal(true))}
+              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-blue-50 text-blue-700 rounded-lg text-sm font-semibold hover:bg-blue-100 transition"
+            >
+              <Car size={16} />
+              Test Drive
+            </button>
+            <button
+              onClick={(e) => handleActionClick(e, () => setShowTradeInModal(true))}
+              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-green-50 text-green-700 rounded-lg text-sm font-semibold hover:bg-green-100 transition"
+            >
+              <DollarSign size={16} />
+              Trade-In
+            </button>
+            <button
+              onClick={(e) => handleActionClick(e, () => setShowFinancingModal(true))}
+              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-purple-50 text-purple-700 rounded-lg text-sm font-semibold hover:bg-purple-100 transition"
+            >
+              <CreditCard size={16} />
+              Finance
+            </button>
+            <button
+              onClick={handleShare}
+              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-gray-50 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-100 transition"
+            >
+              <Share2 size={16} />
+              Share
+            </button>
+          </div>
+
+          <button
+            onClick={handleToggleFeatured}
+            disabled={isTogglingFeatured}
+            className={`w-full mt-2 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold transition ${
+              isFeatured
+                ? 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            } disabled:opacity-50`}
+          >
+            <Star size={16} className={isFeatured ? 'fill-yellow-600' : ''} />
+            {isFeatured ? 'Featured' : 'Mark as Featured'}
+          </button>
         </div>
       </div>
+
+      <TestDriveModal
+        vehicle={vehicle}
+        isOpen={showTestDriveModal}
+        onClose={() => setShowTestDriveModal(false)}
+      />
+      <TradeInModal
+        targetVehicle={vehicle}
+        isOpen={showTradeInModal}
+        onClose={() => setShowTradeInModal(false)}
+      />
+      <FinancingModal
+        vehicle={vehicle}
+        isOpen={showFinancingModal}
+        onClose={() => setShowFinancingModal(false)}
+      />
     </div>
   );
 };
