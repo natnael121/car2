@@ -12,12 +12,10 @@ import {
   Car,
   DollarSign,
   Share2,
-  Star,
-  CreditCard
+  Star
 } from 'lucide-react';
 import { TestDriveModal } from './TestDriveModal';
 import { TradeInModal } from './TradeInModal';
-import { FinancingModal } from './FinancingModal';
 import { db } from '../lib/firebase';
 import { doc, updateDoc } from 'firebase/firestore';
 
@@ -31,7 +29,6 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onViewDetails
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showTestDriveModal, setShowTestDriveModal] = useState(false);
   const [showTradeInModal, setShowTradeInModal] = useState(false);
-  const [showFinancingModal, setShowFinancingModal] = useState(false);
   const [isFeatured, setIsFeatured] = useState(false);
   const [isTogglingFeatured, setIsTogglingFeatured] = useState(false);
 
@@ -267,7 +264,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onViewDetails
             <span className="capitalize">{vehicle.bodyType}</span>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-3 gap-2">
             <button
               onClick={(e) => handleActionClick(e, () => setShowTestDriveModal(true))}
               className="flex items-center justify-center gap-1.5 px-3 py-2 bg-blue-50 text-blue-700 rounded-lg text-sm font-semibold hover:bg-blue-100 transition"
@@ -281,13 +278,6 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onViewDetails
             >
               <DollarSign size={16} />
               Trade-In
-            </button>
-            <button
-              onClick={(e) => handleActionClick(e, () => setShowFinancingModal(true))}
-              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-purple-50 text-purple-700 rounded-lg text-sm font-semibold hover:bg-purple-100 transition"
-            >
-              <CreditCard size={16} />
-              Finance
             </button>
             <button
               onClick={handleShare}
@@ -322,11 +312,6 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onViewDetails
         targetVehicle={vehicle}
         isOpen={showTradeInModal}
         onClose={() => setShowTradeInModal(false)}
-      />
-      <FinancingModal
-        vehicle={vehicle}
-        isOpen={showFinancingModal}
-        onClose={() => setShowFinancingModal(false)}
       />
     </div>
   );
