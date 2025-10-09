@@ -41,17 +41,19 @@ function AppContent() {
               </p>
             </div>
             <div className="flex gap-2">
-              <button
-                onClick={() => setActiveView('list')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition ${
-                  activeView === 'list'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                <List size={20} />
-                Browse Cars
-              </button>
+              {!user && (
+                <button
+                  onClick={() => setActiveView('list')}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition ${
+                    activeView === 'list'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  <List size={20} />
+                  Browse Cars
+                </button>
+              )}
               {user ? (
                 <>
                   <button
@@ -99,7 +101,7 @@ function AppContent() {
       </header>
 
       <main className="max-w-7xl mx-auto px-6 py-8">
-        {activeView === 'list' && <VehicleList />}
+        {activeView === 'list' && !user && <VehicleList />}
         {activeView === 'admin' && user && <AdminInventory />}
         {activeView === 'add' && user && <VehicleFormWizard />}
       </main>
