@@ -1,25 +1,58 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { MapPin, Phone, Mail, Clock, Award, Users, Shield, Star } from 'lucide-react';
 
+interface BusinessSettings {
+  businessName: string;
+  tagline: string;
+  aboutText: string;
+  aboutText2: string;
+  address1: string;
+  address2: string;
+  phone: string;
+  email: string;
+  mondayFriday: string;
+  saturday: string;
+  sunday: string;
+}
+
+const defaultSettings: BusinessSettings = {
+  businessName: 'Car Dealership',
+  tagline: 'Your trusted automotive partner since 2005',
+  aboutText: 'Welcome to Car Dealership, where we\'ve been serving our community with quality vehicles and exceptional service for over 18 years. We pride ourselves on offering a wide selection of new and pre-owned vehicles to suit every lifestyle and budget.',
+  aboutText2: 'Our experienced team is dedicated to making your car buying experience smooth, transparent, and enjoyable. From the moment you walk through our doors to long after you drive away, we\'re here to support you with expert advice and outstanding customer service.',
+  address1: '123 Main Street',
+  address2: 'Anytown, ST 12345',
+  phone: '(555) 123-4567',
+  email: 'info@cardealership.com',
+  mondayFriday: '9:00 AM - 7:00 PM',
+  saturday: '9:00 AM - 6:00 PM',
+  sunday: '10:00 AM - 5:00 PM'
+};
+
 export const About: React.FC = () => {
+  const [settings, setSettings] = useState<BusinessSettings>(defaultSettings);
+
+  useEffect(() => {
+    const savedSettings = localStorage.getItem('businessSettings');
+    if (savedSettings) {
+      setSettings(JSON.parse(savedSettings));
+    }
+  }, []);
+
   return (
     <div className="space-y-6 pb-24">
       <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl p-8 shadow-lg">
-        <h1 className="text-3xl font-bold mb-2">Car Dealership</h1>
-        <p className="text-blue-100 text-lg">Your trusted automotive partner since 2005</p>
+        <h1 className="text-3xl font-bold mb-2">{settings.businessName}</h1>
+        <p className="text-blue-100 text-lg">{settings.tagline}</p>
       </div>
 
       <div className="bg-white rounded-xl shadow-md p-6">
         <h2 className="text-2xl font-bold text-gray-900 mb-4">About Us</h2>
         <p className="text-gray-700 leading-relaxed mb-4">
-          Welcome to Car Dealership, where we've been serving our community with quality vehicles
-          and exceptional service for over 18 years. We pride ourselves on offering a wide selection
-          of new and pre-owned vehicles to suit every lifestyle and budget.
+          {settings.aboutText}
         </p>
         <p className="text-gray-700 leading-relaxed">
-          Our experienced team is dedicated to making your car buying experience smooth, transparent,
-          and enjoyable. From the moment you walk through our doors to long after you drive away,
-          we're here to support you with expert advice and outstanding customer service.
+          {settings.aboutText2}
         </p>
       </div>
 
@@ -81,8 +114,8 @@ export const About: React.FC = () => {
             <MapPin className="w-5 h-5 text-blue-600 mt-1" />
             <div>
               <h3 className="font-semibold text-gray-900 mb-1">Address</h3>
-              <p className="text-gray-600">123 Main Street</p>
-              <p className="text-gray-600">Anytown, ST 12345</p>
+              <p className="text-gray-600">{settings.address1}</p>
+              <p className="text-gray-600">{settings.address2}</p>
             </div>
           </div>
 
@@ -90,8 +123,8 @@ export const About: React.FC = () => {
             <Phone className="w-5 h-5 text-blue-600 mt-1" />
             <div>
               <h3 className="font-semibold text-gray-900 mb-1">Phone</h3>
-              <a href="tel:+15551234567" className="text-blue-600 hover:underline">
-                (555) 123-4567
+              <a href={`tel:${settings.phone.replace(/[^0-9+]/g, '')}`} className="text-blue-600 hover:underline">
+                {settings.phone}
               </a>
             </div>
           </div>
@@ -100,8 +133,8 @@ export const About: React.FC = () => {
             <Mail className="w-5 h-5 text-blue-600 mt-1" />
             <div>
               <h3 className="font-semibold text-gray-900 mb-1">Email</h3>
-              <a href="mailto:info@cardealership.com" className="text-blue-600 hover:underline">
-                info@cardealership.com
+              <a href={`mailto:${settings.email}`} className="text-blue-600 hover:underline">
+                {settings.email}
               </a>
             </div>
           </div>
@@ -111,9 +144,9 @@ export const About: React.FC = () => {
             <div>
               <h3 className="font-semibold text-gray-900 mb-1">Business Hours</h3>
               <div className="text-gray-600 space-y-1">
-                <p>Monday - Friday: 9:00 AM - 7:00 PM</p>
-                <p>Saturday: 9:00 AM - 6:00 PM</p>
-                <p>Sunday: 10:00 AM - 5:00 PM</p>
+                <p>Monday - Friday: {settings.mondayFriday}</p>
+                <p>Saturday: {settings.saturday}</p>
+                <p>Sunday: {settings.sunday}</p>
               </div>
             </div>
           </div>

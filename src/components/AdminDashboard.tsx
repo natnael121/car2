@@ -24,6 +24,7 @@ import { ServiceManagement } from './ServiceManagement';
 import { SalesManagement } from './SalesManagement';
 import { CustomersManagement } from './CustomersManagement';
 import { ReportsAnalytics } from './ReportsAnalytics';
+import { SettingsManagement } from './SettingsManagement';
 
 type AdminTab =
   | 'overview'
@@ -122,12 +123,7 @@ export const AdminDashboard: React.FC = () => {
       case 'reports':
         return <ReportsAnalytics />;
       case 'settings':
-        return (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Settings</h2>
-            <p className="text-gray-600">Settings management coming soon...</p>
-          </div>
-        );
+        return <SettingsManagement />;
       default:
         return null;
     }
