@@ -3,13 +3,16 @@ import { Vehicle } from '../types';
 import { VehicleCard } from './VehicleCard';
 import { db } from '../lib/firebase';
 import { collection, getDocs, query, orderBy, deleteDoc, doc, updateDoc } from 'firebase/firestore';
-import { Car, Loader, Edit2, Trash2, Eye, EyeOff, Calendar, TrendingUp, LayoutGrid, Table as TableIcon, Search, Filter, DollarSign } from 'lucide-react';
+import { Car, Loader, Trash2, Eye, EyeOff, TrendingUp, LayoutGrid, Table as TableIcon, Search, Filter, DollarSign } from 'lucide-react';
 import FilterPanel, { VehicleFilters } from './FilterPanel';
-import { format } from 'date-fns';
 
 type ViewMode = 'grid' | 'table';
 
-export const AdminInventory: React.FC = () => {
+interface AdminInventoryProps {
+  onAddVehicle?: () => void;
+}
+
+export const AdminInventory: React.FC<AdminInventoryProps> = ({ onAddVehicle }) => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
