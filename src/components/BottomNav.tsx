@@ -1,5 +1,5 @@
 import React from 'react';
-import { Car, Search, Heart, Phone, User } from 'lucide-react';
+import { Car, Search, Heart, Phone, Info } from 'lucide-react';
 
 interface BottomNavProps {
   activeTab: string;
@@ -62,15 +62,15 @@ export const BottomNav: React.FC<BottomNavProps> = ({
         </button>
 
         <button
-          onClick={() => onTabChange('profile')}
+          onClick={() => onTabChange('about')}
           className={`flex flex-col items-center py-2 px-3 rounded-lg transition-all ${
-            activeTab === 'profile'
+            activeTab === 'about'
               ? 'text-blue-600 bg-blue-50'
               : 'text-gray-500 hover:text-blue-600'
           }`}
         >
-          <User className="w-6 h-6 mb-1" />
-          <span className="text-xs font-medium">Profile</span>
+          <Info className="w-6 h-6 mb-1" />
+          <span className="text-xs font-medium">About</span>
         </button>
       </div>
     </div>

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { Vehicle } from '../types';
 import { VehicleCard } from './VehicleCard';
 import { BottomNav } from './BottomNav';
+import { About } from './About';
 import { db } from '../lib/firebase';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { Car, Loader } from 'lucide-react';
@@ -184,67 +185,71 @@ export const VehicleList: React.FC = () => {
 
   return (
     <>
-      <div className="space-y-6 pb-24">
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-1">Available Cars</h2>
-          <p className="text-gray-600">
-            Showing {filteredVehicles.length} of {vehicles.length}{' '}
-            {vehicles.length === 1 ? 'vehicle' : 'vehicles'}
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          <div className="lg:col-span-1">
-            <FilterPanel
-              filters={filters}
-              onChange={setFilters}
-              availableOptions={availableOptions}
-              priceRange={priceRange}
-              yearRange={yearRange}
-              mileageRange={mileageRange}
-            />
+      {activeTab === 'about' ? (
+        <About />
+      ) : (
+        <div className="space-y-6 pb-24">
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-1">Available Cars</h2>
+            <p className="text-gray-600">
+              Showing {filteredVehicles.length} of {vehicles.length}{' '}
+              {vehicles.length === 1 ? 'vehicle' : 'vehicles'}
+            </p>
           </div>
 
-          <div className="lg:col-span-3">
-            {filteredVehicles.length === 0 ? (
-              <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
-                <Car size={64} className="text-gray-400 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-gray-700 mb-2">No Vehicles Found</h3>
-                <p className="text-gray-600 mb-4">Try adjusting your filters to see more results.</p>
-                <button
-                  onClick={() =>
-                    setFilters({
-                      priceRange,
-                      makes: [],
-                      models: [],
-                      yearRange,
-                      mileageRange,
-                      bodyTypes: [],
-                      transmissions: [],
-                      fuelTypes: [],
-                      colors: [],
-                      conditions: [],
-                    })
-                  }
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-                >
-                  Clear All Filters
-                </button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {filteredVehicles.map((vehicle) => (
-                  <VehicleCard
-                    key={vehicle.id}
-                    vehicle={vehicle}
-                    onViewDetails={(id) => console.log('View details:', id)}
-                  />
-                ))}
-              </div>
-            )}
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <div className="lg:col-span-1">
+              <FilterPanel
+                filters={filters}
+                onChange={setFilters}
+                availableOptions={availableOptions}
+                priceRange={priceRange}
+                yearRange={yearRange}
+                mileageRange={mileageRange}
+              />
+            </div>
+
+            <div className="lg:col-span-3">
+              {filteredVehicles.length === 0 ? (
+                <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
+                  <Car size={64} className="text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-gray-700 mb-2">No Vehicles Found</h3>
+                  <p className="text-gray-600 mb-4">Try adjusting your filters to see more results.</p>
+                  <button
+                    onClick={() =>
+                      setFilters({
+                        priceRange,
+                        makes: [],
+                        models: [],
+                        yearRange,
+                        mileageRange,
+                        bodyTypes: [],
+                        transmissions: [],
+                        fuelTypes: [],
+                        colors: [],
+                        conditions: [],
+                      })
+                    }
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                  >
+                    Clear All Filters
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {filteredVehicles.map((vehicle) => (
+                    <VehicleCard
+                      key={vehicle.id}
+                      vehicle={vehicle}
+                      onViewDetails={(id) => console.log('View details:', id)}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       <BottomNav
         activeTab={activeTab}
