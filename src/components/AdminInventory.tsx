@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Vehicle } from '../types';
+import { Vehicle, CustomerVehiclePurchase } from '../types';
 import { VehicleCard } from './VehicleCard';
+import { SoldModal, BuyerInfo } from './SoldModal';
 import { db } from '../lib/firebase';
 import { collection, getDocs, query, orderBy, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { Car, Loader, Trash2, Eye, EyeOff, TrendingUp, LayoutGrid, Table as TableIcon, Search, DollarSign, CheckCircle } from 'lucide-react';
+import { getOrCreateCustomer, addPurchaseToCustomer } from '../services/customerService';
 
 type ViewMode = 'grid' | 'table';
 
@@ -20,6 +22,8 @@ export const AdminInventory: React.FC<AdminInventoryProps> = ({ onAddVehicle }) 
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [searchTerm, setSearchTerm] = useState('');
   const [sellingSoldId, setSellingSoldId] = useState<string | null>(null);
+  const [soldModalOpen, setSoldModalOpen] = useState(false);
+  const [selectedVehicleForSale, setSelectedVehicleForSale] = useState<Vehicle | null>(null);
 
   const filteredVehicles = useMemo(() => {
     if (searchTerm) {
@@ -100,21 +104,85 @@ export const AdminInventory: React.FC<AdminInventoryProps> = ({ onAddVehicle }) 
   };
 
   const handleToggleSold = async (vehicle: Vehicle) => {
+    if (vehicle.sold) {
+      if (!confirm('Mark this vehicle as not sold?')) {
+        return;
+      }
+      try {
+        setSellingSoldId(vehicle.id);
+        await updateDoc(doc(db, 'vehicles', vehicle.id), {
+          sold: false,
+          updatedAt: new Date().toISOString(),
+        });
+        setVehicles(vehicles.map(v =>
+          v.id === vehicle.id ? { ...v, sold: false } : v
+        ));
+      } catch (err) {
+        console.error('Error toggling sold status:', err);
+        alert('Failed to update sold status. Please try again.');
+      } finally {
+        setSellingSoldId(null);
+      }
+    } else {
+      setSelectedVehicleForSale(vehicle);
+      setSoldModalOpen(true);
+    }
+  };
+
+  const handleCompleteSale = async (buyerInfo: BuyerInfo) => {
+    if (!selectedVehicleForSale) return;
+
     try {
-      setSellingSoldId(vehicle.id);
-      const newSoldStatus = !vehicle.sold;
-      await updateDoc(doc(db, 'vehicles', vehicle.id), {
-        sold: newSoldStatus,
+      setSellingSoldId(selectedVehicleForSale.id);
+
+      const customerId = await getOrCreateCustomer(
+        buyerInfo.firstName,
+        buyerInfo.lastName,
+        buyerInfo.email,
+        buyerInfo.phone,
+        {
+          address: buyerInfo.address,
+          city: buyerInfo.city,
+          state: buyerInfo.state,
+          zipCode: buyerInfo.zipCode,
+          source: ['purchase'],
+          status: 'active',
+          notes: buyerInfo.notes
+        }
+      );
+
+      const vehicleName = `${selectedVehicleForSale.year} ${selectedVehicleForSale.make} ${selectedVehicleForSale.model}`;
+      const purchase: CustomerVehiclePurchase = {
+        vehicleId: selectedVehicleForSale.id,
+        vehicleName,
+        vin: selectedVehicleForSale.vin,
+        purchaseDate: new Date().toISOString(),
+        salePrice: buyerInfo.salePrice,
+        downPayment: buyerInfo.downPayment,
+        financedAmount: buyerInfo.financedAmount,
+        tradeinValue: buyerInfo.tradeinValue,
+        notes: buyerInfo.notes
+      };
+
+      await addPurchaseToCustomer(customerId, purchase);
+
+      await updateDoc(doc(db, 'vehicles', selectedVehicleForSale.id), {
+        sold: true,
         updatedAt: new Date().toISOString(),
       });
+
       setVehicles(vehicles.map(v =>
-        v.id === vehicle.id ? { ...v, sold: newSoldStatus } : v
+        v.id === selectedVehicleForSale.id ? { ...v, sold: true } : v
       ));
+
+      alert(`Sale completed successfully! Customer record ${customerId} created/updated.`);
     } catch (err) {
-      console.error('Error toggling sold status:', err);
-      alert('Failed to update sold status. Please try again.');
+      console.error('Error completing sale:', err);
+      alert('Failed to complete sale. Please try again.');
+      throw err;
     } finally {
       setSellingSoldId(null);
+      setSelectedVehicleForSale(null);
     }
   };
 
@@ -160,7 +228,18 @@ export const AdminInventory: React.FC<AdminInventoryProps> = ({ onAddVehicle }) 
   }
 
   return (
-    <div className="space-y-6">
+    <>
+      <SoldModal
+        isOpen={soldModalOpen}
+        onClose={() => {
+          setSoldModalOpen(false);
+          setSelectedVehicleForSale(null);
+        }}
+        onConfirm={handleCompleteSale}
+        vehicleName={selectedVehicleForSale ? `${selectedVehicleForSale.year} ${selectedVehicleForSale.make} ${selectedVehicleForSale.model}` : ''}
+        vehiclePrice={selectedVehicleForSale?.price || 0}
+      />
+      <div className="space-y-6">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-2xl font-bold text-gray-900 mb-1">Inventory Management</h2>
@@ -462,5 +541,6 @@ export const AdminInventory: React.FC<AdminInventoryProps> = ({ onAddVehicle }) 
         </div>
       </div>
     </div>
+    </>
   );
 };

@@ -330,3 +330,46 @@ export interface VehicleFormData {
   description: string;
   imageUrls: string[];
 }
+
+export type CustomerSource = 'walk-in' | 'test-drive' | 'trade-in' | 'financing' | 'purchase' | 'service' | 'referral' | 'online';
+export type CustomerStatus = 'lead' | 'prospect' | 'active' | 'inactive' | 'vip';
+
+export interface CustomerVehiclePurchase {
+  vehicleId: string;
+  vehicleName: string;
+  vin: string;
+  purchaseDate: string;
+  salePrice: number;
+  downPayment?: number;
+  financedAmount?: number;
+  tradeinValue?: number;
+  notes?: string;
+}
+
+export interface Customer {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  zipCode?: string;
+  source: CustomerSource[];
+  status: CustomerStatus;
+  telegramUserId?: string;
+  totalPurchases: number;
+  totalSpent: number;
+  vehiclesPurchased: CustomerVehiclePurchase[];
+  testDrives: string[];
+  tradeIns: string[];
+  financingApplications: string[];
+  serviceAppointments: string[];
+  notes?: string;
+  preferredContact?: 'email' | 'phone' | 'telegram';
+  tags?: string[];
+  createdAt: string;
+  updatedAt: string;
+  lastContactDate?: string;
+}

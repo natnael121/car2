@@ -3,6 +3,7 @@ import { Vehicle } from '../types';
 import { X, Car, Calendar, Gauge, AlertCircle, Check } from 'lucide-react';
 import { db } from '../lib/firebase';
 import { collection, addDoc } from 'firebase/firestore';
+import { getOrCreateCustomer, linkTradeInToCustomer } from '../services/customerService';
 
 interface TradeInModalProps {
   targetVehicle?: Vehicle;
@@ -81,7 +82,23 @@ export const TradeInModal: React.FC<TradeInModalProps> = ({ targetVehicle, isOpe
     setIsSubmitting(true);
 
     try {
+      const nameParts = formData.customerName.trim().split(' ');
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || '';
+
+      const customerId = await getOrCreateCustomer(
+        firstName,
+        lastName,
+        formData.customerEmail,
+        formData.customerPhone,
+        {
+          source: ['trade-in'],
+          status: 'lead'
+        }
+      );
+
       const tradeInData = {
+        customerId,
         customerName: formData.customerName,
         customerEmail: formData.customerEmail,
         customerPhone: formData.customerPhone,
@@ -109,7 +126,9 @@ export const TradeInModal: React.FC<TradeInModalProps> = ({ targetVehicle, isOpe
         updatedAt: new Date().toISOString(),
       };
 
-      await addDoc(collection(db, 'trade_ins'), tradeInData);
+      const tradeInRef = await addDoc(collection(db, 'trade_ins'), tradeInData);
+
+      await linkTradeInToCustomer(customerId, tradeInRef.id);
 
       setSubmitSuccess(true);
       setTimeout(() => {

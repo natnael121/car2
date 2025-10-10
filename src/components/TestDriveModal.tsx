@@ -3,6 +3,7 @@ import { Vehicle } from '../types';
 import { X, Calendar, Clock, User, Mail, Phone, Check } from 'lucide-react';
 import { db } from '../lib/firebase';
 import { collection, addDoc } from 'firebase/firestore';
+import { getOrCreateCustomer, linkTestDriveToCustomer } from '../services/customerService';
 
 interface TestDriveModalProps {
   vehicle: Vehicle;
@@ -69,7 +70,23 @@ export const TestDriveModal: React.FC<TestDriveModalProps> = ({ vehicle, isOpen,
     setIsSubmitting(true);
 
     try {
+      const nameParts = formData.customerName.trim().split(' ');
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || '';
+
+      const customerId = await getOrCreateCustomer(
+        firstName,
+        lastName,
+        formData.customerEmail,
+        formData.customerPhone,
+        {
+          source: ['test-drive'],
+          status: 'lead'
+        }
+      );
+
       const testDriveData = {
+        customerId,
         ...formData,
         vehicleId: vehicle.id,
         vehicleMake: vehicle.make,
@@ -82,7 +99,9 @@ export const TestDriveModal: React.FC<TestDriveModalProps> = ({ vehicle, isOpen,
         updatedAt: new Date().toISOString(),
       };
 
-      await addDoc(collection(db, 'test_drives'), testDriveData);
+      const testDriveRef = await addDoc(collection(db, 'test_drives'), testDriveData);
+
+      await linkTestDriveToCustomer(customerId, testDriveRef.id);
 
       setSubmitSuccess(true);
       setTimeout(() => {
