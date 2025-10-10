@@ -4,6 +4,7 @@ import { X, Car, Calendar, Gauge, AlertCircle, Check } from 'lucide-react';
 import { db } from '../lib/firebase';
 import { collection, addDoc } from 'firebase/firestore';
 import { getOrCreateCustomer, linkTradeInToCustomer } from '../services/customerService';
+import { sendTradeInNotification } from '../services/telegramService';
 
 interface TradeInModalProps {
   targetVehicle?: Vehicle;
@@ -129,6 +130,27 @@ export const TradeInModal: React.FC<TradeInModalProps> = ({ targetVehicle, isOpe
       const tradeInRef = await addDoc(collection(db, 'trade_ins'), tradeInData);
 
       await linkTradeInToCustomer(customerId, tradeInRef.id);
+
+      const telegramUserId = import.meta.env.VITE_TELEGRAM_ADMIN_USER_ID;
+      if (telegramUserId) {
+        await sendTradeInNotification(telegramUserId, {
+          customerName: formData.customerName,
+          customerEmail: formData.customerEmail,
+          customerPhone: formData.customerPhone,
+          vehicleMake: formData.vehicleMake,
+          vehicleModel: formData.vehicleModel,
+          vehicleYear: parseInt(formData.vehicleYear),
+          vehicleMileage: parseInt(formData.vehicleMileage),
+          vehicleCondition: formData.vehicleCondition,
+          targetVehicle: targetVehicle
+            ? {
+                year: targetVehicle.year,
+                make: targetVehicle.make,
+                model: targetVehicle.model,
+              }
+            : undefined,
+        });
+      }
 
       setSubmitSuccess(true);
       setTimeout(() => {

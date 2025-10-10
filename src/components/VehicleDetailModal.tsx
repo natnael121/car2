@@ -35,11 +35,13 @@ import {
   Tag,
   TrendingUp,
   Link as LinkIcon,
-  Hash
+  Hash,
+  Send
 } from 'lucide-react';
 import { TestDriveModal } from './TestDriveModal';
 import { TradeInModal } from './TradeInModal';
 import { FinancingModal } from './FinancingModal';
+import { promoteVehicleToChannel } from '../services/telegramService';
 
 interface VehicleDetailModalProps {
   vehicle: Vehicle;
@@ -53,6 +55,7 @@ export const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({ vehicle,
   const [showTradeInModal, setShowTradeInModal] = useState(false);
   const [showFinancingModal, setShowFinancingModal] = useState(false);
   const [activeTab, setActiveTab] = useState<'overview' | 'specifications' | 'history'>('overview');
+  const [isPromoting, setIsPromoting] = useState(false);
 
   const images = vehicle.imageUrls && vehicle.imageUrls.length > 0 ? vehicle.imageUrls : [];
 
@@ -140,6 +143,43 @@ export const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({ vehicle,
     } else {
       navigator.clipboard.writeText(`${shareData.title} - ${shareData.text} ${shareData.url}`);
       alert('Link copied to clipboard!');
+    }
+  };
+
+  const handlePromote = async () => {
+    setIsPromoting(true);
+    try {
+      const channelId = import.meta.env.VITE_TELEGRAM_CHANNEL_ID;
+      if (!channelId) {
+        alert('Telegram channel ID is not configured. Please set VITE_TELEGRAM_CHANNEL_ID in your .env file.');
+        return;
+      }
+
+      const success = await promoteVehicleToChannel(channelId, {
+        year: vehicle.year,
+        make: vehicle.make,
+        model: vehicle.model,
+        price: vehicle.price,
+        mileage: vehicle.mileage,
+        mileageUnit: vehicle.mileageUnit,
+        condition: vehicle.condition,
+        transmission: vehicle.transmission,
+        fuelType: vehicle.fuelType,
+        exteriorColor: vehicle.exteriorColor,
+        imageUrls: vehicle.imageUrls,
+        description: vehicle.description,
+      });
+
+      if (success) {
+        alert('Vehicle promoted to Telegram channel successfully!');
+      } else {
+        alert('Failed to promote vehicle. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error promoting vehicle:', error);
+      alert('Error promoting vehicle. Please check your configuration.');
+    } finally {
+      setIsPromoting(false);
     }
   };
 
@@ -258,7 +298,7 @@ export const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({ vehicle,
                     <span className="text-sm text-gray-400">Price</span>
                     <span className="text-2xl font-bold text-white">{formatPrice(vehicle.price)}</span>
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-3 mb-3">
                     <button
                       onClick={() => setShowTradeInModal(true)}
                       className="py-3 bg-gray-700 text-white rounded-full font-bold hover:bg-gray-600 transition-all shadow-lg flex items-center justify-center gap-2"
@@ -274,6 +314,14 @@ export const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({ vehicle,
                       <span>Test Drive</span>
                     </button>
                   </div>
+                  <button
+                    onClick={handlePromote}
+                    disabled={isPromoting || vehicle.sold}
+                    className="w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full font-bold hover:from-blue-400 hover:to-blue-500 transition-all shadow-lg hover:shadow-blue-500/50 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <Send size={20} />
+                    <span>{isPromoting ? 'Promoting...' : 'Promote to Channel'}</span>
+                  </button>
                 </div>
               </div>
             </div>

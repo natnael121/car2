@@ -4,6 +4,7 @@ import { X, Calendar, Clock, User, Mail, Phone, Check } from 'lucide-react';
 import { db } from '../lib/firebase';
 import { collection, addDoc } from 'firebase/firestore';
 import { getOrCreateCustomer, linkTestDriveToCustomer } from '../services/customerService';
+import { sendTestDriveNotification } from '../services/telegramService';
 
 interface TestDriveModalProps {
   vehicle: Vehicle;
@@ -102,6 +103,21 @@ export const TestDriveModal: React.FC<TestDriveModalProps> = ({ vehicle, isOpen,
       const testDriveRef = await addDoc(collection(db, 'test_drives'), testDriveData);
 
       await linkTestDriveToCustomer(customerId, testDriveRef.id);
+
+      const telegramUserId = import.meta.env.VITE_TELEGRAM_ADMIN_USER_ID;
+      if (telegramUserId) {
+        await sendTestDriveNotification(telegramUserId, {
+          customerName: formData.customerName,
+          customerEmail: formData.customerEmail,
+          customerPhone: formData.customerPhone,
+          vehicleMake: vehicle.make,
+          vehicleModel: vehicle.model,
+          vehicleYear: vehicle.year,
+          preferredDate: formData.preferredDate,
+          preferredTime: formData.preferredTime,
+          notes: formData.notes,
+        });
+      }
 
       setSubmitSuccess(true);
       setTimeout(() => {
