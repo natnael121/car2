@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Loader, User, Mail, Phone, MapPin, DollarSign } from 'lucide-react';
+import { X, Loader, User, DollarSign } from 'lucide-react';
 import { FormInput } from './FormInput';
 
 interface SoldModalProps {
@@ -123,11 +123,16 @@ export const SoldModal: React.FC<SoldModalProps> = ({
     }
   };
 
-  const handleChange = (field: keyof BuyerInfo, value: string | number) => {
+  const handleInputChange = (field: keyof BuyerInfo) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.type === 'number' ? Number(e.target.value) : e.target.value;
     setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: undefined }));
     }
+  };
+
+  const handleTextAreaChange = (field: keyof BuyerInfo, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
   };
 
   if (!isOpen) return null;
@@ -163,18 +168,20 @@ export const SoldModal: React.FC<SoldModalProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormInput
               label="First Name"
+              name="firstName"
               type="text"
               value={formData.firstName}
-              onChange={(value) => handleChange('firstName', value)}
+              onChange={handleInputChange('firstName')}
               error={errors.firstName}
               placeholder="John"
               required
             />
             <FormInput
               label="Last Name"
+              name="lastName"
               type="text"
               value={formData.lastName}
-              onChange={(value) => handleChange('lastName', value)}
+              onChange={handleInputChange('lastName')}
               error={errors.lastName}
               placeholder="Doe"
               required
@@ -184,61 +191,64 @@ export const SoldModal: React.FC<SoldModalProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormInput
               label="Email"
+              name="email"
               type="email"
               value={formData.email}
-              onChange={(value) => handleChange('email', value)}
+              onChange={handleInputChange('email')}
               error={errors.email}
               placeholder="john.doe@example.com"
               required
-              icon={<Mail size={18} />}
             />
             <FormInput
               label="Phone"
+              name="phone"
               type="tel"
               value={formData.phone}
-              onChange={(value) => handleChange('phone', value)}
+              onChange={handleInputChange('phone')}
               error={errors.phone}
               placeholder="(555) 123-4567"
               required
-              icon={<Phone size={18} />}
             />
           </div>
 
           <div className="space-y-4">
             <FormInput
               label="Address"
+              name="address"
               type="text"
               value={formData.address}
-              onChange={(value) => handleChange('address', value)}
+              onChange={handleInputChange('address')}
               error={errors.address}
               placeholder="123 Main St"
               required
-              icon={<MapPin size={18} />}
             />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <FormInput
                 label="City"
+                name="city"
                 type="text"
                 value={formData.city}
-                onChange={(value) => handleChange('city', value)}
+                onChange={handleInputChange('city')}
                 error={errors.city}
                 placeholder="New York"
                 required
               />
               <FormInput
                 label="State"
+                name="state"
                 type="text"
                 value={formData.state}
-                onChange={(value) => handleChange('state', value)}
+                onChange={handleInputChange('state')}
                 error={errors.state}
                 placeholder="NY"
                 required
               />
               <FormInput
                 label="ZIP Code"
+                name="zipCode"
                 type="text"
                 value={formData.zipCode}
-                onChange={(value) => handleChange('zipCode', value)}
+                onChange={handleInputChange('zipCode')}
                 error={errors.zipCode}
                 placeholder="10001"
                 required
@@ -254,32 +264,36 @@ export const SoldModal: React.FC<SoldModalProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormInput
                 label="Sale Price"
+                name="salePrice"
                 type="number"
                 value={formData.salePrice}
-                onChange={(value) => handleChange('salePrice', Number(value))}
+                onChange={handleInputChange('salePrice')}
                 error={errors.salePrice}
                 placeholder="25000"
                 required
               />
               <FormInput
                 label="Down Payment"
+                name="downPayment"
                 type="number"
                 value={formData.downPayment || 0}
-                onChange={(value) => handleChange('downPayment', Number(value))}
+                onChange={handleInputChange('downPayment')}
                 placeholder="5000"
               />
               <FormInput
                 label="Financed Amount"
+                name="financedAmount"
                 type="number"
                 value={formData.financedAmount || 0}
-                onChange={(value) => handleChange('financedAmount', Number(value))}
+                onChange={handleInputChange('financedAmount')}
                 placeholder="20000"
               />
               <FormInput
                 label="Trade-in Value"
+                name="tradeinValue"
                 type="number"
                 value={formData.tradeinValue || 0}
-                onChange={(value) => handleChange('tradeinValue', Number(value))}
+                onChange={handleInputChange('tradeinValue')}
                 placeholder="3000"
               />
             </div>
@@ -291,7 +305,7 @@ export const SoldModal: React.FC<SoldModalProps> = ({
             </label>
             <textarea
               value={formData.notes || ''}
-              onChange={(e) => handleChange('notes', e.target.value)}
+              onChange={(e) => handleTextAreaChange('notes', e.target.value)}
               rows={3}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Additional notes about the sale..."
