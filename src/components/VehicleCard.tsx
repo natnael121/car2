@@ -182,7 +182,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onViewDetails
             <div className="text-white text-xl font-bold">
               {formatPrice(vehicle.price)}
             </div>
-            <div className="text-gray-500 text-xs">/ Day Rental</div>
+            <div className="text-gray-500 text-xs"></div>
           </div>
           <button
             onClick={(e) => {
