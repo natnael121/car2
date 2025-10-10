@@ -33,6 +33,11 @@ const getTelegramSettings = async () => {
 
 export const sendTelegramMessage = async ({ chatId, text, parseMode = 'HTML' }: SendMessageParams): Promise<boolean> => {
   try {
+    if (!TELEGRAM_BOT_TOKEN) {
+      console.error('Telegram bot token is not configured');
+      return false;
+    }
+
     const response = await fetch(`${TELEGRAM_API_URL}/sendMessage`, {
       method: 'POST',
       headers: {
@@ -46,6 +51,11 @@ export const sendTelegramMessage = async ({ chatId, text, parseMode = 'HTML' }: 
     });
 
     const data = await response.json();
+
+    if (!data.ok) {
+      console.error('Telegram API error:', data.description || data);
+    }
+
     return data.ok;
   } catch (error) {
     console.error('Error sending Telegram message:', error);
@@ -68,7 +78,7 @@ export const sendTestDriveNotification = async (
 ): Promise<boolean> => {
   const settings = await getTelegramSettings();
   if (!settings.adminUserId) {
-    console.warn('Telegram admin user ID not configured');
+    console.warn('Telegram admin user ID not configured. Please configure it in Settings > Telegram Integration.');
     return false;
   }
 
@@ -114,7 +124,7 @@ export const sendTradeInNotification = async (
 ): Promise<boolean> => {
   const settings = await getTelegramSettings();
   if (!settings.adminUserId) {
-    console.warn('Telegram admin user ID not configured');
+    console.warn('Telegram admin user ID not configured. Please configure it in Settings > Telegram Integration.');
     return false;
   }
 
@@ -159,7 +169,7 @@ export const promoteVehicleToChannel = async (
 ): Promise<boolean> => {
   const settings = await getTelegramSettings();
   if (!settings.channelId) {
-    console.warn('Telegram channel ID not configured');
+    console.warn('Telegram channel ID not configured. Please configure it in Settings > Telegram Integration.');
     return false;
   }
 
