@@ -378,15 +378,15 @@ export const VehicleList: React.FC = () => {
       )}
 
       {activeTab !== 'about' && (
-        <div className="fixed bottom-20 right-4 flex flex-col gap-2 z-40">
+        <div className="fixed bottom-20 right-4 flex flex-col gap-1.5 z-40">
           {socialLinks.facebook && (
             <a
               href={socialLinks.facebook}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:bg-blue-700 transition"
+              className="text-gray-400 hover:text-yellow-400 w-8 h-8 rounded-full flex items-center justify-center transition"
             >
-              <Facebook size={20} />
+              <Facebook size={16} />
             </a>
           )}
           {socialLinks.twitter && (
@@ -394,9 +394,9 @@ export const VehicleList: React.FC = () => {
               href={socialLinks.twitter}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-sky-500 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:bg-sky-600 transition"
+              className="text-gray-400 hover:text-yellow-400 w-8 h-8 rounded-full flex items-center justify-center transition"
             >
-              <Twitter size={20} />
+              <Twitter size={16} />
             </a>
           )}
           {socialLinks.instagram && (
@@ -404,9 +404,9 @@ export const VehicleList: React.FC = () => {
               href={socialLinks.instagram}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:opacity-90 transition"
+              className="text-gray-400 hover:text-yellow-400 w-8 h-8 rounded-full flex items-center justify-center transition"
             >
-              <Instagram size={20} />
+              <Instagram size={16} />
             </a>
           )}
           {socialLinks.linkedin && (
@@ -414,9 +414,9 @@ export const VehicleList: React.FC = () => {
               href={socialLinks.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-blue-700 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:bg-blue-800 transition"
+              className="text-gray-400 hover:text-yellow-400 w-8 h-8 rounded-full flex items-center justify-center transition"
             >
-              <Linkedin size={20} />
+              <Linkedin size={16} />
             </a>
           )}
           {socialLinks.youtube && (
@@ -424,9 +424,9 @@ export const VehicleList: React.FC = () => {
               href={socialLinks.youtube}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-red-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:bg-red-700 transition"
+              className="text-gray-400 hover:text-yellow-400 w-8 h-8 rounded-full flex items-center justify-center transition"
             >
-              <Youtube size={20} />
+              <Youtube size={16} />
             </a>
           )}
         </div>
