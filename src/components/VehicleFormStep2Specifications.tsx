@@ -94,7 +94,6 @@ export const VehicleFormStep2Specifications: React.FC<VehicleFormStep2Props> = (
             value={formData.mileage}
             onChange={handleInputChange}
             error={errors.mileage}
-            required
             placeholder="50000"
             min={0}
           />
@@ -107,7 +106,6 @@ export const VehicleFormStep2Specifications: React.FC<VehicleFormStep2Props> = (
             onChange={handleInputChange}
             options={mileageUnitOptions}
             error={errors.mileageUnit}
-            required
           />
         </div>
       </div>
@@ -154,7 +152,6 @@ export const VehicleFormStep2Specifications: React.FC<VehicleFormStep2Props> = (
           onChange={handleInputChange}
           options={transmissionOptions}
           error={errors.transmission}
-          required
           placeholder="Select transmission"
         />
 
@@ -165,7 +162,6 @@ export const VehicleFormStep2Specifications: React.FC<VehicleFormStep2Props> = (
           onChange={handleInputChange}
           options={drivetrainOptions}
           error={errors.drivetrain}
-          required
           placeholder="Select drivetrain"
         />
       </div>
@@ -177,7 +173,6 @@ export const VehicleFormStep2Specifications: React.FC<VehicleFormStep2Props> = (
         onChange={handleInputChange}
         options={fuelTypeOptions}
         error={errors.fuelType}
-        required
         placeholder="Select fuel type"
       />
 
@@ -228,7 +223,6 @@ export const VehicleFormStep2Specifications: React.FC<VehicleFormStep2Props> = (
           value={formData.exteriorColor}
           onChange={handleInputChange}
           error={errors.exteriorColor}
-          required
           placeholder="Pearl White, Midnight Black, etc."
         />
 
@@ -239,7 +233,6 @@ export const VehicleFormStep2Specifications: React.FC<VehicleFormStep2Props> = (
           value={formData.interiorColor}
           onChange={handleInputChange}
           error={errors.interiorColor}
-          required
           placeholder="Beige, Black Leather, etc."
         />
       </div>
@@ -268,7 +261,7 @@ export const VehicleFormStep2Specifications: React.FC<VehicleFormStep2Props> = (
 
       <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
         <p className="text-sm text-blue-800">
-          <strong>Tip:</strong> Accurate specifications help buyers find exactly what they're looking for and increase trust in your listing.
+          <strong>Tip:</strong> All fields are optional. Fill in the information you have available.
         </p>
       </div>
     </div>

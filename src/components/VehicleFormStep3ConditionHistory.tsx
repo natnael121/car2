@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FormInput } from './FormInput';
 import { FormSelect } from './FormSelect';
 import { FormTextarea } from './FormTextarea';
 import { VehicleFormData, TitleStatus, AccidentHistory, ServiceRecord } from '../types';
-import { Trash2, Plus } from 'lucide-react';
+import { Trash2, Plus, Upload, X } from 'lucide-react';
+import { photoService } from '../services/imageUpload';
 
 interface VehicleFormStep3Props {
   formData: VehicleFormData;
@@ -30,6 +31,8 @@ export const VehicleFormStep3ConditionHistory: React.FC<VehicleFormStep3Props> =
   errors,
   onChange,
 }) => {
+  const [uploadingImages, setUploadingImages] = useState(false);
+  const [uploadError, setUploadError] = useState<string>('');
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
 
@@ -98,6 +101,52 @@ export const VehicleFormStep3ConditionHistory: React.FC<VehicleFormStep3Props> =
     );
   };
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploadingImages(true);
+    setUploadError('');
+
+    try {
+      const results = await photoService.uploadMultipleImages(files, {
+        maxSizeMB: 32,
+        compress: true,
+      });
+
+      const successUrls: string[] = [];
+      const errors: string[] = [];
+
+      results.forEach((result, index) => {
+        if (result.success && result.url) {
+          successUrls.push(result.url);
+        } else {
+          errors.push(`Image ${index + 1}: ${result.error}`);
+        }
+      });
+
+      if (successUrls.length > 0) {
+        onChange('imageUrls', [...formData.imageUrls, ...successUrls]);
+      }
+
+      if (errors.length > 0) {
+        setUploadError(errors.join(', '));
+      }
+    } catch (error) {
+      setUploadError('Failed to upload images. Please try again.');
+    } finally {
+      setUploadingImages(false);
+      e.target.value = '';
+    }
+  };
+
+  const removeImage = (index: number) => {
+    onChange(
+      'imageUrls',
+      formData.imageUrls.filter((_, i) => i !== index)
+    );
+  };
+
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold text-gray-800 mb-4">Condition & History</h2>
@@ -111,7 +160,6 @@ export const VehicleFormStep3ConditionHistory: React.FC<VehicleFormStep3Props> =
           value={formData.numberOfOwners}
           onChange={handleInputChange}
           error={errors.numberOfOwners}
-          required
           placeholder="1"
           min={0}
         />
@@ -123,7 +171,6 @@ export const VehicleFormStep3ConditionHistory: React.FC<VehicleFormStep3Props> =
           onChange={handleInputChange}
           options={titleStatusOptions}
           error={errors.titleStatus}
-          required
           placeholder="Select title status"
         />
       </div>
@@ -307,9 +354,67 @@ export const VehicleFormStep3ConditionHistory: React.FC<VehicleFormStep3Props> =
         )}
       </div>
 
+      <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+        <h3 className="text-lg font-semibold text-gray-700 mb-4">Vehicle Photos</h3>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Upload Photos
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleImageUpload}
+            className="hidden"
+            id="image-upload"
+            disabled={uploadingImages}
+          />
+          <label
+            htmlFor="image-upload"
+            className={`flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition ${
+              uploadingImages ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
+          >
+            <Upload size={20} className="text-gray-500" />
+            <span className="text-gray-600">
+              {uploadingImages ? 'Uploading...' : 'Click to upload images'}
+            </span>
+          </label>
+          <p className="text-xs text-gray-500 mt-1">Supports JPEG, PNG, WEBP, GIF (Max 32MB per image)</p>
+        </div>
+
+        {uploadError && (
+          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">
+            {uploadError}
+          </div>
+        )}
+
+        {formData.imageUrls.length > 0 && (
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {formData.imageUrls.map((url, index) => (
+              <div key={index} className="relative group">
+                <img
+                  src={url}
+                  alt={`Vehicle ${index + 1}`}
+                  className="w-full h-32 object-cover rounded-lg"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeImage(index)}
+                  className="absolute top-2 right-2 p-1 bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
         <p className="text-sm text-blue-800">
-          <strong>Tip:</strong> Complete service and accident history builds buyer confidence and can increase the vehicle's value.
+          <strong>Tip:</strong> All fields are optional. Fill in the information you have available.
         </p>
       </div>
     </div>

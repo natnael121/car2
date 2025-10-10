@@ -58,7 +58,6 @@ export const VehicleFormStep1BasicInfo: React.FC<VehicleFormStep1Props> = ({
           value={formData.vin}
           onChange={handleInputChange}
           error={errors.vin}
-          required
           placeholder="1HGBH41JXMN109186"
         />
 
@@ -69,7 +68,6 @@ export const VehicleFormStep1BasicInfo: React.FC<VehicleFormStep1Props> = ({
           onChange={handleInputChange}
           options={years.map((year) => ({ value: year, label: year.toString() }))}
           error={errors.year}
-          required
           placeholder="Select year"
         />
       </div>
@@ -82,7 +80,6 @@ export const VehicleFormStep1BasicInfo: React.FC<VehicleFormStep1Props> = ({
           value={formData.make}
           onChange={handleInputChange}
           error={errors.make}
-          required
           placeholder="Toyota"
         />
 
@@ -93,13 +90,12 @@ export const VehicleFormStep1BasicInfo: React.FC<VehicleFormStep1Props> = ({
           value={formData.model}
           onChange={handleInputChange}
           error={errors.model}
-          required
           placeholder="Camry"
         />
       </div>
 
       <FormInput
-        label="Trim (Optional)"
+        label="Trim"
         name="trim"
         type="text"
         value={formData.trim}
@@ -116,7 +112,6 @@ export const VehicleFormStep1BasicInfo: React.FC<VehicleFormStep1Props> = ({
           onChange={handleInputChange}
           options={conditionOptions}
           error={errors.condition}
-          required
           placeholder="Select condition"
         />
 
@@ -127,14 +122,13 @@ export const VehicleFormStep1BasicInfo: React.FC<VehicleFormStep1Props> = ({
           onChange={handleInputChange}
           options={bodyTypeOptions}
           error={errors.bodyType}
-          required
           placeholder="Select body type"
         />
       </div>
 
       <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
         <p className="text-sm text-blue-800">
-          <strong>Tip:</strong> The VIN can be found on the driver's side dashboard, driver's door jamb, or vehicle registration documents.
+          <strong>Tip:</strong> All fields are optional. Fill in the information you have available.
         </p>
       </div>
     </div>
