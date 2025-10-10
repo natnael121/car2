@@ -136,10 +136,16 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onViewDetails
     action();
   };
 
+  const handleCardClick = () => {
+    if (onViewDetails) {
+      onViewDetails(vehicle.id);
+    }
+  };
+
   return (
     <div
       className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
-      onClick={() => onViewDetails?.(vehicle.id)}
+      onClick={handleCardClick}
     >
       <div className="relative h-56 bg-gray-200 overflow-hidden group">
         {images.length > 0 ? (

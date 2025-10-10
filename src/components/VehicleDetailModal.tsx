@@ -24,7 +24,18 @@ import {
   AlertTriangle,
   CheckCircle,
   Clock,
-  Award
+  Award,
+  Activity,
+  Zap,
+  Wind,
+  Thermometer,
+  Power,
+  RotateCw,
+  MessageSquare,
+  Tag,
+  TrendingUp,
+  Link as LinkIcon,
+  Hash
 } from 'lucide-react';
 import { TestDriveModal } from './TestDriveModal';
 import { TradeInModal } from './TradeInModal';
@@ -294,76 +305,190 @@ export const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({ vehicle,
               </div>
 
               {activeTab === 'overview' && (
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
-                    <Gauge className="text-blue-600 mt-1" size={24} />
-                    <div>
-                      <div className="text-sm text-gray-600">Mileage</div>
-                      <div className="font-semibold text-gray-900">{formatMileage(vehicle.mileage, vehicle.mileageUnit)}</div>
+                <div className="space-y-6">
+                  <div className="bg-gray-50 rounded-lg p-6">
+                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                      <Car className="text-blue-600" size={24} />
+                      Basic Information
+                    </h3>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                        <Calendar className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                        <div>
+                          <div className="text-xs text-gray-600">Year</div>
+                          <div className="font-semibold text-gray-900">{vehicle.year}</div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                        <Tag className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                        <div>
+                          <div className="text-xs text-gray-600">Make</div>
+                          <div className="font-semibold text-gray-900">{vehicle.make}</div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                        <Car className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                        <div>
+                          <div className="text-xs text-gray-600">Model</div>
+                          <div className="font-semibold text-gray-900">{vehicle.model}</div>
+                        </div>
+                      </div>
+
+                      {vehicle.trim && (
+                        <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                          <Award className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                          <div>
+                            <div className="text-xs text-gray-600">Trim</div>
+                            <div className="font-semibold text-gray-900">{vehicle.trim}</div>
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                        <Package className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                        <div>
+                          <div className="text-xs text-gray-600">Body Type</div>
+                          <div className="font-semibold text-gray-900 capitalize">{vehicle.bodyType}</div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                        <Shield className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                        <div>
+                          <div className="text-xs text-gray-600">Condition</div>
+                          <div className="font-semibold text-gray-900">{getConditionLabel(vehicle.condition)}</div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                        <Gauge className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                        <div>
+                          <div className="text-xs text-gray-600">Mileage</div>
+                          <div className="font-semibold text-gray-900">{formatMileage(vehicle.mileage, vehicle.mileageUnit)}</div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                        <Hash className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                        <div>
+                          <div className="text-xs text-gray-600">VIN</div>
+                          <div className="font-mono text-xs font-semibold text-gray-900">{vehicle.vin.substring(0, 10)}...</div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                        <DollarSign className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                        <div>
+                          <div className="text-xs text-gray-600">Price</div>
+                          <div className="font-semibold text-gray-900">{formatPrice(vehicle.price)}</div>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
-                    <Settings className="text-blue-600 mt-1" size={24} />
-                    <div>
-                      <div className="text-sm text-gray-600">Transmission</div>
-                      <div className="font-semibold text-gray-900 capitalize">{vehicle.transmission}</div>
+                  <div className="bg-gray-50 rounded-lg p-6">
+                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                      <Droplet className="text-blue-600" size={24} />
+                      Colors
+                    </h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                        <Droplet className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                        <div>
+                          <div className="text-xs text-gray-600">Exterior Color</div>
+                          <div className="font-semibold text-gray-900">{vehicle.exteriorColor}</div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                        <Droplet className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                        <div>
+                          <div className="text-xs text-gray-600">Interior Color</div>
+                          <div className="font-semibold text-gray-900">{vehicle.interiorColor}</div>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
-                    <Fuel className="text-blue-600 mt-1" size={24} />
-                    <div>
-                      <div className="text-sm text-gray-600">Fuel Type</div>
-                      <div className="font-semibold text-gray-900 capitalize">{vehicle.fuelType.replace('-', ' ')}</div>
+                  <div className="bg-gray-50 rounded-lg p-6">
+                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                      <Settings className="text-blue-600" size={24} />
+                      Drivetrain & Transmission
+                    </h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                        <Settings className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                        <div>
+                          <div className="text-xs text-gray-600">Transmission</div>
+                          <div className="font-semibold text-gray-900 capitalize">{vehicle.transmission}</div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                        <Shield className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                        <div>
+                          <div className="text-xs text-gray-600">Drivetrain</div>
+                          <div className="font-semibold text-gray-900">{vehicle.drivetrain}</div>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
-                    <Package className="text-blue-600 mt-1" size={24} />
-                    <div>
-                      <div className="text-sm text-gray-600">Body Type</div>
-                      <div className="font-semibold text-gray-900 capitalize">{vehicle.bodyType}</div>
+                  <div className="bg-gray-50 rounded-lg p-6">
+                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                      <Users className="text-blue-600" size={24} />
+                      Capacity
+                    </h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                        <Users className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                        <div>
+                          <div className="text-xs text-gray-600">Seating Capacity</div>
+                          <div className="font-semibold text-gray-900">{vehicle.seatingCapacity || 'N/A'}</div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                        <Package className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                        <div>
+                          <div className="text-xs text-gray-600">Doors</div>
+                          <div className="font-semibold text-gray-900">{vehicle.doors || 'N/A'}</div>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
-                    <Droplet className="text-blue-600 mt-1" size={24} />
-                    <div>
-                      <div className="text-sm text-gray-600">Exterior Color</div>
-                      <div className="font-semibold text-gray-900">{vehicle.exteriorColor}</div>
-                    </div>
-                  </div>
+                  <div className="bg-gray-50 rounded-lg p-6">
+                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                      <TrendingUp className="text-blue-600" size={24} />
+                      Listing Statistics
+                    </h3>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                        <Clock className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                        <div>
+                          <div className="text-xs text-gray-600">Days on Lot</div>
+                          <div className="font-semibold text-gray-900">{vehicle.daysOnLot}</div>
+                        </div>
+                      </div>
 
-                  <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
-                    <Droplet className="text-blue-600 mt-1" size={24} />
-                    <div>
-                      <div className="text-sm text-gray-600">Interior Color</div>
-                      <div className="font-semibold text-gray-900">{vehicle.interiorColor}</div>
-                    </div>
-                  </div>
+                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                        <Eye className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                        <div>
+                          <div className="text-xs text-gray-600">View Count</div>
+                          <div className="font-semibold text-gray-900">{vehicle.viewCount}</div>
+                        </div>
+                      </div>
 
-                  <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
-                    <Users className="text-blue-600 mt-1" size={24} />
-                    <div>
-                      <div className="text-sm text-gray-600">Seating</div>
-                      <div className="font-semibold text-gray-900">{vehicle.seatingCapacity || 'N/A'}</div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
-                    <Calendar className="text-blue-600 mt-1" size={24} />
-                    <div>
-                      <div className="text-sm text-gray-600">Doors</div>
-                      <div className="font-semibold text-gray-900">{vehicle.doors || 'N/A'}</div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
-                    <Shield className="text-blue-600 mt-1" size={24} />
-                    <div>
-                      <div className="text-sm text-gray-600">Drivetrain</div>
-                      <div className="font-semibold text-gray-900">{vehicle.drivetrain}</div>
+                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                        <MessageSquare className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                        <div>
+                          <div className="text-xs text-gray-600">Inquiries</div>
+                          <div className="font-semibold text-gray-900">{vehicle.inquiryCount}</div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -372,66 +497,215 @@ export const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({ vehicle,
               {activeTab === 'specifications' && (
                 <div className="space-y-6">
                   <div className="bg-gray-50 rounded-lg p-6">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4">Engine & Performance</h3>
-                    <div className="grid grid-cols-2 gap-4">
+                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                      <Power className="text-blue-600" size={24} />
+                      Engine & Performance
+                    </h3>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                       {vehicle.engineSize && (
-                        <div>
-                          <div className="text-sm text-gray-600">Engine Size</div>
-                          <div className="font-semibold text-gray-900">{vehicle.engineSize}</div>
+                        <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                          <Zap className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                          <div>
+                            <div className="text-xs text-gray-600">Engine Size</div>
+                            <div className="font-semibold text-gray-900">{vehicle.engineSize}</div>
+                          </div>
                         </div>
                       )}
                       {vehicle.engineType && (
-                        <div>
-                          <div className="text-sm text-gray-600">Engine Type</div>
-                          <div className="font-semibold text-gray-900">{vehicle.engineType}</div>
+                        <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                          <Activity className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                          <div>
+                            <div className="text-xs text-gray-600">Engine Type</div>
+                            <div className="font-semibold text-gray-900">{vehicle.engineType}</div>
+                          </div>
                         </div>
                       )}
                       {vehicle.cylinders && (
-                        <div>
-                          <div className="text-sm text-gray-600">Cylinders</div>
-                          <div className="font-semibold text-gray-900">{vehicle.cylinders}</div>
+                        <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                          <RotateCw className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                          <div>
+                            <div className="text-xs text-gray-600">Cylinders</div>
+                            <div className="font-semibold text-gray-900">{vehicle.cylinders}</div>
+                          </div>
                         </div>
                       )}
-                      <div>
-                        <div className="text-sm text-gray-600">Drivetrain</div>
-                        <div className="font-semibold text-gray-900">{vehicle.drivetrain}</div>
+                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                        <Fuel className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                        <div>
+                          <div className="text-xs text-gray-600">Fuel Type</div>
+                          <div className="font-semibold text-gray-900 capitalize">{vehicle.fuelType.replace('-', ' ')}</div>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                        <Settings className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                        <div>
+                          <div className="text-xs text-gray-600">Transmission</div>
+                          <div className="font-semibold text-gray-900 capitalize">{vehicle.transmission}</div>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                        <Shield className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                        <div>
+                          <div className="text-xs text-gray-600">Drivetrain</div>
+                          <div className="font-semibold text-gray-900">{vehicle.drivetrain}</div>
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4">Fuel Economy</h3>
-                    <div className="grid grid-cols-3 gap-4">
-                      {vehicle.mpgCity && (
-                        <div>
-                          <div className="text-sm text-gray-600">City</div>
-                          <div className="font-semibold text-gray-900">{vehicle.mpgCity} MPG</div>
-                        </div>
-                      )}
-                      {vehicle.mpgHighway && (
-                        <div>
-                          <div className="text-sm text-gray-600">Highway</div>
-                          <div className="font-semibold text-gray-900">{vehicle.mpgHighway} MPG</div>
-                        </div>
-                      )}
-                      {vehicle.mpgCombined && (
-                        <div>
-                          <div className="text-sm text-gray-600">Combined</div>
-                          <div className="font-semibold text-gray-900">{vehicle.mpgCombined} MPG</div>
-                        </div>
-                      )}
+                  {(vehicle.mpgCity || vehicle.mpgHighway || vehicle.mpgCombined) && (
+                    <div className="bg-gray-50 rounded-lg p-6">
+                      <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <Wind className="text-blue-600" size={24} />
+                        Fuel Economy
+                      </h3>
+                      <div className="grid grid-cols-3 gap-4">
+                        {vehicle.mpgCity && (
+                          <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                            <MapPin className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                            <div>
+                              <div className="text-xs text-gray-600">City</div>
+                              <div className="font-semibold text-gray-900">{vehicle.mpgCity} MPG</div>
+                            </div>
+                          </div>
+                        )}
+                        {vehicle.mpgHighway && (
+                          <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                            <Car className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                            <div>
+                              <div className="text-xs text-gray-600">Highway</div>
+                              <div className="font-semibold text-gray-900">{vehicle.mpgHighway} MPG</div>
+                            </div>
+                          </div>
+                        )}
+                        {vehicle.mpgCombined && (
+                          <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                            <Activity className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                            <div>
+                              <div className="text-xs text-gray-600">Combined</div>
+                              <div className="font-semibold text-gray-900">{vehicle.mpgCombined} MPG</div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   <div className="bg-gray-50 rounded-lg p-6">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4">Identification</h3>
-                    <div className="space-y-2">
-                      <div>
-                        <div className="text-sm text-gray-600">VIN</div>
-                        <div className="font-mono text-sm font-semibold text-gray-900">{vehicle.vin}</div>
+                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                      <Hash className="text-blue-600" size={24} />
+                      Identification
+                    </h3>
+                    <div className="space-y-3">
+                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                        <Hash className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                        <div className="flex-1">
+                          <div className="text-xs text-gray-600 mb-1">Vehicle Identification Number (VIN)</div>
+                          <div className="font-mono text-sm font-semibold text-gray-900 break-all">{vehicle.vin}</div>
+                        </div>
                       </div>
                     </div>
                   </div>
+
+                  {(vehicle.carfaxUrl || vehicle.autoCheckUrl || vehicle.listingUrl) && (
+                    <div className="bg-gray-50 rounded-lg p-6">
+                      <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <LinkIcon className="text-blue-600" size={24} />
+                        Vehicle Reports & Links
+                      </h3>
+                      <div className="space-y-3">
+                        {vehicle.carfaxUrl && (
+                          <a
+                            href={vehicle.carfaxUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-3 p-3 bg-white rounded-lg hover:bg-gray-50 transition"
+                          >
+                            <FileText className="text-blue-600 flex-shrink-0" size={20} />
+                            <div>
+                              <div className="text-sm font-semibold text-blue-600">View CARFAX Report</div>
+                              <div className="text-xs text-gray-600">Complete vehicle history</div>
+                            </div>
+                            <LinkIcon className="text-gray-400 ml-auto" size={16} />
+                          </a>
+                        )}
+                        {vehicle.autoCheckUrl && (
+                          <a
+                            href={vehicle.autoCheckUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-3 p-3 bg-white rounded-lg hover:bg-gray-50 transition"
+                          >
+                            <FileText className="text-blue-600 flex-shrink-0" size={20} />
+                            <div>
+                              <div className="text-sm font-semibold text-blue-600">View AutoCheck Report</div>
+                              <div className="text-xs text-gray-600">Vehicle history and score</div>
+                            </div>
+                            <LinkIcon className="text-gray-400 ml-auto" size={16} />
+                          </a>
+                        )}
+                        {vehicle.listingUrl && (
+                          <a
+                            href={vehicle.listingUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-3 p-3 bg-white rounded-lg hover:bg-gray-50 transition"
+                          >
+                            <Car className="text-blue-600 flex-shrink-0" size={20} />
+                            <div>
+                              <div className="text-sm font-semibold text-blue-600">View Original Listing</div>
+                              <div className="text-xs text-gray-600">External listing page</div>
+                            </div>
+                            <LinkIcon className="text-gray-400 ml-auto" size={16} />
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {(vehicle.registrationExpiry || vehicle.lastInspectionDate || vehicle.nextInspectionDate) && (
+                    <div className="bg-gray-50 rounded-lg p-6">
+                      <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <Calendar className="text-blue-600" size={24} />
+                        Registration & Inspection
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {vehicle.registrationExpiry && (
+                          <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                            <Calendar className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                            <div>
+                              <div className="text-xs text-gray-600">Registration Expiry</div>
+                              <div className="font-semibold text-gray-900">
+                                {new Date(vehicle.registrationExpiry).toLocaleDateString()}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                        {vehicle.lastInspectionDate && (
+                          <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                            <CheckCircle className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                            <div>
+                              <div className="text-xs text-gray-600">Last Inspection</div>
+                              <div className="font-semibold text-gray-900">
+                                {new Date(vehicle.lastInspectionDate).toLocaleDateString()}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                        {vehicle.nextInspectionDate && (
+                          <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                            <Clock className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                            <div>
+                              <div className="text-xs text-gray-600">Next Inspection Due</div>
+                              <div className="font-semibold text-gray-900">
+                                {new Date(vehicle.nextInspectionDate).toLocaleDateString()}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
