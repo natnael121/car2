@@ -19,7 +19,7 @@ export const VehicleList: React.FC = () => {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('Popular');
+  const [selectedMake, setSelectedMake] = useState<string | null>(null);
   const [showFilters, setShowFilters] = useState(false);
   const [showAdminLogin, setShowAdminLogin] = useState(false);
 
@@ -88,6 +88,10 @@ export const VehicleList: React.FC = () => {
     };
   }, [vehicles]);
 
+  const uniqueMakes = useMemo(() => {
+    return Array.from(new Set(vehicles.map((v) => v.make))).sort();
+  }, [vehicles]);
+
   const filteredVehicles = useMemo(() => {
     return vehicles.filter((vehicle) => {
       if (searchQuery) {
@@ -97,6 +101,10 @@ export const VehicleList: React.FC = () => {
           vehicle.model.toLowerCase().includes(query) ||
           vehicle.year.toString().includes(query);
         if (!matchesSearch) return false;
+      }
+
+      if (selectedMake && vehicle.make !== selectedMake) {
+        return false;
       }
 
       if (vehicle.price < filters.priceRange[0] || vehicle.price > filters.priceRange[1]) {
@@ -135,7 +143,7 @@ export const VehicleList: React.FC = () => {
       }
       return true;
     });
-  }, [vehicles, filters, searchQuery]);
+  }, [vehicles, filters, searchQuery, selectedMake]);
 
   useEffect(() => {
     loadVehicles();
@@ -209,8 +217,6 @@ export const VehicleList: React.FC = () => {
     );
   }
 
-  const categories = ['Popular', 'Runs', 'Tributo'];
-
   return (
     <>
       {activeTab === 'about' ? (
@@ -251,17 +257,17 @@ export const VehicleList: React.FC = () => {
             </div>
 
             <div className="flex gap-2 overflow-x-auto scrollbar-hide">
-              {categories.map((category) => (
+              {uniqueMakes.map((make) => (
                 <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
+                  key={make}
+                  onClick={() => setSelectedMake(selectedMake === make ? null : make)}
                   className={`px-4 py-2 rounded-lg whitespace-nowrap font-medium transition ${
-                    selectedCategory === category
+                    selectedMake === make
                       ? 'bg-yellow-400 text-black'
                       : 'bg-gray-900 text-white'
                   }`}
                 >
-                  {category}
+                  {make}
                 </button>
               ))}
             </div>
@@ -269,7 +275,9 @@ export const VehicleList: React.FC = () => {
 
           <div className="px-4">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-white text-xl font-bold">Popular</h2>
+              <h2 className="text-white text-xl font-bold">
+                {selectedMake ? selectedMake : 'All Vehicles'}
+              </h2>
               <button className="text-yellow-400 text-sm font-medium">See All</button>
             </div>
 
