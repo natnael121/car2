@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ClipboardList, DollarSign, CheckCircle, XCircle, Filter, Search, Eye, Phone, Mail, Car, Trash2 } from 'lucide-react';
+import { ClipboardList, DollarSign, CheckCircle, XCircle, Filter, Search, Eye, Phone, Mail, Car, Trash2, Tag, X } from 'lucide-react';
 import { db } from '../lib/firebase';
 import { collection, query, onSnapshot, doc, updateDoc, deleteDoc, orderBy } from 'firebase/firestore';
 import { TradeIn, TradeInStatus } from '../types';
@@ -65,6 +65,33 @@ export const TradeInManagement: React.FC = () => {
       } catch (error) {
         console.error('Error deleting trade-in:', error);
       }
+    }
+  };
+
+  const handleAddTag = async (tradeInId: string, currentTags: string[] = []) => {
+    const tag = prompt('Enter a tag:');
+    if (tag && tag.trim()) {
+      try {
+        const updatedTags = [...currentTags, tag.trim()];
+        await updateDoc(doc(db, 'trade_ins', tradeInId), {
+          tags: updatedTags,
+          updatedAt: new Date().toISOString(),
+        });
+      } catch (error) {
+        console.error('Error adding tag:', error);
+      }
+    }
+  };
+
+  const handleRemoveTag = async (tradeInId: string, tagToRemove: string, currentTags: string[]) => {
+    try {
+      const updatedTags = currentTags.filter(tag => tag !== tagToRemove);
+      await updateDoc(doc(db, 'trade_ins', tradeInId), {
+        tags: updatedTags,
+        updatedAt: new Date().toISOString(),
+      });
+    } catch (error) {
+      console.error('Error removing tag:', error);
     }
   };
 
@@ -204,6 +231,7 @@ export const TradeInManagement: React.FC = () => {
                   <th className="text-left py-3 px-4 font-semibold text-gray-700">Condition</th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-700">Offer</th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-700">Status</th>
+                  <th className="text-left py-3 px-4 font-semibold text-gray-700">Tags</th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-700">Actions</th>
                 </tr>
               </thead>
@@ -255,6 +283,31 @@ export const TradeInManagement: React.FC = () => {
                       <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(tradeIn.status)}`}>
                         {tradeIn.status}
                       </span>
+                    </td>
+                    <td className="py-4 px-4">
+                      <div className="flex flex-wrap gap-1 items-center">
+                        {tradeIn.tags?.map((tag, index) => (
+                          <span
+                            key={index}
+                            className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded text-xs"
+                          >
+                            {tag}
+                            <button
+                              onClick={() => handleRemoveTag(tradeIn.id, tag, tradeIn.tags || [])}
+                              className="hover:text-green-900"
+                            >
+                              <X size={12} />
+                            </button>
+                          </span>
+                        ))}
+                        <button
+                          onClick={() => handleAddTag(tradeIn.id, tradeIn.tags)}
+                          className="p-1 text-gray-400 hover:text-green-600 transition"
+                          title="Add tag"
+                        >
+                          <Tag size={16} />
+                        </button>
+                      </div>
                     </td>
                     <td className="py-4 px-4">
                       <div className="flex items-center gap-2">

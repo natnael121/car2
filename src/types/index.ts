@@ -154,6 +154,7 @@ export interface TestDrive {
   feedback?: string;
   followUpDate?: string;
   followUpNotes?: string;
+  tags?: string[];
   createdAt: string;
   updatedAt: string;
 }
@@ -194,6 +195,7 @@ export interface TradeIn {
     vehicleId: string;
     vehicleName: string;
   };
+  tags?: string[];
   createdAt: string;
   updatedAt: string;
 }
