@@ -145,24 +145,32 @@ export const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({ vehicle,
 
   return (
     <>
-      <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto">
-        <div className="bg-white rounded-xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
-          <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10">
-            <h2 className="text-2xl font-bold text-gray-900">
-              {vehicle.year} {vehicle.make} {vehicle.model}
-            </h2>
+      <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 overflow-y-auto backdrop-blur-sm">
+        <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-gray-700">
+          <div className="sticky top-0 bg-gradient-to-r from-gray-900 to-gray-800 border-b border-gray-700 px-6 py-4 flex items-center justify-between z-10 rounded-t-3xl">
+            <div>
+              <button
+                onClick={onClose}
+                className="p-2 hover:bg-gray-700 rounded-full transition mb-2"
+              >
+                <ChevronLeft size={24} className="text-white" />
+              </button>
+              <h2 className="text-2xl font-bold text-white">
+                Details
+              </h2>
+            </div>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-lg transition"
+              className="p-2 hover:bg-gray-700 rounded-full transition"
             >
-              <X size={24} className="text-gray-600" />
+              <X size={24} className="text-white" />
             </button>
           </div>
 
           <div className="p-6 space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="space-y-6">
               <div className="space-y-4">
-                <div className="relative h-96 bg-gray-200 rounded-xl overflow-hidden group">
+                <div className="relative h-64 bg-gray-950 rounded-2xl overflow-hidden group">
                   {images.length > 0 ? (
                     <>
                       <img
@@ -204,99 +212,72 @@ export const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({ vehicle,
                     </div>
                   )}
                 </div>
-              </div>
 
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <span className={`px-4 py-2 rounded-lg text-sm font-semibold ${getConditionColor(vehicle.condition)}`}>
-                    {getConditionLabel(vehicle.condition)}
-                  </span>
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <Eye size={16} />
-                    <span>{vehicle.viewCount} views</span>
-                  </div>
-                  {vehicle.daysOnLot > 0 && (
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <Calendar size={16} />
-                      <span>{vehicle.daysOnLot} days on lot</span>
-                    </div>
-                  )}
-                </div>
-
-                <div>
-                  <div className="text-4xl font-bold text-gray-900 mb-2">
-                    {formatPrice(vehicle.price)}
-                  </div>
+                <div className="text-center mt-6">
+                  <h3 className="text-2xl font-bold text-white mb-2">
+                    {vehicle.make} {vehicle.model}
+                  </h3>
                   {vehicle.trim && (
-                    <p className="text-lg text-gray-600">{vehicle.trim}</p>
+                    <p className="text-lg text-gray-400">{vehicle.trim}</p>
                   )}
                 </div>
 
                 {vehicle.description && (
-                  <p className="text-gray-700 leading-relaxed">{vehicle.description}</p>
+                  <p className="text-gray-400 leading-relaxed text-center px-4">{vehicle.description}</p>
                 )}
 
-                <div className="grid grid-cols-2 gap-3">
-                  <button
-                    onClick={() => setShowTestDriveModal(true)}
-                    className="flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold"
-                  >
-                    <Car size={20} />
-                    Schedule Test Drive
-                  </button>
-                  <button
-                    onClick={() => setShowTradeInModal(true)}
-                    className="flex items-center justify-center gap-2 px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-semibold"
-                  >
-                    <DollarSign size={20} />
-                    Trade-In Value
-                  </button>
-                  <button
-                    onClick={() => setShowFinancingModal(true)}
-                    className="flex items-center justify-center gap-2 px-4 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-900 transition font-semibold"
-                  >
-                    <FileText size={20} />
-                    Get Financing
-                  </button>
-                  <button
-                    onClick={handleShare}
-                    className="flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition font-semibold"
-                  >
-                    <Share2 size={20} />
-                    Share
-                  </button>
+                <div className="bg-gray-800/50 rounded-2xl p-6 space-y-4 border border-gray-700">
+                  <h4 className="text-white font-semibold">Specification</h4>
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="bg-gray-700/50 rounded-xl p-3 text-center border border-gray-600">
+                      <div className="flex items-center justify-center mb-2">
+                        <Users size={20} className="text-yellow-500" />
+                      </div>
+                      <div className="text-xs text-gray-400 mb-1">Capacity</div>
+                      <div className="text-sm font-semibold text-white">{vehicle.seatingCapacity || 4} Seats</div>
+                    </div>
+                    <div className="bg-gray-700/50 rounded-xl p-3 text-center border border-gray-600">
+                      <div className="flex items-center justify-center mb-2">
+                        <Settings size={20} className="text-yellow-500" />
+                      </div>
+                      <div className="text-xs text-gray-400 mb-1">Max speed</div>
+                      <div className="text-sm font-semibold text-white">250 Km/h</div>
+                    </div>
+                    <div className="bg-gray-700/50 rounded-xl p-3 text-center border border-gray-600">
+                      <div className="flex items-center justify-center mb-2">
+                        <Fuel size={20} className="text-yellow-500" />
+                      </div>
+                      <div className="text-xs text-gray-400 mb-1">Fuel Info</div>
+                      <div className="text-sm font-semibold text-white">{vehicle.mpgCombined || 19.5} L</div>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="bg-gray-50 rounded-lg p-4 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Contact Dealer</span>
+                <div className="bg-gray-800/50 rounded-2xl p-4 border border-gray-700">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-sm text-gray-400">Rent Price</span>
+                    <span className="text-2xl font-bold text-white">{formatPrice(vehicle.price)}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <Phone size={16} className="text-gray-600" />
-                    <a href="tel:+15551234567" className="text-blue-600 hover:underline">
-                      (555) 123-4567
-                    </a>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <Mail size={16} className="text-gray-600" />
-                    <a href="mailto:info@dealership.com" className="text-blue-600 hover:underline">
-                      info@dealership.com
-                    </a>
-                  </div>
+                  <button
+                    className="w-full py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-gray-900 rounded-full font-bold hover:from-yellow-400 hover:to-yellow-500 transition-all shadow-lg hover:shadow-yellow-500/50 flex items-center justify-center gap-2"
+                  >
+                    <span>Book Now</span>
+                    <ChevronRight size={20} />
+                  </button>
                 </div>
               </div>
             </div>
 
-            <div className="border-t border-gray-200 pt-6">
-              <div className="flex gap-2 mb-6 border-b border-gray-200">
+            <div className="border-t border-gray-700 pt-6">
+              <div className="flex gap-2 mb-6 border-b border-gray-700 overflow-x-auto">
                 {['overview', 'specifications', 'history', 'features'].map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab as any)}
-                    className={`px-4 py-3 font-medium capitalize transition ${
+                    className={`px-4 py-3 font-medium capitalize transition whitespace-nowrap ${
                       activeTab === tab
-                        ? 'text-blue-600 border-b-2 border-blue-600'
-                        : 'text-gray-600 hover:text-gray-900'
+                        ? 'text-yellow-500 border-b-2 border-yellow-500'
+                        : 'text-gray-400 hover:text-gray-200'
                     }`}
                   >
                     {tab}
@@ -306,187 +287,187 @@ export const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({ vehicle,
 
               {activeTab === 'overview' && (
                 <div className="space-y-6">
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                      <Car className="text-blue-600" size={24} />
+                  <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700">
+                    <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                      <Car className="text-yellow-500" size={24} />
                       Basic Information
                     </h3>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
-                        <Calendar className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                      <div className="flex items-start gap-3 p-3 bg-gray-700/50 rounded-xl border border-gray-600">
+                        <Calendar className="text-yellow-500 mt-1 flex-shrink-0" size={20} />
                         <div>
-                          <div className="text-xs text-gray-600">Year</div>
-                          <div className="font-semibold text-gray-900">{vehicle.year}</div>
+                          <div className="text-xs text-gray-400">Year</div>
+                          <div className="font-semibold text-white">{vehicle.year}</div>
                         </div>
                       </div>
 
-                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
-                        <Tag className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                      <div className="flex items-start gap-3 p-3 bg-gray-700/50 rounded-xl border border-gray-600">
+                        <Tag className="text-yellow-500 mt-1 flex-shrink-0" size={20} />
                         <div>
-                          <div className="text-xs text-gray-600">Make</div>
-                          <div className="font-semibold text-gray-900">{vehicle.make}</div>
+                          <div className="text-xs text-gray-400">Make</div>
+                          <div className="font-semibold text-white">{vehicle.make}</div>
                         </div>
                       </div>
 
-                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
-                        <Car className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                      <div className="flex items-start gap-3 p-3 bg-gray-700/50 rounded-xl border border-gray-600">
+                        <Car className="text-yellow-500 mt-1 flex-shrink-0" size={20} />
                         <div>
-                          <div className="text-xs text-gray-600">Model</div>
-                          <div className="font-semibold text-gray-900">{vehicle.model}</div>
+                          <div className="text-xs text-gray-400">Model</div>
+                          <div className="font-semibold text-white">{vehicle.model}</div>
                         </div>
                       </div>
 
                       {vehicle.trim && (
-                        <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
-                          <Award className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                        <div className="flex items-start gap-3 p-3 bg-gray-700/50 rounded-xl border border-gray-600">
+                          <Award className="text-yellow-500 mt-1 flex-shrink-0" size={20} />
                           <div>
-                            <div className="text-xs text-gray-600">Trim</div>
-                            <div className="font-semibold text-gray-900">{vehicle.trim}</div>
+                            <div className="text-xs text-gray-400">Trim</div>
+                            <div className="font-semibold text-white">{vehicle.trim}</div>
                           </div>
                         </div>
                       )}
 
-                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
-                        <Package className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                      <div className="flex items-start gap-3 p-3 bg-gray-700/50 rounded-xl border border-gray-600">
+                        <Package className="text-yellow-500 mt-1 flex-shrink-0" size={20} />
                         <div>
-                          <div className="text-xs text-gray-600">Body Type</div>
-                          <div className="font-semibold text-gray-900 capitalize">{vehicle.bodyType}</div>
+                          <div className="text-xs text-gray-400">Body Type</div>
+                          <div className="font-semibold text-white capitalize">{vehicle.bodyType}</div>
                         </div>
                       </div>
 
-                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
-                        <Shield className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                      <div className="flex items-start gap-3 p-3 bg-gray-700/50 rounded-xl border border-gray-600">
+                        <Shield className="text-yellow-500 mt-1 flex-shrink-0" size={20} />
                         <div>
-                          <div className="text-xs text-gray-600">Condition</div>
-                          <div className="font-semibold text-gray-900">{getConditionLabel(vehicle.condition)}</div>
+                          <div className="text-xs text-gray-400">Condition</div>
+                          <div className="font-semibold text-white">{getConditionLabel(vehicle.condition)}</div>
                         </div>
                       </div>
 
-                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
-                        <Gauge className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                      <div className="flex items-start gap-3 p-3 bg-gray-700/50 rounded-xl border border-gray-600">
+                        <Gauge className="text-yellow-500 mt-1 flex-shrink-0" size={20} />
                         <div>
-                          <div className="text-xs text-gray-600">Mileage</div>
-                          <div className="font-semibold text-gray-900">{formatMileage(vehicle.mileage, vehicle.mileageUnit)}</div>
+                          <div className="text-xs text-gray-400">Mileage</div>
+                          <div className="font-semibold text-white">{formatMileage(vehicle.mileage, vehicle.mileageUnit)}</div>
                         </div>
                       </div>
 
-                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
-                        <Hash className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                      <div className="flex items-start gap-3 p-3 bg-gray-700/50 rounded-xl border border-gray-600">
+                        <Hash className="text-yellow-500 mt-1 flex-shrink-0" size={20} />
                         <div>
-                          <div className="text-xs text-gray-600">VIN</div>
-                          <div className="font-mono text-xs font-semibold text-gray-900">{vehicle.vin.substring(0, 10)}...</div>
+                          <div className="text-xs text-gray-400">VIN</div>
+                          <div className="font-mono text-xs font-semibold text-white">{vehicle.vin.substring(0, 10)}...</div>
                         </div>
                       </div>
 
-                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
-                        <DollarSign className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                      <div className="flex items-start gap-3 p-3 bg-gray-700/50 rounded-xl border border-gray-600">
+                        <DollarSign className="text-yellow-500 mt-1 flex-shrink-0" size={20} />
                         <div>
-                          <div className="text-xs text-gray-600">Price</div>
-                          <div className="font-semibold text-gray-900">{formatPrice(vehicle.price)}</div>
+                          <div className="text-xs text-gray-400">Price</div>
+                          <div className="font-semibold text-white">{formatPrice(vehicle.price)}</div>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                      <Droplet className="text-blue-600" size={24} />
+                  <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700">
+                    <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                      <Droplet className="text-yellow-500" size={24} />
                       Colors
                     </h3>
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
-                        <Droplet className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                      <div className="flex items-start gap-3 p-3 bg-gray-700/50 rounded-xl border border-gray-600">
+                        <Droplet className="text-yellow-500 mt-1 flex-shrink-0" size={20} />
                         <div>
-                          <div className="text-xs text-gray-600">Exterior Color</div>
-                          <div className="font-semibold text-gray-900">{vehicle.exteriorColor}</div>
+                          <div className="text-xs text-gray-400">Exterior Color</div>
+                          <div className="font-semibold text-white">{vehicle.exteriorColor}</div>
                         </div>
                       </div>
 
-                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
-                        <Droplet className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                      <div className="flex items-start gap-3 p-3 bg-gray-700/50 rounded-xl border border-gray-600">
+                        <Droplet className="text-yellow-500 mt-1 flex-shrink-0" size={20} />
                         <div>
-                          <div className="text-xs text-gray-600">Interior Color</div>
-                          <div className="font-semibold text-gray-900">{vehicle.interiorColor}</div>
+                          <div className="text-xs text-gray-400">Interior Color</div>
+                          <div className="font-semibold text-white">{vehicle.interiorColor}</div>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                      <Settings className="text-blue-600" size={24} />
+                  <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700">
+                    <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                      <Settings className="text-yellow-500" size={24} />
                       Drivetrain & Transmission
                     </h3>
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
-                        <Settings className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                      <div className="flex items-start gap-3 p-3 bg-gray-700/50 rounded-xl border border-gray-600">
+                        <Settings className="text-yellow-500 mt-1 flex-shrink-0" size={20} />
                         <div>
-                          <div className="text-xs text-gray-600">Transmission</div>
-                          <div className="font-semibold text-gray-900 capitalize">{vehicle.transmission}</div>
+                          <div className="text-xs text-gray-400">Transmission</div>
+                          <div className="font-semibold text-white capitalize">{vehicle.transmission}</div>
                         </div>
                       </div>
 
-                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
-                        <Shield className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                      <div className="flex items-start gap-3 p-3 bg-gray-700/50 rounded-xl border border-gray-600">
+                        <Shield className="text-yellow-500 mt-1 flex-shrink-0" size={20} />
                         <div>
-                          <div className="text-xs text-gray-600">Drivetrain</div>
-                          <div className="font-semibold text-gray-900">{vehicle.drivetrain}</div>
+                          <div className="text-xs text-gray-400">Drivetrain</div>
+                          <div className="font-semibold text-white">{vehicle.drivetrain}</div>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                      <Users className="text-blue-600" size={24} />
+                  <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700">
+                    <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                      <Users className="text-yellow-500" size={24} />
                       Capacity
                     </h3>
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
-                        <Users className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                      <div className="flex items-start gap-3 p-3 bg-gray-700/50 rounded-xl border border-gray-600">
+                        <Users className="text-yellow-500 mt-1 flex-shrink-0" size={20} />
                         <div>
-                          <div className="text-xs text-gray-600">Seating Capacity</div>
-                          <div className="font-semibold text-gray-900">{vehicle.seatingCapacity || 'N/A'}</div>
+                          <div className="text-xs text-gray-400">Seating Capacity</div>
+                          <div className="font-semibold text-white">{vehicle.seatingCapacity || 'N/A'}</div>
                         </div>
                       </div>
 
-                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
-                        <Package className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                      <div className="flex items-start gap-3 p-3 bg-gray-700/50 rounded-xl border border-gray-600">
+                        <Package className="text-yellow-500 mt-1 flex-shrink-0" size={20} />
                         <div>
-                          <div className="text-xs text-gray-600">Doors</div>
-                          <div className="font-semibold text-gray-900">{vehicle.doors || 'N/A'}</div>
+                          <div className="text-xs text-gray-400">Doors</div>
+                          <div className="font-semibold text-white">{vehicle.doors || 'N/A'}</div>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                      <TrendingUp className="text-blue-600" size={24} />
+                  <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700">
+                    <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                      <TrendingUp className="text-yellow-500" size={24} />
                       Listing Statistics
                     </h3>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
-                        <Clock className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                      <div className="flex items-start gap-3 p-3 bg-gray-700/50 rounded-xl border border-gray-600">
+                        <Clock className="text-yellow-500 mt-1 flex-shrink-0" size={20} />
                         <div>
-                          <div className="text-xs text-gray-600">Days on Lot</div>
-                          <div className="font-semibold text-gray-900">{vehicle.daysOnLot}</div>
+                          <div className="text-xs text-gray-400">Days on Lot</div>
+                          <div className="font-semibold text-white">{vehicle.daysOnLot}</div>
                         </div>
                       </div>
 
-                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
-                        <Eye className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                      <div className="flex items-start gap-3 p-3 bg-gray-700/50 rounded-xl border border-gray-600">
+                        <Eye className="text-yellow-500 mt-1 flex-shrink-0" size={20} />
                         <div>
-                          <div className="text-xs text-gray-600">View Count</div>
-                          <div className="font-semibold text-gray-900">{vehicle.viewCount}</div>
+                          <div className="text-xs text-gray-400">View Count</div>
+                          <div className="font-semibold text-white">{vehicle.viewCount}</div>
                         </div>
                       </div>
 
-                      <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
-                        <MessageSquare className="text-blue-600 mt-1 flex-shrink-0" size={20} />
+                      <div className="flex items-start gap-3 p-3 bg-gray-700/50 rounded-xl border border-gray-600">
+                        <MessageSquare className="text-yellow-500 mt-1 flex-shrink-0" size={20} />
                         <div>
-                          <div className="text-xs text-gray-600">Inquiries</div>
-                          <div className="font-semibold text-gray-900">{vehicle.inquiryCount}</div>
+                          <div className="text-xs text-gray-400">Inquiries</div>
+                          <div className="font-semibold text-white">{vehicle.inquiryCount}</div>
                         </div>
                       </div>
                     </div>

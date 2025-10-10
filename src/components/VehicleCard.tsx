@@ -144,10 +144,10 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onViewDetails
 
   return (
     <div
-      className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+      className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl shadow-2xl overflow-hidden hover:shadow-yellow-500/20 transition-all duration-300 cursor-pointer border border-gray-700"
       onClick={handleCardClick}
     >
-      <div className="relative h-56 bg-gray-200 overflow-hidden group">
+      <div className="relative h-56 bg-gray-900 overflow-hidden group">
         {images.length > 0 ? (
           <>
             <img
@@ -191,16 +191,16 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onViewDetails
         )}
 
         <div className="absolute top-3 left-3">
-          <span className={`px-3 py-1.5 rounded-full text-xs font-semibold border ${getConditionColor(vehicle.condition)}`}>
+          <span className="px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-900/80 text-gray-300 border border-gray-700">
             {getConditionLabel(vehicle.condition)}
           </span>
         </div>
 
         {vehicle.daysOnLot > 0 && (
-          <div className="absolute top-3 right-3 bg-white bg-opacity-95 px-3 py-1.5 rounded-full">
+          <div className="absolute top-3 right-3 bg-gray-900/80 px-3 py-1.5 rounded-full border border-gray-700">
             <div className="flex items-center gap-1.5">
-              <Calendar size={14} className={getDaysOnLotColor(vehicle.daysOnLot)} />
-              <span className={`text-xs font-semibold ${getDaysOnLotColor(vehicle.daysOnLot)}`}>
+              <Calendar size={14} className="text-yellow-500" />
+              <span className="text-xs font-semibold text-gray-300">
                 {vehicle.daysOnLot} days
               </span>
             </div>
@@ -208,10 +208,10 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onViewDetails
         )}
 
         {vehicle.viewCount > 0 && (
-          <div className="absolute bottom-3 right-3 bg-black bg-opacity-60 px-2.5 py-1 rounded-full">
+          <div className="absolute bottom-3 right-3 bg-gray-900/80 px-2.5 py-1 rounded-full border border-gray-700">
             <div className="flex items-center gap-1.5">
-              <Eye size={12} className="text-white" />
-              <span className="text-xs font-medium text-white">
+              <Eye size={12} className="text-yellow-500" />
+              <span className="text-xs font-medium text-gray-300">
                 {vehicle.viewCount}
               </span>
             </div>
@@ -221,104 +221,92 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onViewDetails
 
       <div className="p-5">
         <div className="mb-3">
-          <h3 className="text-xl font-bold text-gray-900 mb-1">
-            {vehicle.year} {vehicle.make} {vehicle.model}
+          <h3 className="text-xl font-bold text-white mb-1">
+            {vehicle.make} {vehicle.model}
           </h3>
           {vehicle.trim && (
-            <p className="text-sm text-gray-600 font-medium">{vehicle.trim}</p>
+            <p className="text-sm text-gray-400 font-medium">{vehicle.trim}</p>
           )}
         </div>
 
         <div className="mb-4 flex flex-wrap gap-2">
-          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 rounded-lg border border-gray-200">
-            <Gauge size={16} className="text-gray-600" />
-            <span className="text-sm font-medium text-gray-700">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-700/50 rounded-full border border-gray-600">
+            <Gauge size={14} className="text-gray-400" />
+            <span className="text-xs font-medium text-gray-300">
               {formatMileage(vehicle.mileage, vehicle.mileageUnit)}
             </span>
           </div>
 
-          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 rounded-lg border border-gray-200">
-            <Settings size={16} className="text-gray-600" />
-            <span className="text-sm font-medium text-gray-700 capitalize">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-700/50 rounded-full border border-gray-600">
+            <Settings size={14} className="text-gray-400" />
+            <span className="text-xs font-medium text-gray-300 capitalize">
               {vehicle.transmission}
             </span>
           </div>
 
-          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 rounded-lg border border-gray-200">
-            <Fuel size={16} className="text-gray-600" />
-            <span className="text-sm font-medium text-gray-700 capitalize">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-700/50 rounded-full border border-gray-600">
+            <Fuel size={14} className="text-gray-400" />
+            <span className="text-xs font-medium text-gray-300 capitalize">
               {vehicle.fuelType.replace('-', ' ')}
             </span>
           </div>
         </div>
 
         <div className="mb-4 flex items-baseline gap-2">
-          <span className="text-3xl font-bold text-gray-900">
+          <span className="text-2xl font-bold text-white">
             {formatPrice(vehicle.price)}
           </span>
+          <span className="text-sm text-gray-500">/day</span>
         </div>
 
         {vehicle.description && (
-          <p className="text-sm text-gray-600 line-clamp-2 mb-4">
+          <p className="text-sm text-gray-400 line-clamp-2 mb-4">
             {vehicle.description}
           </p>
         )}
 
-        <div className="pt-4 border-t border-gray-200">
+        <div className="pt-4 border-t border-gray-700">
           <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
-            <span>VIN: {vehicle.vin.substring(0, 8)}...</span>
-            <span className="capitalize">{vehicle.bodyType}</span>
-          </div>
-
-          <div className="grid grid-cols-3 gap-2">
-            <button
-              onClick={(e) => handleActionClick(e, () => setShowTestDriveModal(true))}
-              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-blue-50 text-blue-700 rounded-lg text-sm font-semibold hover:bg-blue-100 transition"
-            >
-              <Car size={16} />
-              Test Drive
-            </button>
-            <button
-              onClick={(e) => handleActionClick(e, () => setShowTradeInModal(true))}
-              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-green-50 text-green-700 rounded-lg text-sm font-semibold hover:bg-green-100 transition"
-            >
-              <DollarSign size={16} />
-              Trade-In
-            </button>
-            <button
-              onClick={handleShare}
-              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-gray-50 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-100 transition"
-            >
-              <Share2 size={16} />
-              Share
-            </button>
+            <span className="flex items-center gap-1">
+              <Settings size={12} />
+              {vehicle.seatingCapacity || 4} Seats
+            </span>
+            <span className="flex items-center gap-1">
+              <Gauge size={12} />
+              {vehicle.engineSize || 'N/A'}
+            </span>
+            <span className="flex items-center gap-1">
+              <Fuel size={12} />
+              {vehicle.mpgCombined || '--'} L
+            </span>
           </div>
 
           <button
-            onClick={handleToggleFeatured}
-            disabled={isTogglingFeatured}
-            className={`w-full mt-2 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold transition ${
-              isFeatured
-                ? 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            } disabled:opacity-50`}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleCardClick();
+            }}
+            className="w-full py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-gray-900 rounded-full text-sm font-bold hover:from-yellow-400 hover:to-yellow-500 transition-all shadow-lg hover:shadow-yellow-500/50"
           >
-            <Star size={16} className={isFeatured ? 'fill-yellow-600' : ''} />
-            {isFeatured ? 'Featured' : 'Mark as Featured'}
+            Book Now
           </button>
         </div>
       </div>
 
-      <TestDriveModal
-        vehicle={vehicle}
-        isOpen={showTestDriveModal}
-        onClose={() => setShowTestDriveModal(false)}
-      />
-      <TradeInModal
-        targetVehicle={vehicle}
-        isOpen={showTradeInModal}
-        onClose={() => setShowTradeInModal(false)}
-      />
+      {showTestDriveModal && (
+        <TestDriveModal
+          vehicle={vehicle}
+          isOpen={showTestDriveModal}
+          onClose={() => setShowTestDriveModal(false)}
+        />
+      )}
+      {showTradeInModal && (
+        <TradeInModal
+          targetVehicle={vehicle}
+          isOpen={showTradeInModal}
+          onClose={() => setShowTradeInModal(false)}
+        />
+      )}
     </div>
   );
 };

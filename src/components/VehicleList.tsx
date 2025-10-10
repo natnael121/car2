@@ -191,16 +191,15 @@ export const VehicleList: React.FC = () => {
       {activeTab === 'about' ? (
         <About />
       ) : (
-        <div className="space-y-6 pb-24">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-1">Available Cars</h2>
-            <p className="text-gray-600">
-              Showing {filteredVehicles.length} of {vehicles.length}{' '}
-              {vehicles.length === 1 ? 'vehicle' : 'vehicles'}
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 space-y-6 pb-24">
+          <div className="mb-8 px-6 pt-6">
+            <h2 className="text-3xl font-bold text-white mb-2">Explore Our Exquisite Fleet</h2>
+            <p className="text-gray-300">
+              {filteredVehicles.length} {filteredVehicles.length === 1 ? 'vehicle' : 'vehicles'} available
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 px-6">
             <div className="lg:col-span-1">
               <FilterPanel
                 filters={filters}
@@ -214,10 +213,10 @@ export const VehicleList: React.FC = () => {
 
             <div className="lg:col-span-3">
               {filteredVehicles.length === 0 ? (
-                <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
-                  <Car size={64} className="text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-gray-700 mb-2">No Vehicles Found</h3>
-                  <p className="text-gray-600 mb-4">Try adjusting your filters to see more results.</p>
+                <div className="bg-gray-800 border-2 border-dashed border-gray-700 rounded-2xl p-12 text-center">
+                  <Car size={64} className="text-gray-600 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-gray-300 mb-2">No Vehicles Found</h3>
+                  <p className="text-gray-400 mb-4">Try adjusting your filters to see more results.</p>
                   <button
                     onClick={() =>
                       setFilters({
@@ -233,7 +232,7 @@ export const VehicleList: React.FC = () => {
                         conditions: [],
                       })
                     }
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                    className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-gray-900 font-semibold rounded-full hover:from-yellow-400 hover:to-yellow-500 transition"
                   >
                     Clear All Filters
                   </button>
