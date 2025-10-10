@@ -2,13 +2,10 @@ import React, { useState } from 'react';
 import {
   LayoutDashboard,
   Car,
-  Users,
   Calendar,
-  DollarSign,
   FileText,
   Settings,
   ClipboardList,
-  Wrench,
   TrendingUp,
   MessageSquare,
   LogOut
@@ -16,11 +13,8 @@ import {
 import { AdminInventory } from './AdminInventory';
 import { VehicleFormWizard } from './VehicleFormWizard';
 import { DashboardOverview } from './DashboardOverview';
-import { LeadsManagement } from './LeadsManagement';
 import { TestDriveManagement } from './TestDriveManagement';
 import { TradeInManagement } from './TradeInManagement';
-import { FinancingManagement } from './FinancingManagement';
-import { ServiceManagement } from './ServiceManagement';
 import { SalesManagement } from './SalesManagement';
 import { CustomersManagement } from './CustomersManagement';
 import { ReportsAnalytics } from './ReportsAnalytics';
@@ -31,11 +25,8 @@ type AdminTab =
   | 'overview'
   | 'inventory'
   | 'add-vehicle'
-  | 'leads'
   | 'test-drives'
   | 'trade-ins'
-  | 'financing'
-  | 'service'
   | 'sales'
   | 'customers'
   | 'reports'
@@ -55,11 +46,8 @@ export const AdminDashboard: React.FC = () => {
   const menuItems: MenuItem[] = [
     { id: 'overview', label: 'Dashboard', icon: <LayoutDashboard size={20} /> },
     { id: 'inventory', label: 'Inventory', icon: <Car size={20} /> },
-    { id: 'leads', label: 'Leads', icon: <Users size={20} />, badge: 12 },
     { id: 'test-drives', label: 'Test Drives', icon: <Calendar size={20} />, badge: 5 },
     { id: 'trade-ins', label: 'Trade-Ins', icon: <ClipboardList size={20} />, badge: 8 },
-    { id: 'financing', label: 'Financing', icon: <DollarSign size={20} />, badge: 3 },
-    { id: 'service', label: 'Service', icon: <Wrench size={20} /> },
     { id: 'sales', label: 'Sales', icon: <TrendingUp size={20} /> },
     { id: 'customers', label: 'Customers', icon: <MessageSquare size={20} /> },
     { id: 'reports', label: 'Reports', icon: <FileText size={20} /> },
@@ -112,16 +100,10 @@ export const AdminDashboard: React.FC = () => {
             <VehicleFormWizard onSuccess={() => setActiveTab('inventory')} />
           </div>
         );
-      case 'leads':
-        return <LeadsManagement />;
       case 'test-drives':
         return <TestDriveManagement />;
       case 'trade-ins':
         return <TradeInManagement />;
-      case 'financing':
-        return <FinancingManagement />;
-      case 'service':
-        return <ServiceManagement />;
       case 'sales':
         return <SalesManagement />;
       case 'customers':
