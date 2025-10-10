@@ -12,6 +12,29 @@ interface VehicleFormStep1Props {
 const currentYear = new Date().getFullYear();
 const years = Array.from({ length: 50 }, (_, i) => currentYear - i + 1);
 
+const makeOptions = [
+  'Chevrolet',
+  'Ford',
+  'Honda',
+  'Toyota',
+  'Nissan',
+  'Jeep',
+  'Ram',
+  'GMC',
+  'Hyundai',
+  'Subaru',
+  'Kia',
+  'Mazda',
+  'Volkswagen',
+  'Dodge',
+  'Buick',
+  'Chrysler',
+  'Mitsubishi',
+  'Volvo',
+  'Acura',
+  'Infiniti',
+].map((make) => ({ value: make, label: make }));
+
 const conditionOptions: { value: VehicleCondition; label: string }[] = [
   { value: 'new', label: 'New' },
   { value: 'used', label: 'Used' },
@@ -73,14 +96,14 @@ export const VehicleFormStep1BasicInfo: React.FC<VehicleFormStep1Props> = ({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <FormInput
+        <FormSelect
           label="Make"
           name="make"
-          type="text"
           value={formData.make}
           onChange={handleInputChange}
+          options={makeOptions}
           error={errors.make}
-          placeholder="Toyota"
+          placeholder="Select make"
         />
 
         <FormInput
