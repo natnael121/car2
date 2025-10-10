@@ -4,6 +4,7 @@ import { VehicleCard } from './VehicleCard';
 import { VehicleDetailModal } from './VehicleDetailModal';
 import { BottomNav } from './BottomNav';
 import { About } from './About';
+import { AdminLogin } from './AdminLogin';
 import { db } from '../lib/firebase';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { Car, Loader, Search, X } from 'lucide-react';
@@ -20,6 +21,7 @@ export const VehicleList: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Popular');
   const [showFilters, setShowFilters] = useState(false);
+  const [showAdminLogin, setShowAdminLogin] = useState(false);
 
   const priceRange: [number, number] = useMemo(() => {
     if (vehicles.length === 0) return [0, 100000];
@@ -316,6 +318,7 @@ export const VehicleList: React.FC = () => {
       <BottomNav
         activeTab={activeTab}
         onTabChange={setActiveTab}
+        onAdminClick={() => setShowAdminLogin(true)}
       />
 
       {selectedVehicle && (
@@ -327,6 +330,14 @@ export const VehicleList: React.FC = () => {
             setSelectedVehicle(null);
           }}
         />
+      )}
+
+      {showAdminLogin && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full">
+            <AdminLogin onClose={() => setShowAdminLogin(false)} />
+          </div>
+        </div>
       )}
     </>
   );

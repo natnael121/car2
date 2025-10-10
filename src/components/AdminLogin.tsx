@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { Lock, Mail, AlertCircle } from 'lucide-react';
+import { Lock, Mail, AlertCircle, X } from 'lucide-react';
 
-export const AdminLogin: React.FC = () => {
+interface AdminLoginProps {
+  onClose?: () => void;
+}
+
+export const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -24,16 +28,23 @@ export const AdminLogin: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-              <Lock className="w-8 h-8 text-blue-600" />
-            </div>
-            <h1 className="text-2xl font-bold text-gray-900">Admin Login</h1>
-            <p className="text-gray-600 mt-2">Sign in to access the admin panel</p>
+    <div className="w-full">
+      <div className="bg-white rounded-2xl p-8">
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+          >
+            <X size={24} />
+          </button>
+        )}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+            <Lock className="w-8 h-8 text-blue-600" />
           </div>
+          <h1 className="text-2xl font-bold text-gray-900">Admin Login</h1>
+          <p className="text-gray-600 mt-2">Sign in to access the admin panel</p>
+        </div>
 
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
@@ -86,8 +97,7 @@ export const AdminLogin: React.FC = () => {
             >
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
-          </form>
-        </div>
+        </form>
       </div>
     </div>
   );
