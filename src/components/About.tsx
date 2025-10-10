@@ -70,15 +70,15 @@ export const About: React.FC = () => {
           <h1 className="text-4xl font-bold mb-3 text-white">{settings.businessName}</h1>
           <p className="text-yellow-400 text-lg font-medium mb-6">{settings.tagline}</p>
 
-          <div className="flex justify-center gap-3 mt-6">
+          <div className="flex justify-center gap-2 mt-6">
             {settings.facebookUrl && (
               <a
                 href={settings.facebookUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-gray-800 hover:bg-yellow-400 text-gray-300 hover:text-black p-3 rounded-full transition-all transform hover:scale-110"
+                className="text-gray-400 hover:text-yellow-400 p-1.5 rounded-full transition-all"
               >
-                <Facebook size={20} />
+                <Facebook size={16} />
               </a>
             )}
             {settings.twitterUrl && (
@@ -86,9 +86,9 @@ export const About: React.FC = () => {
                 href={settings.twitterUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-gray-800 hover:bg-yellow-400 text-gray-300 hover:text-black p-3 rounded-full transition-all transform hover:scale-110"
+                className="text-gray-400 hover:text-yellow-400 p-1.5 rounded-full transition-all"
               >
-                <Twitter size={20} />
+                <Twitter size={16} />
               </a>
             )}
             {settings.instagramUrl && (
@@ -96,9 +96,9 @@ export const About: React.FC = () => {
                 href={settings.instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-gray-800 hover:bg-yellow-400 text-gray-300 hover:text-black p-3 rounded-full transition-all transform hover:scale-110"
+                className="text-gray-400 hover:text-yellow-400 p-1.5 rounded-full transition-all"
               >
-                <Instagram size={20} />
+                <Instagram size={16} />
               </a>
             )}
             {settings.linkedinUrl && (
@@ -106,9 +106,9 @@ export const About: React.FC = () => {
                 href={settings.linkedinUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-gray-800 hover:bg-yellow-400 text-gray-300 hover:text-black p-3 rounded-full transition-all transform hover:scale-110"
+                className="text-gray-400 hover:text-yellow-400 p-1.5 rounded-full transition-all"
               >
-                <Linkedin size={20} />
+                <Linkedin size={16} />
               </a>
             )}
             {settings.youtubeUrl && (
@@ -116,9 +116,9 @@ export const About: React.FC = () => {
                 href={settings.youtubeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-gray-800 hover:bg-yellow-400 text-gray-300 hover:text-black p-3 rounded-full transition-all transform hover:scale-110"
+                className="text-gray-400 hover:text-yellow-400 p-1.5 rounded-full transition-all"
               >
-                <Youtube size={20} />
+                <Youtube size={16} />
               </a>
             )}
           </div>
