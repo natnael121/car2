@@ -6,8 +6,8 @@ import { BottomNav } from './BottomNav';
 import { About } from './About';
 import { AdminLogin } from './AdminLogin';
 import { db } from '../lib/firebase';
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
-import { Car, Loader, Search, X } from 'lucide-react';
+import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
+import { Car, Loader, Search, X, Facebook, Twitter, Instagram, Linkedin, Youtube } from 'lucide-react';
 import FilterPanel, { VehicleFilters } from './FilterPanel';
 
 export const VehicleList: React.FC = () => {
@@ -22,6 +22,13 @@ export const VehicleList: React.FC = () => {
   const [selectedMake, setSelectedMake] = useState<string | null>(null);
   const [showFilters, setShowFilters] = useState(false);
   const [showAdminLogin, setShowAdminLogin] = useState(false);
+  const [socialLinks, setSocialLinks] = useState({
+    facebook: '',
+    twitter: '',
+    instagram: '',
+    linkedin: '',
+    youtube: '',
+  });
 
   const priceRange: [number, number] = useMemo(() => {
     if (vehicles.length === 0) return [0, 100000];
@@ -147,6 +154,7 @@ export const VehicleList: React.FC = () => {
 
   useEffect(() => {
     loadVehicles();
+    loadSocialLinks();
   }, []);
 
   const loadVehicles = async () => {
@@ -173,6 +181,27 @@ export const VehicleList: React.FC = () => {
       setError('Failed to load vehicles. Please try again later.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadSocialLinks = async () => {
+    try {
+      const settingsRef = collection(db, 'business_settings');
+      const q = query(settingsRef, limit(1));
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        const data = querySnapshot.docs[0].data();
+        setSocialLinks({
+          facebook: data.facebook_url || '',
+          twitter: data.twitter_url || '',
+          instagram: data.instagram_url || '',
+          linkedin: data.linkedin_url || '',
+          youtube: data.youtube_url || '',
+        });
+      }
+    } catch (error) {
+      console.error('Error loading social links:', error);
     }
   };
 
@@ -346,6 +375,61 @@ export const VehicleList: React.FC = () => {
             setSelectedVehicle(null);
           }}
         />
+      )}
+
+      {activeTab !== 'about' && (
+        <div className="fixed bottom-20 right-4 flex flex-col gap-2 z-40">
+          {socialLinks.facebook && (
+            <a
+              href={socialLinks.facebook}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:bg-blue-700 transition"
+            >
+              <Facebook size={20} />
+            </a>
+          )}
+          {socialLinks.twitter && (
+            <a
+              href={socialLinks.twitter}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-sky-500 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:bg-sky-600 transition"
+            >
+              <Twitter size={20} />
+            </a>
+          )}
+          {socialLinks.instagram && (
+            <a
+              href={socialLinks.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:opacity-90 transition"
+            >
+              <Instagram size={20} />
+            </a>
+          )}
+          {socialLinks.linkedin && (
+            <a
+              href={socialLinks.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-blue-700 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:bg-blue-800 transition"
+            >
+              <Linkedin size={20} />
+            </a>
+          )}
+          {socialLinks.youtube && (
+            <a
+              href={socialLinks.youtube}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-red-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:bg-red-700 transition"
+            >
+              <Youtube size={20} />
+            </a>
+          )}
+        </div>
       )}
 
       {showAdminLogin && (
