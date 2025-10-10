@@ -32,7 +32,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onViewDetails
   const [isFeatured, setIsFeatured] = useState(false);
   const [isTogglingFeatured, setIsTogglingFeatured] = useState(false);
 
-  const images = vehicle.imageUrl ? [vehicle.imageUrl] : [];
+  const images = vehicle.imageUrls && vehicle.imageUrls.length > 0 ? vehicle.imageUrls : [];
 
   const handlePreviousImage = (e: React.MouseEvent) => {
     e.stopPropagation();

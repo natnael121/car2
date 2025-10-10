@@ -54,7 +54,7 @@ export const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({ vehicle,
   const [showFinancingModal, setShowFinancingModal] = useState(false);
   const [activeTab, setActiveTab] = useState<'overview' | 'specifications' | 'history' | 'features'>('overview');
 
-  const images = vehicle.imageUrl ? [vehicle.imageUrl] : [];
+  const images = vehicle.imageUrls && vehicle.imageUrls.length > 0 ? vehicle.imageUrls : [];
 
   if (!isOpen) return null;
 
