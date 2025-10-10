@@ -1,4 +1,5 @@
-import { supabase } from '../lib/supabase';
+import { db } from '../lib/firebase';
+import { collection, getDocs, limit, query } from 'firebase/firestore';
 
 const TELEGRAM_BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
 const TELEGRAM_API_URL = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`;
@@ -11,16 +12,22 @@ interface SendMessageParams {
 
 const getTelegramSettings = async () => {
   try {
-    const { data, error } = await supabase
-      .from('telegram_settings')
-      .select('*')
-      .maybeSingle();
+    const settingsRef = collection(db, 'telegram_settings');
+    const q = query(settingsRef, limit(1));
+    const querySnapshot = await getDocs(q);
 
-    if (error) throw error;
+    if (querySnapshot.empty) {
+      console.warn('No Telegram settings found in Firebase');
+      return {
+        adminUserId: '',
+        channelId: '',
+      };
+    }
 
+    const data = querySnapshot.docs[0].data();
     return {
-      adminUserId: data?.admin_user_id || '',
-      channelId: data?.channel_id || '',
+      adminUserId: data.admin_user_id || '',
+      channelId: data.channel_id || '',
     };
   } catch (error) {
     console.error('Error loading Telegram settings:', error);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Save, Building2, MapPin, Phone, Mail, Clock, Info, Image, Share2, Send } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { db } from '../lib/firebase';
+import { collection, getDocs, addDoc, updateDoc, doc, query, limit } from 'firebase/firestore';
 
 interface BusinessSettings {
   businessName: string;
@@ -64,14 +65,12 @@ export const SettingsManagement: React.FC = () => {
 
   const loadBusinessSettings = async () => {
     try {
-      const { data, error } = await supabase
-        .from('business_settings')
-        .select('*')
-        .maybeSingle();
+      const settingsRef = collection(db, 'business_settings');
+      const q = query(settingsRef, limit(1));
+      const querySnapshot = await getDocs(q);
 
-      if (error && error.code !== 'PGRST116') throw error;
-
-      if (data) {
+      if (!querySnapshot.empty) {
+        const data = querySnapshot.docs[0].data();
         setSettings({
           businessName: data.business_name || defaultSettings.businessName,
           tagline: data.tagline || defaultSettings.tagline,
@@ -99,16 +98,15 @@ export const SettingsManagement: React.FC = () => {
 
   const loadTelegramSettings = async () => {
     try {
-      const { data, error } = await supabase
-        .from('telegram_settings')
-        .select('*')
-        .maybeSingle();
+      const settingsRef = collection(db, 'telegram_settings');
+      const q = query(settingsRef, limit(1));
+      const querySnapshot = await getDocs(q);
 
-      if (error) throw error;
-
-      if (data) {
+      if (!querySnapshot.empty) {
+        const docSnapshot = querySnapshot.docs[0];
+        const data = docSnapshot.data();
         setTelegramSettings({
-          id: data.id,
+          id: docSnapshot.id,
           admin_user_id: data.admin_user_id || '',
           channel_id: data.channel_id || '',
         });
@@ -121,10 +119,9 @@ export const SettingsManagement: React.FC = () => {
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      const { data: existingSettings } = await supabase
-        .from('business_settings')
-        .select('id')
-        .maybeSingle();
+      const businessSettingsRef = collection(db, 'business_settings');
+      const businessQuery = query(businessSettingsRef, limit(1));
+      const businessSnapshot = await getDocs(businessQuery);
 
       const businessSettingsData = {
         business_name: settings.businessName,
@@ -147,49 +144,47 @@ export const SettingsManagement: React.FC = () => {
         updated_at: new Date().toISOString(),
       };
 
-      if (existingSettings) {
-        const { error } = await supabase
-          .from('business_settings')
-          .update(businessSettingsData)
-          .eq('id', existingSettings.id);
-
-        if (error) throw error;
+      if (!businessSnapshot.empty) {
+        const docRef = doc(db, 'business_settings', businessSnapshot.docs[0].id);
+        await updateDoc(docRef, businessSettingsData);
       } else {
-        const { error } = await supabase
-          .from('business_settings')
-          .insert(businessSettingsData);
-
-        if (error) throw error;
+        await addDoc(businessSettingsRef, {
+          ...businessSettingsData,
+          created_at: new Date().toISOString(),
+        });
       }
 
+      const telegramSettingsRef = collection(db, 'telegram_settings');
+      const telegramQuery = query(telegramSettingsRef, limit(1));
+      const telegramSnapshot = await getDocs(telegramQuery);
+
+      const telegramData = {
+        admin_user_id: telegramSettings.admin_user_id,
+        channel_id: telegramSettings.channel_id,
+        updated_at: new Date().toISOString(),
+      };
+
       if (telegramSettings.id) {
-        await supabase
-          .from('telegram_settings')
-          .update({
-            admin_user_id: telegramSettings.admin_user_id,
-            channel_id: telegramSettings.channel_id,
-            updated_at: new Date().toISOString(),
-          })
-          .eq('id', telegramSettings.id);
+        const docRef = doc(db, 'telegram_settings', telegramSettings.id);
+        await updateDoc(docRef, telegramData);
+      } else if (!telegramSnapshot.empty) {
+        const docRef = doc(db, 'telegram_settings', telegramSnapshot.docs[0].id);
+        await updateDoc(docRef, telegramData);
+        setTelegramSettings({
+          id: telegramSnapshot.docs[0].id,
+          admin_user_id: telegramSettings.admin_user_id,
+          channel_id: telegramSettings.channel_id,
+        });
       } else {
-        const { data, error } = await supabase
-          .from('telegram_settings')
-          .insert({
-            admin_user_id: telegramSettings.admin_user_id,
-            channel_id: telegramSettings.channel_id,
-          })
-          .select()
-          .single();
-
-        if (error) throw error;
-
-        if (data) {
-          setTelegramSettings({
-            id: data.id,
-            admin_user_id: data.admin_user_id,
-            channel_id: data.channel_id,
-          });
-        }
+        const docRef = await addDoc(telegramSettingsRef, {
+          ...telegramData,
+          created_at: new Date().toISOString(),
+        });
+        setTelegramSettings({
+          id: docRef.id,
+          admin_user_id: telegramSettings.admin_user_id,
+          channel_id: telegramSettings.channel_id,
+        });
       }
 
       setSaveMessage('Settings saved successfully!');
