@@ -142,169 +142,58 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onViewDetails
     }
   };
 
+  const rating = 4.5;
+
   return (
     <div
-      className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+      className="bg-gray-900 rounded-2xl overflow-hidden cursor-pointer flex gap-4 p-4"
       onClick={handleCardClick}
     >
-      <div className="relative h-56 bg-gray-200 overflow-hidden group">
+      <div className="relative w-32 h-32 flex-shrink-0 rounded-xl overflow-hidden">
         {images.length > 0 ? (
-          <>
-            <img
-              src={images[currentImageIndex]}
-              alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-            />
-            {images.length > 1 && (
-              <>
-                <button
-                  onClick={handlePreviousImage}
-                  className="absolute left-2 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 transition opacity-0 group-hover:opacity-100"
-                  aria-label="Previous image"
-                >
-                  <ChevronLeft size={20} />
-                </button>
-                <button
-                  onClick={handleNextImage}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 transition opacity-0 group-hover:opacity-100"
-                  aria-label="Next image"
-                >
-                  <ChevronRight size={20} />
-                </button>
-                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
-                  {images.map((_, index) => (
-                    <div
-                      key={index}
-                      className={`w-2 h-2 rounded-full transition ${
-                        index === currentImageIndex ? 'bg-white' : 'bg-white bg-opacity-50'
-                      }`}
-                    />
-                  ))}
-                </div>
-              </>
-            )}
-          </>
+          <img
+            src={images[currentImageIndex]}
+            alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
+            className="w-full h-full object-cover"
+          />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-gray-400">
-            <MapPin size={48} />
-          </div>
-        )}
-
-        <div className="absolute top-3 left-3">
-          <span className={`px-3 py-1.5 rounded-full text-xs font-semibold border ${getConditionColor(vehicle.condition)}`}>
-            {getConditionLabel(vehicle.condition)}
-          </span>
-        </div>
-
-        {vehicle.daysOnLot > 0 && (
-          <div className="absolute top-3 right-3 bg-white bg-opacity-95 px-3 py-1.5 rounded-full">
-            <div className="flex items-center gap-1.5">
-              <Calendar size={14} className={getDaysOnLotColor(vehicle.daysOnLot)} />
-              <span className={`text-xs font-semibold ${getDaysOnLotColor(vehicle.daysOnLot)}`}>
-                {vehicle.daysOnLot} days
-              </span>
-            </div>
-          </div>
-        )}
-
-        {vehicle.viewCount > 0 && (
-          <div className="absolute bottom-3 right-3 bg-black bg-opacity-60 px-2.5 py-1 rounded-full">
-            <div className="flex items-center gap-1.5">
-              <Eye size={12} className="text-white" />
-              <span className="text-xs font-medium text-white">
-                {vehicle.viewCount}
-              </span>
-            </div>
+          <div className="w-full h-full flex items-center justify-center bg-gray-800 text-gray-600">
+            <Car size={32} />
           </div>
         )}
       </div>
 
-      <div className="p-5">
-        <div className="mb-3">
-          <h3 className="text-xl font-bold text-gray-900 mb-1">
-            {vehicle.year} {vehicle.make} {vehicle.model}
+      <div className="flex-1 flex flex-col justify-between">
+        <div>
+          <div className="flex items-start gap-1 mb-1">
+            <Star size={14} className="text-yellow-400 fill-yellow-400 flex-shrink-0 mt-0.5" />
+            <span className="text-yellow-400 text-sm font-bold">{rating}</span>
+          </div>
+          <h3 className="text-white font-bold text-base mb-0.5">
+            {vehicle.make}
           </h3>
-          {vehicle.trim && (
-            <p className="text-sm text-gray-600 font-medium">{vehicle.trim}</p>
-          )}
-        </div>
-
-        <div className="mb-4 flex flex-wrap gap-2">
-          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 rounded-lg border border-gray-200">
-            <Gauge size={16} className="text-gray-600" />
-            <span className="text-sm font-medium text-gray-700">
-              {formatMileage(vehicle.mileage, vehicle.mileageUnit)}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 rounded-lg border border-gray-200">
-            <Settings size={16} className="text-gray-600" />
-            <span className="text-sm font-medium text-gray-700 capitalize">
-              {vehicle.transmission}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 rounded-lg border border-gray-200">
-            <Fuel size={16} className="text-gray-600" />
-            <span className="text-sm font-medium text-gray-700 capitalize">
-              {vehicle.fuelType.replace('-', ' ')}
-            </span>
-          </div>
-        </div>
-
-        <div className="mb-4 flex items-baseline gap-2">
-          <span className="text-3xl font-bold text-gray-900">
-            {formatPrice(vehicle.price)}
-          </span>
-        </div>
-
-        {vehicle.description && (
-          <p className="text-sm text-gray-600 line-clamp-2 mb-4">
-            {vehicle.description}
+          <p className="text-gray-400 text-sm">
+            {vehicle.model}
           </p>
-        )}
+        </div>
 
-        <div className="pt-4 border-t border-gray-200">
-          <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
-            <span>VIN: {vehicle.vin.substring(0, 8)}...</span>
-            <span className="capitalize">{vehicle.bodyType}</span>
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="text-white text-xl font-bold">
+              {formatPrice(vehicle.price)}
+            </div>
+            <div className="text-gray-500 text-xs">/ Day Rental</div>
           </div>
-
-          <div className="grid grid-cols-3 gap-2">
-            <button
-              onClick={(e) => handleActionClick(e, () => setShowTestDriveModal(true))}
-              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-blue-50 text-blue-700 rounded-lg text-sm font-semibold hover:bg-blue-100 transition"
-            >
-              <Car size={16} />
-              Test Drive
-            </button>
-            <button
-              onClick={(e) => handleActionClick(e, () => setShowTradeInModal(true))}
-              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-green-50 text-green-700 rounded-lg text-sm font-semibold hover:bg-green-100 transition"
-            >
-              <DollarSign size={16} />
-              Trade-In
-            </button>
-            <button
-              onClick={handleShare}
-              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-gray-50 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-100 transition"
-            >
-              <Share2 size={16} />
-              Share
-            </button>
-          </div>
-
           <button
-            onClick={handleToggleFeatured}
-            disabled={isTogglingFeatured}
-            className={`w-full mt-2 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold transition ${
-              isFeatured
-                ? 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            } disabled:opacity-50`}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (onViewDetails) {
+                onViewDetails(vehicle.id);
+              }
+            }}
+            className="bg-yellow-400 text-black w-10 h-10 rounded-full flex items-center justify-center hover:bg-yellow-300 transition flex-shrink-0"
           >
-            <Star size={16} className={isFeatured ? 'fill-yellow-600' : ''} />
-            {isFeatured ? 'Featured' : 'Mark as Featured'}
+            <ChevronRight size={20} strokeWidth={3} />
           </button>
         </div>
       </div>

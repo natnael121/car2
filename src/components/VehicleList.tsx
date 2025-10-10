@@ -6,7 +6,7 @@ import { BottomNav } from './BottomNav';
 import { About } from './About';
 import { db } from '../lib/firebase';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
-import { Car, Loader } from 'lucide-react';
+import { Car, Loader, Search, X } from 'lucide-react';
 import FilterPanel, { VehicleFilters } from './FilterPanel';
 
 export const VehicleList: React.FC = () => {
@@ -16,6 +16,10 @@ export const VehicleList: React.FC = () => {
   const [activeTab, setActiveTab] = useState('inventory');
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('Popular');
+  const [showFilters, setShowFilters] = useState(false);
 
   const priceRange: [number, number] = useMemo(() => {
     if (vehicles.length === 0) return [0, 100000];
@@ -84,6 +88,15 @@ export const VehicleList: React.FC = () => {
 
   const filteredVehicles = useMemo(() => {
     return vehicles.filter((vehicle) => {
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        const matchesSearch =
+          vehicle.make.toLowerCase().includes(query) ||
+          vehicle.model.toLowerCase().includes(query) ||
+          vehicle.year.toString().includes(query);
+        if (!matchesSearch) return false;
+      }
+
       if (vehicle.price < filters.priceRange[0] || vehicle.price > filters.priceRange[1]) {
         return false;
       }
@@ -120,7 +133,7 @@ export const VehicleList: React.FC = () => {
       }
       return true;
     });
-  }, [vehicles, filters]);
+  }, [vehicles, filters, searchQuery]);
 
   useEffect(() => {
     loadVehicles();
@@ -186,76 +199,117 @@ export const VehicleList: React.FC = () => {
     );
   }
 
+  const categories = ['Popular', 'Runs', 'Tributo'];
+
   return (
     <>
       {activeTab === 'about' ? (
         <About />
       ) : (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 space-y-6 pb-24">
-          <div className="mb-8 px-6 pt-6">
-            <h2 className="text-3xl font-bold text-white mb-2">Explore Our Exquisite Fleet</h2>
-            <p className="text-gray-300">
-              {filteredVehicles.length} {filteredVehicles.length === 1 ? 'vehicle' : 'vehicles'} available
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 px-6">
-            <div className="lg:col-span-1">
-              <FilterPanel
-                filters={filters}
-                onChange={setFilters}
-                availableOptions={availableOptions}
-                priceRange={priceRange}
-                yearRange={yearRange}
-                mileageRange={mileageRange}
-              />
-            </div>
-
-            <div className="lg:col-span-3">
-              {filteredVehicles.length === 0 ? (
-                <div className="bg-gray-800 border-2 border-dashed border-gray-700 rounded-2xl p-12 text-center">
-                  <Car size={64} className="text-gray-600 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-gray-300 mb-2">No Vehicles Found</h3>
-                  <p className="text-gray-400 mb-4">Try adjusting your filters to see more results.</p>
-                  <button
-                    onClick={() =>
-                      setFilters({
-                        priceRange,
-                        makes: [],
-                        models: [],
-                        yearRange,
-                        mileageRange,
-                        bodyTypes: [],
-                        transmissions: [],
-                        fuelTypes: [],
-                        colors: [],
-                        conditions: [],
-                      })
-                    }
-                    className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-gray-900 font-semibold rounded-full hover:from-yellow-400 hover:to-yellow-500 transition"
-                  >
-                    Clear All Filters
-                  </button>
-                </div>
+        <div className="min-h-screen bg-black space-y-4 pb-24">
+          <div className="px-4 pt-6 space-y-4">
+            <div className="flex items-center gap-2">
+              {!showSearch ? (
+                <button
+                  onClick={() => setShowSearch(true)}
+                  className="flex items-center gap-2 w-full bg-gray-900 text-gray-400 px-4 py-3 rounded-xl"
+                >
+                  <Search size={20} />
+                  <span>Type here to search</span>
+                </button>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {filteredVehicles.map((vehicle) => (
-                    <VehicleCard
-                      key={vehicle.id}
-                      vehicle={vehicle}
-                      onViewDetails={(id) => {
-                        const vehicle = vehicles.find(v => v.id === id);
-                        if (vehicle) {
-                          setSelectedVehicle(vehicle);
-                          setShowDetailModal(true);
-                        }
-                      }}
-                    />
-                  ))}
+                <div className="flex items-center gap-2 w-full bg-gray-900 px-4 py-3 rounded-xl">
+                  <Search size={20} className="text-gray-400" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Type here to search"
+                    className="flex-1 bg-transparent text-white placeholder-gray-400 outline-none"
+                    autoFocus
+                  />
+                  {searchQuery && (
+                    <button onClick={() => setSearchQuery('')} className="text-gray-400">
+                      <X size={20} />
+                    </button>
+                  )}
+                  <button onClick={() => setShowSearch(false)} className="text-gray-400">
+                    <X size={20} />
+                  </button>
                 </div>
               )}
             </div>
+
+            <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`px-4 py-2 rounded-lg whitespace-nowrap font-medium transition ${
+                    selectedCategory === category
+                      ? 'bg-yellow-400 text-black'
+                      : 'bg-gray-900 text-white'
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
           </div>
+
+          <div className="px-4">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-white text-xl font-bold">Popular</h2>
+              <button className="text-yellow-400 text-sm font-medium">See All</button>
+            </div>
+
+            {filteredVehicles.length === 0 ? (
+              <div className="bg-gray-900 border-2 border-dashed border-gray-700 rounded-2xl p-12 text-center">
+                <Car size={64} className="text-gray-600 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-300 mb-2">No Vehicles Found</h3>
+                <p className="text-gray-400 mb-4">Try adjusting your search.</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {filteredVehicles.map((vehicle) => (
+                  <VehicleCard
+                    key={vehicle.id}
+                    vehicle={vehicle}
+                    onViewDetails={(id) => {
+                      const vehicle = vehicles.find(v => v.id === id);
+                      if (vehicle) {
+                        setSelectedVehicle(vehicle);
+                        setShowDetailModal(true);
+                      }
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
+          {showFilters && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end">
+              <div className="bg-white w-full max-h-[80vh] rounded-t-3xl overflow-y-auto">
+                <div className="sticky top-0 bg-white border-b border-gray-200 px-4 py-4 flex items-center justify-between">
+                  <h3 className="text-lg font-bold">Filters</h3>
+                  <button onClick={() => setShowFilters(false)}>
+                    <X size={24} />
+                  </button>
+                </div>
+                <div className="p-4">
+                  <FilterPanel
+                    filters={filters}
+                    onChange={setFilters}
+                    availableOptions={availableOptions}
+                    priceRange={priceRange}
+                    yearRange={yearRange}
+                    mileageRange={mileageRange}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
