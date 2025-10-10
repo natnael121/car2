@@ -180,6 +180,11 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onViewDetails
           <p className="text-gray-400 text-sm">
             {vehicle.model}
           </p>
+          <div className="flex items-center gap-2 mt-1 text-xs text-gray-500">
+            <span>{vehicle.year}</span>
+            <span>•</span>
+            <span>{formatMileage(vehicle.mileage, vehicle.mileageUnit)}</span>
+          </div>
         </div>
 
         <div className="flex items-center justify-between">
