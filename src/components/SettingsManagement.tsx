@@ -58,12 +58,44 @@ export const SettingsManagement: React.FC = () => {
   const [saveMessage, setSaveMessage] = useState('');
 
   useEffect(() => {
-    const savedSettings = localStorage.getItem('businessSettings');
-    if (savedSettings) {
-      setSettings(JSON.parse(savedSettings));
-    }
+    loadBusinessSettings();
     loadTelegramSettings();
   }, []);
+
+  const loadBusinessSettings = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('business_settings')
+        .select('*')
+        .maybeSingle();
+
+      if (error && error.code !== 'PGRST116') throw error;
+
+      if (data) {
+        setSettings({
+          businessName: data.business_name || defaultSettings.businessName,
+          tagline: data.tagline || defaultSettings.tagline,
+          aboutText: data.about_text || defaultSettings.aboutText,
+          aboutText2: data.about_text2 || defaultSettings.aboutText2,
+          address1: data.address1 || defaultSettings.address1,
+          address2: data.address2 || defaultSettings.address2,
+          phone: data.phone || defaultSettings.phone,
+          email: data.email || defaultSettings.email,
+          mondayFriday: data.monday_friday || defaultSettings.mondayFriday,
+          saturday: data.saturday || defaultSettings.saturday,
+          sunday: data.sunday || defaultSettings.sunday,
+          logoUrl: data.logo_url || '',
+          facebookUrl: data.facebook_url || '',
+          twitterUrl: data.twitter_url || '',
+          instagramUrl: data.instagram_url || '',
+          linkedinUrl: data.linkedin_url || '',
+          youtubeUrl: data.youtube_url || '',
+        });
+      }
+    } catch (error) {
+      console.error('Error loading business settings:', error);
+    }
+  };
 
   const loadTelegramSettings = async () => {
     try {
@@ -89,7 +121,46 @@ export const SettingsManagement: React.FC = () => {
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      localStorage.setItem('businessSettings', JSON.stringify(settings));
+      const { data: existingSettings } = await supabase
+        .from('business_settings')
+        .select('id')
+        .maybeSingle();
+
+      const businessSettingsData = {
+        business_name: settings.businessName,
+        tagline: settings.tagline,
+        about_text: settings.aboutText,
+        about_text2: settings.aboutText2,
+        address1: settings.address1,
+        address2: settings.address2,
+        phone: settings.phone,
+        email: settings.email,
+        monday_friday: settings.mondayFriday,
+        saturday: settings.saturday,
+        sunday: settings.sunday,
+        logo_url: settings.logoUrl || '',
+        facebook_url: settings.facebookUrl || '',
+        twitter_url: settings.twitterUrl || '',
+        instagram_url: settings.instagramUrl || '',
+        linkedin_url: settings.linkedinUrl || '',
+        youtube_url: settings.youtubeUrl || '',
+        updated_at: new Date().toISOString(),
+      };
+
+      if (existingSettings) {
+        const { error } = await supabase
+          .from('business_settings')
+          .update(businessSettingsData)
+          .eq('id', existingSettings.id);
+
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from('business_settings')
+          .insert(businessSettingsData);
+
+        if (error) throw error;
+      }
 
       if (telegramSettings.id) {
         await supabase

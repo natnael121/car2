@@ -4,8 +4,9 @@ import { VehicleCard } from './VehicleCard';
 import { SoldModal, BuyerInfo } from './SoldModal';
 import { db } from '../lib/firebase';
 import { collection, getDocs, query, orderBy, deleteDoc, doc, updateDoc } from 'firebase/firestore';
-import { Car, Loader, Trash2, Eye, EyeOff, TrendingUp, LayoutGrid, Table as TableIcon, Search, DollarSign, CheckCircle } from 'lucide-react';
+import { Car, Loader, Trash2, Eye, EyeOff, TrendingUp, LayoutGrid, Table as TableIcon, Search, DollarSign, CheckCircle, Send } from 'lucide-react';
 import { getOrCreateCustomer, addPurchaseToCustomer } from '../services/customerService';
+import { promoteVehicleToChannel } from '../services/telegramService';
 
 type ViewMode = 'grid' | 'table';
 
@@ -24,6 +25,7 @@ export const AdminInventory: React.FC<AdminInventoryProps> = ({ onAddVehicle }) 
   const [sellingSoldId, setSellingSoldId] = useState<string | null>(null);
   const [soldModalOpen, setSoldModalOpen] = useState(false);
   const [selectedVehicleForSale, setSelectedVehicleForSale] = useState<Vehicle | null>(null);
+  const [promotingId, setPromotingId] = useState<string | null>(null);
 
   const filteredVehicles = useMemo(() => {
     if (searchTerm) {
@@ -183,6 +185,37 @@ export const AdminInventory: React.FC<AdminInventoryProps> = ({ onAddVehicle }) 
     } finally {
       setSellingSoldId(null);
       setSelectedVehicleForSale(null);
+    }
+  };
+
+  const handlePromote = async (vehicle: Vehicle) => {
+    setPromotingId(vehicle.id);
+    try {
+      const success = await promoteVehicleToChannel({
+        year: vehicle.year,
+        make: vehicle.make,
+        model: vehicle.model,
+        price: vehicle.price,
+        mileage: vehicle.mileage,
+        mileageUnit: vehicle.mileageUnit,
+        condition: vehicle.condition,
+        transmission: vehicle.transmission,
+        fuelType: vehicle.fuelType,
+        exteriorColor: vehicle.exteriorColor,
+        imageUrls: vehicle.imageUrls,
+        description: vehicle.description,
+      });
+
+      if (success) {
+        alert('Vehicle promoted to Telegram channel successfully!');
+      } else {
+        alert('Failed to promote vehicle. Please configure your Telegram settings in Settings.');
+      }
+    } catch (error) {
+      console.error('Error promoting vehicle:', error);
+      alert('Error promoting vehicle. Please check your configuration in Settings.');
+    } finally {
+      setPromotingId(null);
     }
   };
 
@@ -381,6 +414,18 @@ export const AdminInventory: React.FC<AdminInventoryProps> = ({ onAddVehicle }) 
                       )}
                     </button>
                     <button
+                      onClick={() => handlePromote(vehicle)}
+                      disabled={promotingId === vehicle.id || vehicle.sold}
+                      className="p-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                      title="Promote to Telegram channel"
+                    >
+                      {promotingId === vehicle.id ? (
+                        <Loader size={16} className="animate-spin" />
+                      ) : (
+                        <Send size={16} />
+                      )}
+                    </button>
+                    <button
                       onClick={() => handleDelete(vehicle.id)}
                       disabled={deletingId === vehicle.id}
                       className="p-2 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
@@ -501,6 +546,18 @@ export const AdminInventory: React.FC<AdminInventoryProps> = ({ onAddVehicle }) 
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex items-center justify-end gap-2">
+                            <button
+                              onClick={() => handlePromote(vehicle)}
+                              disabled={promotingId === vehicle.id || vehicle.sold}
+                              className="p-2 text-purple-600 hover:bg-purple-50 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                              title="Promote to Telegram channel"
+                            >
+                              {promotingId === vehicle.id ? (
+                                <Loader size={18} className="animate-spin" />
+                              ) : (
+                                <Send size={18} />
+                              )}
+                            </button>
                             <button
                               onClick={() => handleDelete(vehicle.id)}
                               disabled={deletingId === vehicle.id}
