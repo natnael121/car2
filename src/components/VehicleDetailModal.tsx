@@ -52,7 +52,7 @@ export const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({ vehicle,
   const [showTestDriveModal, setShowTestDriveModal] = useState(false);
   const [showTradeInModal, setShowTradeInModal] = useState(false);
   const [showFinancingModal, setShowFinancingModal] = useState(false);
-  const [activeTab, setActiveTab] = useState<'overview' | 'specifications' | 'history' | 'features'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'specifications' | 'history'>('overview');
 
   const images = vehicle.imageUrls && vehicle.imageUrls.length > 0 ? vehicle.imageUrls : [];
 
@@ -145,9 +145,9 @@ export const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({ vehicle,
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 overflow-y-auto backdrop-blur-sm">
-        <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-gray-700">
-          <div className="sticky top-0 bg-gradient-to-r from-gray-900 to-gray-800 border-b border-gray-700 px-6 py-4 flex items-center justify-between z-10 rounded-t-3xl">
+      <div className="fixed inset-0 bg-black/90 z-50 overflow-y-auto">
+        <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 min-h-screen w-full">
+          <div className="sticky top-0 bg-gradient-to-r from-gray-900 to-gray-800 border-b border-gray-700 py-4 flex items-center justify-between z-10">
             <div>
               <button
                 onClick={onClose}
@@ -167,10 +167,10 @@ export const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({ vehicle,
             </button>
           </div>
 
-          <div className="p-6 space-y-6">
+          <div className="space-y-6">
             <div className="space-y-6">
               <div className="space-y-4">
-                <div className="relative h-64 bg-gray-950 rounded-2xl overflow-hidden group">
+                <div className="relative h-64 bg-gray-950 overflow-hidden group">
                   {images.length > 0 ? (
                     <>
                       <img
@@ -226,7 +226,7 @@ export const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({ vehicle,
                   <p className="text-gray-400 leading-relaxed text-center px-4">{vehicle.description}</p>
                 )}
 
-                <div className="bg-gray-800/50 rounded-2xl p-6 space-y-4 border border-gray-700">
+                <div className="bg-gray-800/50 p-6 space-y-4 border-t border-b border-gray-700">
                   <h4 className="text-white font-semibold">Specification</h4>
                   <div className="grid grid-cols-3 gap-3">
                     <div className="bg-gray-700/50 rounded-xl p-3 text-center border border-gray-600">
@@ -253,7 +253,7 @@ export const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({ vehicle,
                   </div>
                 </div>
 
-                <div className="bg-gray-800/50 rounded-2xl p-4 border border-gray-700">
+                <div className="bg-gray-800/50 p-6 border-t border-b border-gray-700">
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-sm text-gray-400">Rent Price</span>
                     <span className="text-2xl font-bold text-white">{formatPrice(vehicle.price)}</span>
@@ -269,8 +269,8 @@ export const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({ vehicle,
             </div>
 
             <div className="border-t border-gray-700 pt-6">
-              <div className="flex gap-2 mb-6 border-b border-gray-700 overflow-x-auto">
-                {['overview', 'specifications', 'history', 'features'].map((tab) => (
+              <div className="flex gap-2 mb-6 border-b border-gray-700 overflow-x-auto px-6">
+                {['overview', 'specifications', 'history'].map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab as any)}
@@ -286,8 +286,8 @@ export const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({ vehicle,
               </div>
 
               {activeTab === 'overview' && (
-                <div className="space-y-6">
-                  <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700">
+                <div className="space-y-6 px-6">
+                  <div className="bg-gray-800/50 p-6 border-t border-b border-gray-700">
                     <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                       <Car className="text-yellow-500" size={24} />
                       Basic Information
@@ -369,7 +369,7 @@ export const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({ vehicle,
                     </div>
                   </div>
 
-                  <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700">
+                  <div className="bg-gray-800/50 p-6 border-t border-b border-gray-700">
                     <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                       <Droplet className="text-yellow-500" size={24} />
                       Colors
@@ -393,7 +393,7 @@ export const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({ vehicle,
                     </div>
                   </div>
 
-                  <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700">
+                  <div className="bg-gray-800/50 p-6 border-t border-b border-gray-700">
                     <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                       <Settings className="text-yellow-500" size={24} />
                       Drivetrain & Transmission
@@ -417,7 +417,7 @@ export const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({ vehicle,
                     </div>
                   </div>
 
-                  <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700">
+                  <div className="bg-gray-800/50 p-6 border-t border-b border-gray-700">
                     <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                       <Users className="text-yellow-500" size={24} />
                       Capacity
@@ -441,33 +441,44 @@ export const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({ vehicle,
                     </div>
                   </div>
 
-                  <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700">
+                  <div className="bg-gray-800/50 p-6 border-t border-b border-gray-700">
                     <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                      <TrendingUp className="text-yellow-500" size={24} />
-                      Listing Statistics
+                      <Power className="text-yellow-500" size={24} />
+                      Engine & Performance
                     </h3>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                      <div className="flex items-start gap-3 p-3 bg-gray-700/50 rounded-xl border border-gray-600">
-                        <Clock className="text-yellow-500 mt-1 flex-shrink-0" size={20} />
-                        <div>
-                          <div className="text-xs text-gray-400">Days on Lot</div>
-                          <div className="font-semibold text-white">{vehicle.daysOnLot}</div>
+                      {vehicle.engineSize && (
+                        <div className="flex items-start gap-3 p-3 bg-gray-700/50 rounded-xl border border-gray-600">
+                          <Zap className="text-yellow-500 mt-1 flex-shrink-0" size={20} />
+                          <div>
+                            <div className="text-xs text-gray-400">Engine Size</div>
+                            <div className="font-semibold text-white">{vehicle.engineSize}</div>
+                          </div>
                         </div>
-                      </div>
-
-                      <div className="flex items-start gap-3 p-3 bg-gray-700/50 rounded-xl border border-gray-600">
-                        <Eye className="text-yellow-500 mt-1 flex-shrink-0" size={20} />
-                        <div>
-                          <div className="text-xs text-gray-400">View Count</div>
-                          <div className="font-semibold text-white">{vehicle.viewCount}</div>
+                      )}
+                      {vehicle.engineType && (
+                        <div className="flex items-start gap-3 p-3 bg-gray-700/50 rounded-xl border border-gray-600">
+                          <Activity className="text-yellow-500 mt-1 flex-shrink-0" size={20} />
+                          <div>
+                            <div className="text-xs text-gray-400">Engine Type</div>
+                            <div className="font-semibold text-white">{vehicle.engineType}</div>
+                          </div>
                         </div>
-                      </div>
-
+                      )}
+                      {vehicle.cylinders && (
+                        <div className="flex items-start gap-3 p-3 bg-gray-700/50 rounded-xl border border-gray-600">
+                          <RotateCw className="text-yellow-500 mt-1 flex-shrink-0" size={20} />
+                          <div>
+                            <div className="text-xs text-gray-400">Cylinders</div>
+                            <div className="font-semibold text-white">{vehicle.cylinders}</div>
+                          </div>
+                        </div>
+                      )}
                       <div className="flex items-start gap-3 p-3 bg-gray-700/50 rounded-xl border border-gray-600">
-                        <MessageSquare className="text-yellow-500 mt-1 flex-shrink-0" size={20} />
+                        <Fuel className="text-yellow-500 mt-1 flex-shrink-0" size={20} />
                         <div>
-                          <div className="text-xs text-gray-400">Inquiries</div>
-                          <div className="font-semibold text-white">{vehicle.inquiryCount}</div>
+                          <div className="text-xs text-gray-400">Fuel Type</div>
+                          <div className="font-semibold text-white capitalize">{vehicle.fuelType.replace('-', ' ')}</div>
                         </div>
                       </div>
                     </div>
@@ -476,7 +487,7 @@ export const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({ vehicle,
               )}
 
               {activeTab === 'specifications' && (
-                <div className="space-y-6">
+                <div className="space-y-6 px-6">
                   <div className="bg-gray-50 rounded-lg p-6">
                     <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                       <Power className="text-blue-600" size={24} />
@@ -691,7 +702,7 @@ export const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({ vehicle,
               )}
 
               {activeTab === 'history' && (
-                <div className="space-y-6">
+                <div className="space-y-6 px-6">
                   <div className="bg-gray-50 rounded-lg p-6">
                     <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                       <Shield className="text-blue-600" size={24} />
@@ -821,24 +832,6 @@ export const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({ vehicle,
                 </div>
               )}
 
-              {activeTab === 'features' && (
-                <div className="space-y-4">
-                  {vehicle.features && vehicle.features.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {vehicle.features.map((feature, index) => (
-                        <div key={index} className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
-                          <CheckCircle size={20} className="text-green-600 flex-shrink-0" />
-                          <span className="text-gray-900">{feature}</span>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-center py-8 text-gray-600">
-                      No features listed for this vehicle
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
           </div>
         </div>
