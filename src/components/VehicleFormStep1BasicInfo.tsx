@@ -59,7 +59,7 @@ export const VehicleFormStep1BasicInfo: React.FC<VehicleFormStep1Props> = ({
 }) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    const numericFields = ['year'];
+    const numericFields = ['year', 'price'];
 
     if (numericFields.includes(name)) {
       onChange(name as keyof VehicleFormData, value ? parseInt(value, 10) : '');
@@ -148,6 +148,16 @@ export const VehicleFormStep1BasicInfo: React.FC<VehicleFormStep1Props> = ({
           placeholder="Select body type"
         />
       </div>
+
+      <FormInput
+        label="Price ($)"
+        name="price"
+        type="number"
+        value={formData.price}
+        onChange={handleInputChange}
+        error={errors.price}
+        placeholder="25000"
+      />
 
       <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
         <p className="text-sm text-blue-800">
