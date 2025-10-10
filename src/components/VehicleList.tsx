@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Vehicle } from '../types';
 import { VehicleCard } from './VehicleCard';
+import { VehicleDetailModal } from './VehicleDetailModal';
 import { BottomNav } from './BottomNav';
 import { About } from './About';
 import { db } from '../lib/firebase';
@@ -13,6 +14,8 @@ export const VehicleList: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('inventory');
+  const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
+  const [showDetailModal, setShowDetailModal] = useState(false);
 
   const priceRange: [number, number] = useMemo(() => {
     if (vehicles.length === 0) return [0, 100000];
@@ -241,7 +244,13 @@ export const VehicleList: React.FC = () => {
                     <VehicleCard
                       key={vehicle.id}
                       vehicle={vehicle}
-                      onViewDetails={(id) => console.log('View details:', id)}
+                      onViewDetails={(id) => {
+                        const vehicle = vehicles.find(v => v.id === id);
+                        if (vehicle) {
+                          setSelectedVehicle(vehicle);
+                          setShowDetailModal(true);
+                        }
+                      }}
                     />
                   ))}
                 </div>
@@ -255,6 +264,17 @@ export const VehicleList: React.FC = () => {
         activeTab={activeTab}
         onTabChange={setActiveTab}
       />
+
+      {selectedVehicle && (
+        <VehicleDetailModal
+          vehicle={selectedVehicle}
+          isOpen={showDetailModal}
+          onClose={() => {
+            setShowDetailModal(false);
+            setSelectedVehicle(null);
+          }}
+        />
+      )}
     </>
   );
 };
