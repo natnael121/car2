@@ -25,6 +25,7 @@ import { SalesManagement } from './SalesManagement';
 import { CustomersManagement } from './CustomersManagement';
 import { ReportsAnalytics } from './ReportsAnalytics';
 import { SettingsManagement } from './SettingsManagement';
+import { useAuth } from '../contexts/AuthContext';
 
 type AdminTab =
   | 'overview'
@@ -49,6 +50,7 @@ interface MenuItem {
 
 export const AdminDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<AdminTab>('overview');
+  const { logout } = useAuth();
 
   const menuItems: MenuItem[] = [
     { id: 'overview', label: 'Dashboard', icon: <LayoutDashboard size={20} /> },
@@ -64,8 +66,12 @@ export const AdminDashboard: React.FC = () => {
     { id: 'settings', label: 'Settings', icon: <Settings size={20} /> },
   ];
 
-  const handleLogout = () => {
-    console.log('Logout');
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
   };
 
   const renderContent = () => {
