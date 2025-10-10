@@ -9,7 +9,7 @@ import {
   TrendingUp,
   MessageSquare,
   LogOut,
-  Menu,
+  Menu, 
   X
 } from 'lucide-react';
 import { AdminInventory } from './AdminInventory';
