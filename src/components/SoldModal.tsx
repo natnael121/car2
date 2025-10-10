@@ -55,32 +55,6 @@ export const SoldModal: React.FC<SoldModalProps> = ({
   const validateForm = (): boolean => {
     const newErrors: Partial<Record<keyof BuyerInfo, string>> = {};
 
-    if (!formData.firstName.trim()) {
-      newErrors.firstName = 'First name is required';
-    }
-    if (!formData.lastName.trim()) {
-      newErrors.lastName = 'Last name is required';
-    }
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
-    }
-    if (!formData.phone.trim()) {
-      newErrors.phone = 'Phone is required';
-    }
-    if (!formData.address.trim()) {
-      newErrors.address = 'Address is required';
-    }
-    if (!formData.city.trim()) {
-      newErrors.city = 'City is required';
-    }
-    if (!formData.state.trim()) {
-      newErrors.state = 'State is required';
-    }
-    if (!formData.zipCode.trim()) {
-      newErrors.zipCode = 'ZIP code is required';
-    }
     if (!formData.salePrice || formData.salePrice <= 0) {
       newErrors.salePrice = 'Sale price must be greater than 0';
     }
@@ -174,7 +148,6 @@ export const SoldModal: React.FC<SoldModalProps> = ({
               onChange={handleInputChange('firstName')}
               error={errors.firstName}
               placeholder="John"
-              required
             />
             <FormInput
               label="Last Name"
@@ -184,7 +157,6 @@ export const SoldModal: React.FC<SoldModalProps> = ({
               onChange={handleInputChange('lastName')}
               error={errors.lastName}
               placeholder="Doe"
-              required
             />
           </div>
 
@@ -197,7 +169,6 @@ export const SoldModal: React.FC<SoldModalProps> = ({
               onChange={handleInputChange('email')}
               error={errors.email}
               placeholder="john.doe@example.com"
-              required
             />
             <FormInput
               label="Phone"
@@ -207,7 +178,6 @@ export const SoldModal: React.FC<SoldModalProps> = ({
               onChange={handleInputChange('phone')}
               error={errors.phone}
               placeholder="(555) 123-4567"
-              required
             />
           </div>
 
@@ -220,7 +190,6 @@ export const SoldModal: React.FC<SoldModalProps> = ({
               onChange={handleInputChange('address')}
               error={errors.address}
               placeholder="123 Main St"
-              required
             />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <FormInput
@@ -231,7 +200,6 @@ export const SoldModal: React.FC<SoldModalProps> = ({
                 onChange={handleInputChange('city')}
                 error={errors.city}
                 placeholder="New York"
-                required
               />
               <FormInput
                 label="State"
@@ -241,7 +209,6 @@ export const SoldModal: React.FC<SoldModalProps> = ({
                 onChange={handleInputChange('state')}
                 error={errors.state}
                 placeholder="NY"
-                required
               />
               <FormInput
                 label="ZIP Code"
@@ -251,7 +218,6 @@ export const SoldModal: React.FC<SoldModalProps> = ({
                 onChange={handleInputChange('zipCode')}
                 error={errors.zipCode}
                 placeholder="10001"
-                required
               />
             </div>
           </div>
