@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Save, Building2, MapPin, Phone, Mail, Clock, Info } from 'lucide-react';
+import { Save, Building2, MapPin, Phone, Mail, Clock, Info, Image, Share2 } from 'lucide-react';
 
 interface BusinessSettings {
   businessName: string;
@@ -13,6 +13,12 @@ interface BusinessSettings {
   mondayFriday: string;
   saturday: string;
   sunday: string;
+  logoUrl?: string;
+  facebookUrl?: string;
+  twitterUrl?: string;
+  instagramUrl?: string;
+  linkedinUrl?: string;
+  youtubeUrl?: string;
 }
 
 const defaultSettings: BusinessSettings = {
@@ -26,7 +32,13 @@ const defaultSettings: BusinessSettings = {
   email: 'info@cardealership.com',
   mondayFriday: '9:00 AM - 7:00 PM',
   saturday: '9:00 AM - 6:00 PM',
-  sunday: '10:00 AM - 5:00 PM'
+  sunday: '10:00 AM - 5:00 PM',
+  logoUrl: '',
+  facebookUrl: '',
+  twitterUrl: '',
+  instagramUrl: '',
+  linkedinUrl: '',
+  youtubeUrl: ''
 };
 
 export const SettingsManagement: React.FC = () => {
@@ -110,6 +122,114 @@ export const SettingsManagement: React.FC = () => {
                 onChange={(e) => handleChange('tagline', e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Your trusted automotive partner since 2005"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t border-gray-200 pt-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Image className="text-blue-600" size={24} />
+            <h2 className="text-xl font-bold text-gray-900">Logo</h2>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Logo URL
+            </label>
+            <input
+              type="url"
+              value={settings.logoUrl || ''}
+              onChange={(e) => handleChange('logoUrl', e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="https://example.com/logo.png"
+            />
+            <p className="text-sm text-gray-500 mt-1">Enter the URL of your business logo</p>
+            {settings.logoUrl && (
+              <div className="mt-3 p-4 bg-gray-50 rounded-lg">
+                <p className="text-sm text-gray-600 mb-2">Logo Preview:</p>
+                <img
+                  src={settings.logoUrl}
+                  alt="Logo Preview"
+                  className="h-20 w-auto object-contain"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="border-t border-gray-200 pt-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Share2 className="text-blue-600" size={24} />
+            <h2 className="text-xl font-bold text-gray-900">Social Media</h2>
+          </div>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Facebook URL
+              </label>
+              <input
+                type="url"
+                value={settings.facebookUrl || ''}
+                onChange={(e) => handleChange('facebookUrl', e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="https://facebook.com/yourbusiness"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Twitter URL
+              </label>
+              <input
+                type="url"
+                value={settings.twitterUrl || ''}
+                onChange={(e) => handleChange('twitterUrl', e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="https://twitter.com/yourbusiness"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Instagram URL
+              </label>
+              <input
+                type="url"
+                value={settings.instagramUrl || ''}
+                onChange={(e) => handleChange('instagramUrl', e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="https://instagram.com/yourbusiness"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                LinkedIn URL
+              </label>
+              <input
+                type="url"
+                value={settings.linkedinUrl || ''}
+                onChange={(e) => handleChange('linkedinUrl', e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="https://linkedin.com/company/yourbusiness"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                YouTube URL
+              </label>
+              <input
+                type="url"
+                value={settings.youtubeUrl || ''}
+                onChange={(e) => handleChange('youtubeUrl', e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="https://youtube.com/@yourbusiness"
               />
             </div>
           </div>

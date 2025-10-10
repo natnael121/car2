@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, Phone, Mail, Clock, Award, Users, Shield, Star } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Award, Users, Shield, Star, Facebook, Twitter, Instagram, Linkedin, Youtube } from 'lucide-react';
 
 interface BusinessSettings {
   businessName: string;
@@ -13,6 +13,12 @@ interface BusinessSettings {
   mondayFriday: string;
   saturday: string;
   sunday: string;
+  logoUrl?: string;
+  facebookUrl?: string;
+  twitterUrl?: string;
+  instagramUrl?: string;
+  linkedinUrl?: string;
+  youtubeUrl?: string;
 }
 
 const defaultSettings: BusinessSettings = {
@@ -26,7 +32,13 @@ const defaultSettings: BusinessSettings = {
   email: 'info@cardealership.com',
   mondayFriday: '9:00 AM - 7:00 PM',
   saturday: '9:00 AM - 6:00 PM',
-  sunday: '10:00 AM - 5:00 PM'
+  sunday: '10:00 AM - 5:00 PM',
+  logoUrl: '',
+  facebookUrl: '',
+  twitterUrl: '',
+  instagramUrl: '',
+  linkedinUrl: '',
+  youtubeUrl: ''
 };
 
 export const About: React.FC = () => {
@@ -40,110 +52,185 @@ export const About: React.FC = () => {
   }, []);
 
   return (
-    <div className="space-y-6 pb-24">
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl p-8 shadow-lg">
-        <h1 className="text-3xl font-bold mb-2">{settings.businessName}</h1>
-        <p className="text-blue-100 text-lg">{settings.tagline}</p>
+    <div className="min-h-screen bg-black space-y-6 pb-24 px-4 pt-6">
+      <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-black border border-gray-700 rounded-2xl p-8 shadow-2xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-400 opacity-5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-yellow-400 opacity-5 rounded-full blur-3xl"></div>
+
+        <div className="relative z-10 text-center">
+          {settings.logoUrl && (
+            <div className="mb-6 flex justify-center">
+              <img
+                src={settings.logoUrl}
+                alt="Business Logo"
+                className="h-24 w-auto object-contain"
+              />
+            </div>
+          )}
+          <h1 className="text-4xl font-bold mb-3 text-white">{settings.businessName}</h1>
+          <p className="text-yellow-400 text-lg font-medium mb-6">{settings.tagline}</p>
+
+          <div className="flex justify-center gap-3 mt-6">
+            {settings.facebookUrl && (
+              <a
+                href={settings.facebookUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-gray-800 hover:bg-yellow-400 text-gray-300 hover:text-black p-3 rounded-full transition-all transform hover:scale-110"
+              >
+                <Facebook size={20} />
+              </a>
+            )}
+            {settings.twitterUrl && (
+              <a
+                href={settings.twitterUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-gray-800 hover:bg-yellow-400 text-gray-300 hover:text-black p-3 rounded-full transition-all transform hover:scale-110"
+              >
+                <Twitter size={20} />
+              </a>
+            )}
+            {settings.instagramUrl && (
+              <a
+                href={settings.instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-gray-800 hover:bg-yellow-400 text-gray-300 hover:text-black p-3 rounded-full transition-all transform hover:scale-110"
+              >
+                <Instagram size={20} />
+              </a>
+            )}
+            {settings.linkedinUrl && (
+              <a
+                href={settings.linkedinUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-gray-800 hover:bg-yellow-400 text-gray-300 hover:text-black p-3 rounded-full transition-all transform hover:scale-110"
+              >
+                <Linkedin size={20} />
+              </a>
+            )}
+            {settings.youtubeUrl && (
+              <a
+                href={settings.youtubeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-gray-800 hover:bg-yellow-400 text-gray-300 hover:text-black p-3 rounded-full transition-all transform hover:scale-110"
+              >
+                <Youtube size={20} />
+              </a>
+            )}
+          </div>
+        </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-md p-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">About Us</h2>
-        <p className="text-gray-700 leading-relaxed mb-4">
+      <div className="bg-gray-900 border border-gray-700 rounded-2xl shadow-xl p-6">
+        <h2 className="text-2xl font-bold text-white mb-4">About Us</h2>
+        <p className="text-gray-300 leading-relaxed mb-4">
           {settings.aboutText}
         </p>
-        <p className="text-gray-700 leading-relaxed">
+        <p className="text-gray-300 leading-relaxed">
           {settings.aboutText2}
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="bg-white rounded-xl shadow-md p-6">
+        <div className="bg-gray-900 border border-gray-700 rounded-2xl shadow-xl p-6 hover:border-yellow-400 transition-all transform hover:scale-105">
           <div className="flex items-start gap-4">
-            <div className="bg-blue-100 p-3 rounded-lg">
-              <Award className="w-6 h-6 text-blue-600" />
+            <div className="bg-yellow-400 bg-opacity-20 p-3 rounded-lg">
+              <Award className="w-6 h-6 text-yellow-400" />
             </div>
             <div>
-              <h3 className="font-bold text-gray-900 mb-1">Certified Quality</h3>
-              <p className="text-gray-600 text-sm">All vehicles undergo rigorous inspection and certification</p>
+              <h3 className="font-bold text-white mb-1">Certified Quality</h3>
+              <p className="text-gray-400 text-sm">All vehicles undergo rigorous inspection and certification</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-md p-6">
+        <div className="bg-gray-900 border border-gray-700 rounded-2xl shadow-xl p-6 hover:border-yellow-400 transition-all transform hover:scale-105">
           <div className="flex items-start gap-4">
-            <div className="bg-blue-100 p-3 rounded-lg">
-              <Users className="w-6 h-6 text-blue-600" />
+            <div className="bg-yellow-400 bg-opacity-20 p-3 rounded-lg">
+              <Users className="w-6 h-6 text-yellow-400" />
             </div>
             <div>
-              <h3 className="font-bold text-gray-900 mb-1">Expert Team</h3>
-              <p className="text-gray-600 text-sm">Knowledgeable staff with years of automotive experience</p>
+              <h3 className="font-bold text-white mb-1">Expert Team</h3>
+              <p className="text-gray-400 text-sm">Knowledgeable staff with years of automotive experience</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-md p-6">
+        <div className="bg-gray-900 border border-gray-700 rounded-2xl shadow-xl p-6 hover:border-yellow-400 transition-all transform hover:scale-105">
           <div className="flex items-start gap-4">
-            <div className="bg-blue-100 p-3 rounded-lg">
-              <Shield className="w-6 h-6 text-blue-600" />
+            <div className="bg-yellow-400 bg-opacity-20 p-3 rounded-lg">
+              <Shield className="w-6 h-6 text-yellow-400" />
             </div>
             <div>
-              <h3 className="font-bold text-gray-900 mb-1">Warranty Coverage</h3>
-              <p className="text-gray-600 text-sm">Comprehensive warranty options for peace of mind</p>
+              <h3 className="font-bold text-white mb-1">Warranty Coverage</h3>
+              <p className="text-gray-400 text-sm">Comprehensive warranty options for peace of mind</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-md p-6">
+        <div className="bg-gray-900 border border-gray-700 rounded-2xl shadow-xl p-6 hover:border-yellow-400 transition-all transform hover:scale-105">
           <div className="flex items-start gap-4">
-            <div className="bg-blue-100 p-3 rounded-lg">
-              <Star className="w-6 h-6 text-blue-600" />
+            <div className="bg-yellow-400 bg-opacity-20 p-3 rounded-lg">
+              <Star className="w-6 h-6 text-yellow-400" />
             </div>
             <div>
-              <h3 className="font-bold text-gray-900 mb-1">Customer Rated</h3>
-              <p className="text-gray-600 text-sm">4.8/5 stars from over 2,000 satisfied customers</p>
+              <h3 className="font-bold text-white mb-1">Customer Rated</h3>
+              <p className="text-gray-400 text-sm">4.8/5 stars from over 2,000 satisfied customers</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-md p-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Contact Information</h2>
+      <div className="bg-gray-900 border border-gray-700 rounded-2xl shadow-xl p-6">
+        <h2 className="text-2xl font-bold text-white mb-6">Contact Information</h2>
 
-        <div className="space-y-4">
-          <div className="flex items-start gap-4">
-            <MapPin className="w-5 h-5 text-blue-600 mt-1" />
+        <div className="space-y-6">
+          <div className="flex items-start gap-4 group">
+            <div className="bg-yellow-400 bg-opacity-20 p-2 rounded-lg group-hover:bg-opacity-30 transition-all">
+              <MapPin className="w-5 h-5 text-yellow-400 mt-1" />
+            </div>
             <div>
-              <h3 className="font-semibold text-gray-900 mb-1">Address</h3>
-              <p className="text-gray-600">{settings.address1}</p>
-              <p className="text-gray-600">{settings.address2}</p>
+              <h3 className="font-semibold text-white mb-1">Address</h3>
+              <p className="text-gray-300">{settings.address1}</p>
+              <p className="text-gray-300">{settings.address2}</p>
             </div>
           </div>
 
-          <div className="flex items-start gap-4">
-            <Phone className="w-5 h-5 text-blue-600 mt-1" />
+          <div className="flex items-start gap-4 group">
+            <div className="bg-yellow-400 bg-opacity-20 p-2 rounded-lg group-hover:bg-opacity-30 transition-all">
+              <Phone className="w-5 h-5 text-yellow-400 mt-1" />
+            </div>
             <div>
-              <h3 className="font-semibold text-gray-900 mb-1">Phone</h3>
-              <a href={`tel:${settings.phone.replace(/[^0-9+]/g, '')}`} className="text-blue-600 hover:underline">
+              <h3 className="font-semibold text-white mb-1">Phone</h3>
+              <a href={`tel:${settings.phone.replace(/[^0-9+]/g, '')}`} className="text-yellow-400 hover:underline">
                 {settings.phone}
               </a>
             </div>
           </div>
 
-          <div className="flex items-start gap-4">
-            <Mail className="w-5 h-5 text-blue-600 mt-1" />
+          <div className="flex items-start gap-4 group">
+            <div className="bg-yellow-400 bg-opacity-20 p-2 rounded-lg group-hover:bg-opacity-30 transition-all">
+              <Mail className="w-5 h-5 text-yellow-400 mt-1" />
+            </div>
             <div>
-              <h3 className="font-semibold text-gray-900 mb-1">Email</h3>
-              <a href={`mailto:${settings.email}`} className="text-blue-600 hover:underline">
+              <h3 className="font-semibold text-white mb-1">Email</h3>
+              <a href={`mailto:${settings.email}`} className="text-yellow-400 hover:underline">
                 {settings.email}
               </a>
             </div>
           </div>
 
-          <div className="flex items-start gap-4">
-            <Clock className="w-5 h-5 text-blue-600 mt-1" />
+          <div className="flex items-start gap-4 group">
+            <div className="bg-yellow-400 bg-opacity-20 p-2 rounded-lg group-hover:bg-opacity-30 transition-all">
+              <Clock className="w-5 h-5 text-yellow-400 mt-1" />
+            </div>
             <div>
-              <h3 className="font-semibold text-gray-900 mb-1">Business Hours</h3>
-              <div className="text-gray-600 space-y-1">
+              <h3 className="font-semibold text-white mb-1">Business Hours</h3>
+              <div className="text-gray-300 space-y-1">
                 <p>Monday - Friday: {settings.mondayFriday}</p>
                 <p>Saturday: {settings.saturday}</p>
                 <p>Sunday: {settings.sunday}</p>
@@ -153,32 +240,32 @@ export const About: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-md p-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Our Services</h2>
+      <div className="bg-gray-900 border border-gray-700 rounded-2xl shadow-xl p-6">
+        <h2 className="text-2xl font-bold text-white mb-4">Our Services</h2>
         <ul className="space-y-3">
-          <li className="flex items-center gap-3">
-            <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-            <span className="text-gray-700">New and pre-owned vehicle sales</span>
+          <li className="flex items-center gap-3 group">
+            <div className="w-2 h-2 bg-yellow-400 rounded-full group-hover:scale-150 transition-transform"></div>
+            <span className="text-gray-300 group-hover:text-white transition-colors">New and pre-owned vehicle sales</span>
           </li>
-          <li className="flex items-center gap-3">
-            <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-            <span className="text-gray-700">Trade-in evaluations</span>
+          <li className="flex items-center gap-3 group">
+            <div className="w-2 h-2 bg-yellow-400 rounded-full group-hover:scale-150 transition-transform"></div>
+            <span className="text-gray-300 group-hover:text-white transition-colors">Trade-in evaluations</span>
           </li>
-          <li className="flex items-center gap-3">
-            <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-            <span className="text-gray-700">Financing and leasing options</span>
+          <li className="flex items-center gap-3 group">
+            <div className="w-2 h-2 bg-yellow-400 rounded-full group-hover:scale-150 transition-transform"></div>
+            <span className="text-gray-300 group-hover:text-white transition-colors">Financing and leasing options</span>
           </li>
-          <li className="flex items-center gap-3">
-            <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-            <span className="text-gray-700">Vehicle service and maintenance</span>
+          <li className="flex items-center gap-3 group">
+            <div className="w-2 h-2 bg-yellow-400 rounded-full group-hover:scale-150 transition-transform"></div>
+            <span className="text-gray-300 group-hover:text-white transition-colors">Vehicle service and maintenance</span>
           </li>
-          <li className="flex items-center gap-3">
-            <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-            <span className="text-gray-700">Extended warranty programs</span>
+          <li className="flex items-center gap-3 group">
+            <div className="w-2 h-2 bg-yellow-400 rounded-full group-hover:scale-150 transition-transform"></div>
+            <span className="text-gray-300 group-hover:text-white transition-colors">Extended warranty programs</span>
           </li>
-          <li className="flex items-center gap-3">
-            <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-            <span className="text-gray-700">Parts and accessories</span>
+          <li className="flex items-center gap-3 group">
+            <div className="w-2 h-2 bg-yellow-400 rounded-full group-hover:scale-150 transition-transform"></div>
+            <span className="text-gray-300 group-hover:text-white transition-colors">Parts and accessories</span>
           </li>
         </ul>
       </div>

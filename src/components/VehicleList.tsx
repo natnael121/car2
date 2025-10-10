@@ -170,9 +170,17 @@ export const VehicleList: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center py-16">
-        <Loader size={48} className="text-blue-600 animate-spin mb-4" />
-        <p className="text-gray-600">Loading vehicles...</p>
+      <div className="min-h-screen bg-black flex flex-col items-center justify-center px-4">
+        <div className="text-center">
+          <div className="mb-8">
+            <Car size={80} className="text-yellow-400 mx-auto mb-4 animate-pulse" />
+          </div>
+          <div className="relative">
+            <Loader size={48} className="text-yellow-400 animate-spin mb-4 mx-auto" />
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-2">Loading Inventory</h2>
+          <p className="text-gray-400">Please wait while we load the vehicles...</p>
+        </div>
       </div>
     );
   }
