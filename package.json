@@ -12,6 +12,7 @@
     "migrate-crm": "node scripts/migrate-crm-data.js"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.75.0",
     "@telegram-apps/sdk": "^1.1.3",
     "date-fns": "^4.1.0",
     "firebase": "^10.14.1",

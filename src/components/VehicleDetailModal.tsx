@@ -149,13 +149,7 @@ export const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({ vehicle,
   const handlePromote = async () => {
     setIsPromoting(true);
     try {
-      const channelId = import.meta.env.VITE_TELEGRAM_CHANNEL_ID;
-      if (!channelId) {
-        alert('Telegram channel ID is not configured. Please set VITE_TELEGRAM_CHANNEL_ID in your .env file.');
-        return;
-      }
-
-      const success = await promoteVehicleToChannel(channelId, {
+      const success = await promoteVehicleToChannel({
         year: vehicle.year,
         make: vehicle.make,
         model: vehicle.model,
@@ -173,11 +167,11 @@ export const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({ vehicle,
       if (success) {
         alert('Vehicle promoted to Telegram channel successfully!');
       } else {
-        alert('Failed to promote vehicle. Please try again.');
+        alert('Failed to promote vehicle. Please configure your Telegram settings in the admin panel.');
       }
     } catch (error) {
       console.error('Error promoting vehicle:', error);
-      alert('Error promoting vehicle. Please check your configuration.');
+      alert('Error promoting vehicle. Please check your configuration in Settings.');
     } finally {
       setIsPromoting(false);
     }

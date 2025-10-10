@@ -104,20 +104,17 @@ export const TestDriveModal: React.FC<TestDriveModalProps> = ({ vehicle, isOpen,
 
       await linkTestDriveToCustomer(customerId, testDriveRef.id);
 
-      const telegramUserId = import.meta.env.VITE_TELEGRAM_ADMIN_USER_ID;
-      if (telegramUserId) {
-        await sendTestDriveNotification(telegramUserId, {
-          customerName: formData.customerName,
-          customerEmail: formData.customerEmail,
-          customerPhone: formData.customerPhone,
-          vehicleMake: vehicle.make,
-          vehicleModel: vehicle.model,
-          vehicleYear: vehicle.year,
-          preferredDate: formData.preferredDate,
-          preferredTime: formData.preferredTime,
-          notes: formData.notes,
-        });
-      }
+      await sendTestDriveNotification({
+        customerName: formData.customerName,
+        customerEmail: formData.customerEmail,
+        customerPhone: formData.customerPhone,
+        vehicleMake: vehicle.make,
+        vehicleModel: vehicle.model,
+        vehicleYear: vehicle.year,
+        preferredDate: formData.preferredDate,
+        preferredTime: formData.preferredTime,
+        notes: formData.notes,
+      });
 
       setSubmitSuccess(true);
       setTimeout(() => {

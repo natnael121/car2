@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Save, Building2, MapPin, Phone, Mail, Clock, Info, Image, Share2 } from 'lucide-react';
+import { Save, Building2, MapPin, Phone, Mail, Clock, Info, Image, Share2, Send } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 interface BusinessSettings {
   businessName: string;
@@ -19,6 +20,12 @@ interface BusinessSettings {
   instagramUrl?: string;
   linkedinUrl?: string;
   youtubeUrl?: string;
+}
+
+interface TelegramSettings {
+  id?: string;
+  admin_user_id: string;
+  channel_id: string;
 }
 
 const defaultSettings: BusinessSettings = {
@@ -43,6 +50,10 @@ const defaultSettings: BusinessSettings = {
 
 export const SettingsManagement: React.FC = () => {
   const [settings, setSettings] = useState<BusinessSettings>(defaultSettings);
+  const [telegramSettings, setTelegramSettings] = useState<TelegramSettings>({
+    admin_user_id: '',
+    channel_id: '',
+  });
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');
 
@@ -51,21 +62,82 @@ export const SettingsManagement: React.FC = () => {
     if (savedSettings) {
       setSettings(JSON.parse(savedSettings));
     }
+    loadTelegramSettings();
   }, []);
 
-  const handleSave = () => {
-    setIsSaving(true);
-    localStorage.setItem('businessSettings', JSON.stringify(settings));
+  const loadTelegramSettings = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('telegram_settings')
+        .select('*')
+        .maybeSingle();
 
-    setTimeout(() => {
-      setIsSaving(false);
+      if (error) throw error;
+
+      if (data) {
+        setTelegramSettings({
+          id: data.id,
+          admin_user_id: data.admin_user_id || '',
+          channel_id: data.channel_id || '',
+        });
+      }
+    } catch (error) {
+      console.error('Error loading Telegram settings:', error);
+    }
+  };
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      localStorage.setItem('businessSettings', JSON.stringify(settings));
+
+      if (telegramSettings.id) {
+        await supabase
+          .from('telegram_settings')
+          .update({
+            admin_user_id: telegramSettings.admin_user_id,
+            channel_id: telegramSettings.channel_id,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', telegramSettings.id);
+      } else {
+        const { data, error } = await supabase
+          .from('telegram_settings')
+          .insert({
+            admin_user_id: telegramSettings.admin_user_id,
+            channel_id: telegramSettings.channel_id,
+          })
+          .select()
+          .single();
+
+        if (error) throw error;
+
+        if (data) {
+          setTelegramSettings({
+            id: data.id,
+            admin_user_id: data.admin_user_id,
+            channel_id: data.channel_id,
+          });
+        }
+      }
+
       setSaveMessage('Settings saved successfully!');
       setTimeout(() => setSaveMessage(''), 3000);
-    }, 500);
+    } catch (error) {
+      console.error('Error saving settings:', error);
+      setSaveMessage('Error saving settings. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleChange = (field: keyof BusinessSettings, value: string) => {
     setSettings(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleTelegramChange = (field: keyof TelegramSettings, value: string) => {
+    if (field === 'id') return;
+    setTelegramSettings(prev => ({ ...prev, [field]: value }));
   };
 
   return (
@@ -86,13 +158,76 @@ export const SettingsManagement: React.FC = () => {
       </div>
 
       {saveMessage && (
-        <div className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
+        <div className={`${
+          saveMessage.includes('Error')
+            ? 'bg-red-50 border-red-200 text-red-800'
+            : 'bg-green-50 border-green-200 text-green-800'
+        } border px-4 py-3 rounded-lg`}>
           {saveMessage}
         </div>
       )}
 
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-6">
         <div>
+          <div className="flex items-center gap-2 mb-4">
+            <Send className="text-blue-600" size={24} />
+            <h2 className="text-xl font-bold text-gray-900">Telegram Integration</h2>
+          </div>
+
+          <div className="space-y-4">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+              <p className="text-sm text-blue-800">
+                Configure your Telegram settings to receive notifications for test drives and trade-ins,
+                and to promote vehicles to your Telegram channel or group.
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Admin User ID
+              </label>
+              <input
+                type="text"
+                value={telegramSettings.admin_user_id}
+                onChange={(e) => handleTelegramChange('admin_user_id', e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Your Telegram User ID (e.g., 123456789)"
+              />
+              <p className="text-sm text-gray-500 mt-1">
+                Get your user ID by messaging <a href="https://t.me/userinfobot" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">@userinfobot</a> on Telegram
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Channel/Group ID
+              </label>
+              <input
+                type="text"
+                value={telegramSettings.channel_id}
+                onChange={(e) => handleTelegramChange('channel_id', e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="@your_channel or -1001234567890"
+              />
+              <p className="text-sm text-gray-500 mt-1">
+                Use @channel_username for public channels or numeric ID for private channels/groups
+              </p>
+            </div>
+
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+              <h3 className="text-sm font-semibold text-gray-900 mb-2">Setup Instructions:</h3>
+              <ol className="text-sm text-gray-700 space-y-1 list-decimal list-inside">
+                <li>Get your Telegram user ID from @userinfobot</li>
+                <li>Create or use an existing Telegram channel/group</li>
+                <li>Add @car_shop_MD_bot as an administrator with posting permissions</li>
+                <li>Get the channel/group ID (for private ones, forward a message to @userinfobot)</li>
+                <li>Save your settings using the button above</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t border-gray-200 pt-6">
           <div className="flex items-center gap-2 mb-4">
             <Building2 className="text-blue-600" size={24} />
             <h2 className="text-xl font-bold text-gray-900">Business Information</h2>

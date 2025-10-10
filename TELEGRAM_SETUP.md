@@ -17,7 +17,7 @@ This guide will help you set up the Telegram integration for your car dealership
 To receive notifications, you need your Telegram user ID:
 
 1. Open Telegram and search for `@userinfobot`
-2. Start a conversation with the bot
+2. Start a conversation with the bot by clicking START
 3. The bot will send you your user ID (a number like `123456789`)
 4. Copy this user ID
 
@@ -32,26 +32,25 @@ To receive notifications, you need your Telegram user ID:
    - Give it permission to post messages
 
 3. Get the channel/group ID:
-   - For public channels: Use the channel username (e.g., `@your_channel`)
-   - For private channels/groups:
-     - Add `@userinfobot` to the channel/group
-     - Forward a message from the channel/group to the bot
+   - **For public channels**: Use the channel username (e.g., `@your_channel`)
+   - **For private channels/groups**:
+     - Add `@userinfobot` to the channel/group as admin temporarily
+     - Forward any message from the channel/group to `@userinfobot`
      - The bot will show you the channel ID (e.g., `-1001234567890`)
+     - Remove `@userinfobot` from the channel after getting the ID
 
-### 3. Configure Environment Variables
+### 3. Configure Settings in Admin Panel
 
-Update your `.env` file with the following values:
+**IMPORTANT**: You no longer need to manually edit the `.env` file. All Telegram settings are now managed through the admin panel.
 
-```env
-VITE_TELEGRAM_BOT_TOKEN=8410370897:AAE1qG1lai5ZbHBpSr58RfAuqYTaG6Gaa1Y
-VITE_TELEGRAM_BOT_USERNAME=car_shop_MD_bot
-VITE_TELEGRAM_ADMIN_USER_ID=YOUR_TELEGRAM_USER_ID
-VITE_TELEGRAM_CHANNEL_ID=YOUR_TELEGRAM_CHANNEL_OR_GROUP_ID
-```
+1. Log in to your admin dashboard
+2. Navigate to **Settings** (click the gear icon in the sidebar)
+3. Scroll to the **Telegram Integration** section at the top
+4. Enter your **Admin User ID** (from step 1)
+5. Enter your **Channel/Group ID** (from step 2)
+6. Click **Save Changes** at the top of the page
 
-Replace:
-- `YOUR_TELEGRAM_USER_ID` with your user ID from step 1
-- `YOUR_TELEGRAM_CHANNEL_OR_GROUP_ID` with your channel/group ID from step 2
+Your settings are now stored securely in the database and will be used automatically for all Telegram features.
 
 ### 4. Test the Integration
 
@@ -65,7 +64,7 @@ Replace:
 
 3. **Vehicle Promotion**:
    - Open any vehicle details page
-   - Click the "Promote to Channel" button
+   - Click the "Promote to Channel" button (blue button below Trade In and Test Drive)
    - The vehicle should be posted to your Telegram channel/group
 
 ## Notification Message Format
@@ -132,10 +131,11 @@ Contact us today for more details or to schedule a test drive!
 
 ### Not receiving notifications?
 
-1. Make sure your bot token is correct
-2. Verify your user ID is correct
-3. Start a conversation with your bot (`@car_shop_MD_bot`) first
+1. Make sure you've saved your Telegram settings in the admin panel
+2. Verify your user ID is correct (check with @userinfobot again)
+3. Start a conversation with your bot (`@car_shop_MD_bot`) by clicking START
 4. Check the browser console for any errors
+5. Make sure you're logged into the admin dashboard
 
 ### Channel promotion not working?
 
@@ -143,6 +143,8 @@ Contact us today for more details or to schedule a test drive!
 2. Make sure the channel/group ID is correct (including the minus sign for private channels)
 3. Ensure the bot has permission to post messages
 4. Check if the channel is public or private and use the correct ID format
+5. For public channels, use `@channel_username` format
+6. For private channels, use the numeric ID (e.g., `-1001234567890`)
 
 ### Images not showing in promotions?
 
@@ -150,8 +152,26 @@ Contact us today for more details or to schedule a test drive!
 2. Check that the images are publicly accessible
 3. The Telegram API requires valid image URLs that are reachable from the internet
 
+### Settings not saving?
+
+1. Make sure you're logged into the admin dashboard
+2. Check your browser console for errors
+3. Verify your Supabase connection is working
+4. Try refreshing the page and entering the settings again
+
+## Admin Panel Location
+
+To access the Telegram settings:
+
+1. Log in to your admin dashboard at `/admin`
+2. Click on **Settings** in the left sidebar (gear icon)
+3. The **Telegram Integration** section is at the top of the page
+4. Enter your settings and click **Save Changes**
+
 ## Security Notes
 
+- All Telegram settings are stored securely in your Supabase database
+- Only authenticated admin users can view and modify these settings
 - Never share your bot token publicly
-- Keep your `.env` file secure and never commit it to version control
-- The `.env` file is already included in `.gitignore` to prevent accidental commits
+- The bot token is stored in environment variables and never exposed to end users
+- Settings are encrypted in transit using HTTPS

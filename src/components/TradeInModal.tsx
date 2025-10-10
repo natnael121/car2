@@ -131,26 +131,23 @@ export const TradeInModal: React.FC<TradeInModalProps> = ({ targetVehicle, isOpe
 
       await linkTradeInToCustomer(customerId, tradeInRef.id);
 
-      const telegramUserId = import.meta.env.VITE_TELEGRAM_ADMIN_USER_ID;
-      if (telegramUserId) {
-        await sendTradeInNotification(telegramUserId, {
-          customerName: formData.customerName,
-          customerEmail: formData.customerEmail,
-          customerPhone: formData.customerPhone,
-          vehicleMake: formData.vehicleMake,
-          vehicleModel: formData.vehicleModel,
-          vehicleYear: parseInt(formData.vehicleYear),
-          vehicleMileage: parseInt(formData.vehicleMileage),
-          vehicleCondition: formData.vehicleCondition,
-          targetVehicle: targetVehicle
-            ? {
-                year: targetVehicle.year,
-                make: targetVehicle.make,
-                model: targetVehicle.model,
-              }
-            : undefined,
-        });
-      }
+      await sendTradeInNotification({
+        customerName: formData.customerName,
+        customerEmail: formData.customerEmail,
+        customerPhone: formData.customerPhone,
+        vehicleMake: formData.vehicleMake,
+        vehicleModel: formData.vehicleModel,
+        vehicleYear: parseInt(formData.vehicleYear),
+        vehicleMileage: parseInt(formData.vehicleMileage),
+        vehicleCondition: formData.vehicleCondition,
+        targetVehicle: targetVehicle
+          ? {
+              year: targetVehicle.year,
+              make: targetVehicle.make,
+              model: targetVehicle.model,
+            }
+          : undefined,
+      });
 
       setSubmitSuccess(true);
       setTimeout(() => {

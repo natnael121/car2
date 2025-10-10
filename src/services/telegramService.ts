@@ -1,3 +1,5 @@
+import { supabase } from '../lib/supabase';
+
 const TELEGRAM_BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
 const TELEGRAM_API_URL = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`;
 
@@ -6,6 +8,28 @@ interface SendMessageParams {
   text: string;
   parseMode?: 'HTML' | 'Markdown';
 }
+
+const getTelegramSettings = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('telegram_settings')
+      .select('*')
+      .maybeSingle();
+
+    if (error) throw error;
+
+    return {
+      adminUserId: data?.admin_user_id || '',
+      channelId: data?.channel_id || '',
+    };
+  } catch (error) {
+    console.error('Error loading Telegram settings:', error);
+    return {
+      adminUserId: '',
+      channelId: '',
+    };
+  }
+};
 
 export const sendTelegramMessage = async ({ chatId, text, parseMode = 'HTML' }: SendMessageParams): Promise<boolean> => {
   try {
@@ -30,7 +54,6 @@ export const sendTelegramMessage = async ({ chatId, text, parseMode = 'HTML' }: 
 };
 
 export const sendTestDriveNotification = async (
-  telegramUserId: string,
   data: {
     customerName: string;
     customerEmail: string;
@@ -43,6 +66,12 @@ export const sendTestDriveNotification = async (
     notes?: string;
   }
 ): Promise<boolean> => {
+  const settings = await getTelegramSettings();
+  if (!settings.adminUserId) {
+    console.warn('Telegram admin user ID not configured');
+    return false;
+  }
+
   const message = `
 🚗 <b>New Test Drive Request</b>
 
@@ -63,11 +92,10 @@ ${data.notes ? `<b>Additional Notes:</b>\n${data.notes}` : ''}
 Please contact the customer to confirm the test drive appointment.
   `.trim();
 
-  return sendTelegramMessage({ chatId: telegramUserId, text: message });
+  return sendTelegramMessage({ chatId: settings.adminUserId, text: message });
 };
 
 export const sendTradeInNotification = async (
-  telegramUserId: string,
   data: {
     customerName: string;
     customerEmail: string;
@@ -84,6 +112,12 @@ export const sendTradeInNotification = async (
     };
   }
 ): Promise<boolean> => {
+  const settings = await getTelegramSettings();
+  if (!settings.adminUserId) {
+    console.warn('Telegram admin user ID not configured');
+    return false;
+  }
+
   const targetVehicleText = data.targetVehicle
     ? `\n\n<b>Applying Toward Purchase:</b>\n🎯 ${data.targetVehicle.year} ${data.targetVehicle.make} ${data.targetVehicle.model}`
     : '';
@@ -104,11 +138,10 @@ export const sendTradeInNotification = async (
 Please contact the customer to schedule a vehicle evaluation.
   `.trim();
 
-  return sendTelegramMessage({ chatId: telegramUserId, text: message });
+  return sendTelegramMessage({ chatId: settings.adminUserId, text: message });
 };
 
 export const promoteVehicleToChannel = async (
-  chatId: string | number,
   vehicle: {
     year: number;
     make: string;
@@ -124,6 +157,12 @@ export const promoteVehicleToChannel = async (
     description?: string;
   }
 ): Promise<boolean> => {
+  const settings = await getTelegramSettings();
+  if (!settings.channelId) {
+    console.warn('Telegram channel ID not configured');
+    return false;
+  }
+
   const formatPrice = (price: number): string => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -155,7 +194,7 @@ Contact us today for more details or to schedule a test drive!
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          chat_id: chatId,
+          chat_id: settings.channelId,
           photo: vehicle.imageUrls[0],
           caption: message,
           parse_mode: 'HTML',
@@ -166,9 +205,9 @@ Contact us today for more details or to schedule a test drive!
       return data.ok;
     } catch (error) {
       console.error('Error sending photo to Telegram:', error);
-      return sendTelegramMessage({ chatId, text: message });
+      return sendTelegramMessage({ chatId: settings.channelId, text: message });
     }
   } else {
-    return sendTelegramMessage({ chatId, text: message });
+    return sendTelegramMessage({ chatId: settings.channelId, text: message });
   }
 };
