@@ -254,16 +254,26 @@ export const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({ vehicle,
                 </div>
 
                 <div className="bg-gray-800/50 p-6 border-t border-b border-gray-700">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-sm text-gray-400">Rent Price</span>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-sm text-gray-400">Price</span>
                     <span className="text-2xl font-bold text-white">{formatPrice(vehicle.price)}</span>
                   </div>
-                  <button
-                    className="w-full py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-gray-900 rounded-full font-bold hover:from-yellow-400 hover:to-yellow-500 transition-all shadow-lg hover:shadow-yellow-500/50 flex items-center justify-center gap-2"
-                  >
-                    <span>Book Now</span>
-                    <ChevronRight size={20} />
-                  </button>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      onClick={() => setShowTradeInModal(true)}
+                      className="py-3 bg-gray-700 text-white rounded-full font-bold hover:bg-gray-600 transition-all shadow-lg flex items-center justify-center gap-2"
+                    >
+                      <Car size={20} />
+                      <span>Trade In</span>
+                    </button>
+                    <button
+                      onClick={() => setShowTestDriveModal(true)}
+                      className="py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-gray-900 rounded-full font-bold hover:from-yellow-400 hover:to-yellow-500 transition-all shadow-lg hover:shadow-yellow-500/50 flex items-center justify-center gap-2"
+                    >
+                      <Settings size={20} />
+                      <span>Test Drive</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
