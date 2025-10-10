@@ -98,6 +98,7 @@ export interface Vehicle extends Product {
   carfaxUrl?: string;
   autoCheckUrl?: string;
   listingUrl?: string;
+  sold?: boolean;
 }
 
 export interface Dealership extends Shop {

@@ -161,6 +161,11 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onViewDetails
             <Car size={32} />
           </div>
         )}
+        {vehicle.sold && (
+          <div className="absolute top-2 left-2 bg-red-600 text-white px-2 py-1 rounded text-xs font-bold">
+            SOLD
+          </div>
+        )}
       </div>
 
       <div className="flex-1 flex flex-col justify-between">
