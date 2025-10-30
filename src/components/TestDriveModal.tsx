@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Vehicle } from '../types';
 import { X, Calendar, Clock, User, Mail, Phone, Check } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { db } from '../lib/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { getOrCreateCustomer, linkTestDriveToCustomer } from '../services/customerService';
 import { sendTestDriveNotification } from '../services/telegramService';
 
 interface TestDriveModalProps {
@@ -69,32 +71,43 @@ export const TestDriveModal: React.FC<TestDriveModalProps> = ({ vehicle, isOpen,
     setIsSubmitting(true);
 
     try {
+      const nameParts = formData.customerName.trim().split(' ');
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || '';
+
+      const customerId = await getOrCreateCustomer(
+        firstName,
+        lastName,
+        formData.customerEmail,
+        formData.customerPhone,
+        {
+          source: ['test-drive'],
+          status: 'lead'
+        }
+      );
+
       const testDriveData = {
-        customer_name: formData.customerName,
-        customer_email: formData.customerEmail,
-        customer_phone: formData.customerPhone,
-        preferred_date: formData.preferredDate,
-        preferred_time: formData.preferredTime,
-        notes: formData.notes || '',
-        vehicle_id: vehicle.id,
-        vehicle_make: vehicle.make,
-        vehicle_model: vehicle.model,
-        vehicle_year: vehicle.year,
+        customerId,
+        customerName: formData.customerName,
+        customerEmail: formData.customerEmail,
+        customerPhone: formData.customerPhone,
+        preferredDate: formData.preferredDate,
+        preferredTime: formData.preferredTime,
+        notes: formData.notes,
+        vehicleId: vehicle.id,
+        vehicleMake: vehicle.make,
+        vehicleModel: vehicle.model,
+        vehicleYear: vehicle.year,
         status: 'pending',
-        drivers_license_verified: false,
+        driversLicenseVerified: false,
         duration: 30,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
       };
 
-      const { data, error } = await supabase
-        .from('test_drives')
-        .insert([testDriveData])
-        .select()
-        .single();
+      const testDriveRef = await addDoc(collection(db, 'test_drives'), testDriveData);
 
-      if (error) {
-        console.error('Supabase error:', error);
-        throw new Error(error.message);
-      }
+      await linkTestDriveToCustomer(customerId, testDriveRef.id);
 
       await sendTestDriveNotification({
         customerName: formData.customerName,

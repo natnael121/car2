@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Vehicle } from '../types';
 import { X, DollarSign, User, Mail, Phone, MapPin, Briefcase, Check } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { db } from '../lib/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 interface FinancingModalProps {
   vehicle?: Vehicle;
@@ -97,19 +98,19 @@ export const FinancingModal: React.FC<FinancingModalProps> = ({ vehicle, isOpen,
 
     try {
       const financingData = {
-        customer_name: formData.customerName,
-        customer_email: formData.customerEmail,
-        customer_phone: formData.customerPhone,
-        date_of_birth: formData.dateOfBirth,
+        customerName: formData.customerName,
+        customerEmail: formData.customerEmail,
+        customerPhone: formData.customerPhone,
+        dateOfBirth: formData.dateOfBirth,
         address: formData.address,
         city: formData.city,
         state: formData.state,
-        zip_code: formData.zipCode,
-        credit_score_range: formData.creditScoreRange,
-        down_payment: parseFloat(formData.downPayment),
-        loan_term_preference: parseInt(formData.loanTermPreference),
-        monthly_budget: formData.monthlyBudget ? parseFloat(formData.monthlyBudget) : null,
-        employment_data: {
+        zipCode: formData.zipCode,
+        creditScoreRange: formData.creditScoreRange,
+        downPayment: parseFloat(formData.downPayment),
+        loanTermPreference: parseInt(formData.loanTermPreference),
+        monthlyBudget: formData.monthlyBudget ? parseFloat(formData.monthlyBudget) : undefined,
+        applicantEmployment: {
           employer: formData.employerName,
           jobTitle: formData.jobTitle,
           employmentType: formData.employmentType,
@@ -117,22 +118,18 @@ export const FinancingModal: React.FC<FinancingModalProps> = ({ vehicle, isOpen,
           monthlyIncome: parseFloat(formData.monthlyIncome),
           phoneNumber: formData.employerPhone,
         },
-        vehicle_id: vehicle?.id || null,
-        vehicle_price: vehicle?.price || null,
+        ...(vehicle && {
+          vehicleId: vehicle.id,
+          vehiclePrice: vehicle.price,
+        }),
+        documents: [],
         status: 'submitted',
-        pre_approval_status: false,
+        preApprovalStatus: false,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
       };
 
-      const { data, error } = await supabase
-        .from('financing_applications')
-        .insert([financingData])
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Supabase error:', error);
-        throw new Error(error.message);
-      }
+      await addDoc(collection(db, 'financing_applications'), financingData);
 
       setSubmitSuccess(true);
       setTimeout(() => {
