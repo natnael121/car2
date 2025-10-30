@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Vehicle } from '../types';
 import { X, DollarSign, User, Mail, Phone, MapPin, Briefcase, Check } from 'lucide-react';
 import { db } from '../lib/firebase';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 interface FinancingModalProps {
   vehicle?: Vehicle;
@@ -125,8 +125,8 @@ export const FinancingModal: React.FC<FinancingModalProps> = ({ vehicle, isOpen,
         documents: [],
         status: 'submitted',
         preApprovalStatus: false,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
       };
 
       await addDoc(collection(db, 'financing_applications'), financingData);

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Vehicle } from '../types';
 import { X, Calendar, Clock, User, Mail, Phone, Check } from 'lucide-react';
 import { db } from '../lib/firebase';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { getOrCreateCustomer, linkTestDriveToCustomer } from '../services/customerService';
 import { sendTestDriveNotification } from '../services/telegramService';
 
@@ -88,7 +88,12 @@ export const TestDriveModal: React.FC<TestDriveModalProps> = ({ vehicle, isOpen,
 
       const testDriveData = {
         customerId,
-        ...formData,
+        customerName: formData.customerName,
+        customerEmail: formData.customerEmail,
+        customerPhone: formData.customerPhone,
+        preferredDate: formData.preferredDate,
+        preferredTime: formData.preferredTime,
+        notes: formData.notes,
         vehicleId: vehicle.id,
         vehicleMake: vehicle.make,
         vehicleModel: vehicle.model,
@@ -96,8 +101,8 @@ export const TestDriveModal: React.FC<TestDriveModalProps> = ({ vehicle, isOpen,
         status: 'pending',
         driversLicenseVerified: false,
         duration: 30,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
       };
 
       const testDriveRef = await addDoc(collection(db, 'test_drives'), testDriveData);

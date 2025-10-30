@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Vehicle } from '../types';
 import { X, Car, Calendar, Gauge, AlertCircle, Check } from 'lucide-react';
 import { db } from '../lib/firebase';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { getOrCreateCustomer, linkTradeInToCustomer } from '../services/customerService';
 import { sendTradeInNotification } from '../services/telegramService';
 
@@ -123,8 +123,8 @@ export const TradeInModal: React.FC<TradeInModalProps> = ({ targetVehicle, isOpe
             vehicleName: `${targetVehicle.year} ${targetVehicle.make} ${targetVehicle.model}`,
           },
         }),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
       };
 
       const tradeInRef = await addDoc(collection(db, 'trade_ins'), tradeInData);
