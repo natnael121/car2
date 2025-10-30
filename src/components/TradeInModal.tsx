@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { Vehicle } from '../types';
 import { X, Car, Calendar, Gauge, AlertCircle, Check } from 'lucide-react';
-import { db } from '../lib/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { getOrCreateCustomer, linkTradeInToCustomer } from '../services/customerService';
+import { supabase } from '../lib/supabase';
 import { sendTradeInNotification } from '../services/telegramService';
 
 interface TradeInModalProps {
@@ -83,53 +81,36 @@ export const TradeInModal: React.FC<TradeInModalProps> = ({ targetVehicle, isOpe
     setIsSubmitting(true);
 
     try {
-      const nameParts = formData.customerName.trim().split(' ');
-      const firstName = nameParts[0] || '';
-      const lastName = nameParts.slice(1).join(' ') || '';
-
-      const customerId = await getOrCreateCustomer(
-        firstName,
-        lastName,
-        formData.customerEmail,
-        formData.customerPhone,
-        {
-          source: ['trade-in'],
-          status: 'lead'
-        }
-      );
-
       const tradeInData = {
-        customerId,
-        customerName: formData.customerName,
-        customerEmail: formData.customerEmail,
-        customerPhone: formData.customerPhone,
-        vehicle: {
-          make: formData.vehicleMake,
-          model: formData.vehicleModel,
-          year: parseInt(formData.vehicleYear),
-          mileage: parseInt(formData.vehicleMileage),
-          condition: formData.vehicleCondition,
-          exteriorColor: formData.exteriorColor,
-          interiorColor: formData.interiorColor,
-          hasAccidents: formData.hasAccidents,
-          ...(formData.accidentDetails && { accidentDetails: formData.accidentDetails }),
-          ...(formData.knownIssues && { knownIssues: formData.knownIssues }),
-        },
+        customer_name: formData.customerName,
+        customer_email: formData.customerEmail,
+        customer_phone: formData.customerPhone,
+        vehicle_make: formData.vehicleMake,
+        vehicle_model: formData.vehicleModel,
+        vehicle_year: parseInt(formData.vehicleYear),
+        vehicle_mileage: parseInt(formData.vehicleMileage),
+        vehicle_condition: formData.vehicleCondition,
+        exterior_color: formData.exteriorColor,
+        interior_color: formData.interiorColor,
+        has_accidents: formData.hasAccidents,
+        accident_details: formData.accidentDetails || null,
+        known_issues: formData.knownIssues || null,
         photos: [],
         status: 'submitted',
-        ...(targetVehicle && {
-          applyTowardsPurchase: {
-            vehicleId: targetVehicle.id,
-            vehicleName: `${targetVehicle.year} ${targetVehicle.make} ${targetVehicle.model}`,
-          },
-        }),
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
+        target_vehicle_id: targetVehicle?.id || null,
+        target_vehicle_name: targetVehicle ? `${targetVehicle.year} ${targetVehicle.make} ${targetVehicle.model}` : null,
       };
 
-      const tradeInRef = await addDoc(collection(db, 'trade_ins'), tradeInData);
+      const { data, error } = await supabase
+        .from('trade_ins')
+        .insert([tradeInData])
+        .select()
+        .single();
 
-      await linkTradeInToCustomer(customerId, tradeInRef.id);
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error(error.message);
+      }
 
       await sendTradeInNotification({
         customerName: formData.customerName,
