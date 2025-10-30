@@ -1,0 +1,305 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+             request.auth.token.admin == true;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() &&
+             request.auth.uid == userId;
+    }
+
+    function isValidEmail(email) {
+      return email.matches('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$');
+    }
+
+    function isValidPhone(phone) {
+      return phone.matches('^\\+?[1-9]\\d{1,14}$') ||
+             phone.matches('^\\d{10}$');
+    }
+
+    function isValidVIN(vin) {
+      return vin.size() == 17 &&
+             vin.matches('^[A-HJ-NPR-Z0-9]{17}$');
+    }
+
+    function hasRequiredVehicleFields(data) {
+      return data.keys().hasAll(['make', 'model', 'year', 'vin', 'price', 'condition']) &&
+             data.year is int &&
+             data.year >= 1900 &&
+             data.year <= 2030 &&
+             data.price is number &&
+             data.price >= 0 &&
+             isValidVIN(data.vin);
+    }
+
+    function hasRequiredCustomerFields(data) {
+      return data.keys().hasAll(['firstName', 'lastName', 'email', 'phone']) &&
+             data.firstName.size() > 0 &&
+             data.lastName.size() > 0 &&
+             isValidEmail(data.email) &&
+             isValidPhone(data.phone);
+    }
+
+    // Vehicles collection
+    match /vehicles/{vehicleId} {
+      // Public can read all vehicles (for browsing)
+      allow read: if true;
+
+      // Only admins can create/update/delete vehicles
+      allow create: if isAdmin() &&
+                      hasRequiredVehicleFields(request.resource.data) &&
+                      request.resource.data.createdAt == request.time &&
+                      request.resource.data.updatedAt == request.time;
+
+      allow update: if isAdmin() &&
+                      hasRequiredVehicleFields(request.resource.data) &&
+                      request.resource.data.createdAt == resource.data.createdAt &&
+                      request.resource.data.updatedAt == request.time;
+
+      allow delete: if isAdmin();
+
+      // Subcollections for vehicle documents and history
+      match /documents/{documentId} {
+        allow read: if isAdmin();
+        allow write: if isAdmin();
+      }
+
+      match /price_history/{historyId} {
+        allow read: if isAdmin();
+        allow write: if isAdmin();
+      }
+    }
+
+    // Customers collection
+    match /customers/{customerId} {
+      // Admins can read all customers
+      allow read: if isAdmin();
+
+      // Admins can create customers
+      allow create: if isAdmin() &&
+                      hasRequiredCustomerFields(request.resource.data) &&
+                      request.resource.data.createdAt == request.time &&
+                      request.resource.data.updatedAt == request.time &&
+                      request.resource.data.totalPurchases is int &&
+                      request.resource.data.totalPurchases >= 0 &&
+                      request.resource.data.totalSpent is number &&
+                      request.resource.data.totalSpent >= 0;
+
+      // Admins can update customers
+      allow update: if isAdmin() &&
+                      request.resource.data.createdAt == resource.data.createdAt &&
+                      request.resource.data.updatedAt == request.time;
+
+      // Admins can delete customers
+      allow delete: if isAdmin();
+    }
+
+    // Test drives collection
+    match /test_drives/{testDriveId} {
+      // Anyone can create a test drive request
+      allow create: if request.resource.data.keys().hasAll(['customerName', 'customerEmail', 'customerPhone', 'vehicleId']) &&
+                      request.resource.data.customerName.size() > 0 &&
+                      isValidEmail(request.resource.data.customerEmail) &&
+                      isValidPhone(request.resource.data.customerPhone) &&
+                      request.resource.data.vehicleId.size() > 0 &&
+                      request.resource.data.status == 'pending' &&
+                      request.resource.data.createdAt == request.time &&
+                      request.resource.data.updatedAt == request.time;
+
+      // Admins can read all test drives
+      allow read: if isAdmin();
+
+      // Admins can update test drives
+      allow update: if isAdmin() &&
+                      request.resource.data.createdAt == resource.data.createdAt &&
+                      request.resource.data.updatedAt == request.time;
+
+      // Admins can delete test drives
+      allow delete: if isAdmin();
+    }
+
+    // Trade-ins collection
+    match /trade_ins/{tradeInId} {
+      // Anyone can create a trade-in submission
+      allow create: if request.resource.data.keys().hasAll(['customerName', 'customerEmail', 'customerPhone', 'vehicle']) &&
+                      request.resource.data.customerName.size() > 0 &&
+                      isValidEmail(request.resource.data.customerEmail) &&
+                      isValidPhone(request.resource.data.customerPhone) &&
+                      request.resource.data.vehicle.keys().hasAll(['make', 'model', 'year', 'mileage']) &&
+                      request.resource.data.vehicle.year is int &&
+                      request.resource.data.vehicle.year >= 1900 &&
+                      request.resource.data.vehicle.mileage is int &&
+                      request.resource.data.vehicle.mileage >= 0 &&
+                      request.resource.data.status == 'submitted' &&
+                      request.resource.data.createdAt == request.time &&
+                      request.resource.data.updatedAt == request.time;
+
+      // Admins can read all trade-ins
+      allow read: if isAdmin();
+
+      // Admins can update trade-ins
+      allow update: if isAdmin() &&
+                      request.resource.data.createdAt == resource.data.createdAt &&
+                      request.resource.data.updatedAt == request.time;
+
+      // Admins can delete trade-ins
+      allow delete: if isAdmin();
+    }
+
+    // Financing applications collection
+    match /financing_applications/{applicationId} {
+      // Anyone can create a financing application
+      allow create: if request.resource.data.keys().hasAll(['customerName', 'customerEmail', 'customerPhone', 'creditScoreRange', 'downPayment']) &&
+                      request.resource.data.customerName.size() > 0 &&
+                      isValidEmail(request.resource.data.customerEmail) &&
+                      isValidPhone(request.resource.data.customerPhone) &&
+                      request.resource.data.creditScoreRange in ['excellent', 'good', 'fair', 'poor', 'unknown'] &&
+                      request.resource.data.downPayment is number &&
+                      request.resource.data.downPayment >= 0 &&
+                      request.resource.data.status == 'submitted' &&
+                      request.resource.data.createdAt == request.time &&
+                      request.resource.data.updatedAt == request.time;
+
+      // Admins can read all financing applications
+      allow read: if isAdmin();
+
+      // Admins can update financing applications
+      // Sensitive financial data should only be updated by admins
+      allow update: if isAdmin() &&
+                      request.resource.data.createdAt == resource.data.createdAt &&
+                      request.resource.data.updatedAt == request.time;
+
+      // Admins can delete financing applications
+      allow delete: if isAdmin();
+    }
+
+    // Service appointments collection
+    match /service_appointments/{appointmentId} {
+      // Anyone can create a service appointment
+      allow create: if request.resource.data.keys().hasAll(['customerName', 'customerEmail', 'customerPhone', 'vehicleVin', 'serviceType']) &&
+                      request.resource.data.customerName.size() > 0 &&
+                      isValidEmail(request.resource.data.customerEmail) &&
+                      isValidPhone(request.resource.data.customerPhone) &&
+                      isValidVIN(request.resource.data.vehicleVin) &&
+                      request.resource.data.serviceType is list &&
+                      request.resource.data.serviceType.size() > 0 &&
+                      request.resource.data.status == 'requested' &&
+                      request.resource.data.createdAt == request.time &&
+                      request.resource.data.updatedAt == request.time;
+
+      // Admins can read all service appointments
+      allow read: if isAdmin();
+
+      // Admins can update service appointments
+      allow update: if isAdmin() &&
+                      request.resource.data.createdAt == resource.data.createdAt &&
+                      request.resource.data.updatedAt == request.time;
+
+      // Admins can delete service appointments
+      allow delete: if isAdmin();
+    }
+
+    // Business settings collection
+    match /business_settings/{settingId} {
+      // Public can read business settings (for displaying dealership info)
+      allow read: if true;
+
+      // Only admins can write business settings
+      allow write: if isAdmin();
+    }
+
+    // Telegram settings collection
+    match /telegram_settings/{settingId} {
+      // Only admins can read/write Telegram settings
+      allow read: if isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // Sales records collection (for completed purchases)
+    match /sales/{saleId} {
+      // Admins can read all sales
+      allow read: if isAdmin();
+
+      // Only admins can create sales records
+      allow create: if isAdmin() &&
+                      request.resource.data.keys().hasAll(['customerId', 'vehicleId', 'salePrice', 'saleDate']) &&
+                      request.resource.data.salePrice is number &&
+                      request.resource.data.salePrice > 0 &&
+                      request.resource.data.createdAt == request.time;
+
+      // Admins can update sales (for corrections)
+      allow update: if isAdmin() &&
+                      request.resource.data.createdAt == resource.data.createdAt &&
+                      request.resource.data.updatedAt == request.time;
+
+      // Admins can delete sales (for corrections)
+      allow delete: if isAdmin();
+    }
+
+    // Analytics and reports collection
+    match /analytics/{analyticsId} {
+      // Only admins can read/write analytics
+      allow read: if isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // User profiles collection (for admin users)
+    match /users/{userId} {
+      // Users can read their own profile
+      allow read: if isOwner(userId) || isAdmin();
+
+      // Only admins can create user profiles
+      allow create: if isAdmin();
+
+      // Users can update their own profile (limited fields)
+      // Admins can update any profile
+      allow update: if isOwner(userId) || isAdmin();
+
+      // Only admins can delete user profiles
+      allow delete: if isAdmin();
+    }
+
+    // Activity logs collection (for audit trail)
+    match /activity_logs/{logId} {
+      // Only admins can read logs
+      allow read: if isAdmin();
+
+      // System can create logs (server-side only)
+      allow create: if false;
+
+      // Logs cannot be updated or deleted
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    // Notifications collection
+    match /notifications/{notificationId} {
+      // Admins can read all notifications
+      allow read: if isAdmin();
+
+      // System can create notifications
+      allow create: if isAuthenticated();
+
+      // Admins can update notifications (mark as read, etc.)
+      allow update: if isAdmin();
+
+      // Admins can delete notifications
+      allow delete: if isAdmin();
+    }
+
+    // Default deny all other paths
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

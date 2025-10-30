@@ -1,0 +1,216 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+             request.auth.token.admin == true;
+    }
+
+    function isValidImageFile() {
+      return request.resource.contentType.matches('image/.*') &&
+             request.resource.size < 10 * 1024 * 1024; // 10MB max
+    }
+
+    function isValidDocumentFile() {
+      return (request.resource.contentType.matches('image/.*') ||
+              request.resource.contentType.matches('application/pdf') ||
+              request.resource.contentType.matches('application/msword') ||
+              request.resource.contentType.matches('application/vnd.openxmlformats-officedocument.*')) &&
+             request.resource.size < 20 * 1024 * 1024; // 20MB max
+    }
+
+    // Vehicle images
+    // Path: /vehicles/{vehicleId}/{imageId}
+    match /vehicles/{vehicleId}/{imageId} {
+      // Anyone can read vehicle images (public display)
+      allow read: if true;
+
+      // Only admins can upload/update vehicle images
+      allow create, update: if isAdmin() && isValidImageFile();
+
+      // Only admins can delete vehicle images
+      allow delete: if isAdmin();
+    }
+
+    // Vehicle documents (title, registration, inspection reports, etc.)
+    // Path: /vehicle_documents/{vehicleId}/{documentId}
+    match /vehicle_documents/{vehicleId}/{documentId} {
+      // Only admins can read vehicle documents
+      allow read: if isAdmin();
+
+      // Only admins can upload vehicle documents
+      allow create, update: if isAdmin() && isValidDocumentFile();
+
+      // Only admins can delete vehicle documents
+      allow delete: if isAdmin();
+    }
+
+    // Customer documents (driver's license, proof of income, etc.)
+    // Path: /customer_documents/{customerId}/{documentId}
+    match /customer_documents/{customerId}/{documentId} {
+      // Only admins can read customer documents
+      allow read: if isAdmin();
+
+      // Customers can upload their own documents during application process
+      // Admins can upload documents for any customer
+      allow create, update: if isValidDocumentFile() &&
+                              (isAdmin() || isAuthenticated());
+
+      // Only admins can delete customer documents
+      allow delete: if isAdmin();
+    }
+
+    // Test drive documents (driver's license photos)
+    // Path: /test_drives/{testDriveId}/{documentId}
+    match /test_drives/{testDriveId}/{documentId} {
+      // Only admins can read test drive documents
+      allow read: if isAdmin();
+
+      // Anyone can upload during test drive request (with size limits)
+      allow create: if isValidImageFile();
+
+      // Only admins can update/delete
+      allow update, delete: if isAdmin();
+    }
+
+    // Trade-in photos
+    // Path: /trade_ins/{tradeInId}/{photoId}
+    match /trade_ins/{tradeInId}/{photoId} {
+      // Only admins can read trade-in photos
+      allow read: if isAdmin();
+
+      // Anyone can upload photos during trade-in submission
+      allow create: if isValidImageFile();
+
+      // Only admins can update/delete
+      allow update, delete: if isAdmin();
+    }
+
+    // Financing application documents
+    // Path: /financing_documents/{applicationId}/{documentId}
+    match /financing_documents/{applicationId}/{documentId} {
+      // Only admins can read financing documents (sensitive financial data)
+      allow read: if isAdmin();
+
+      // Applicants can upload their documents during application
+      allow create: if isValidDocumentFile();
+
+      // Only admins can update/delete
+      allow update, delete: if isAdmin();
+    }
+
+    // Service appointment photos (issue photos, before/after)
+    // Path: /service_appointments/{appointmentId}/{photoId}
+    match /service_appointments/{appointmentId}/{photoId} {
+      // Only admins can read service photos
+      allow read: if isAdmin();
+
+      // Customers can upload issue photos during booking
+      // Technicians can upload before/after photos
+      allow create: if isValidImageFile() &&
+                      (isAdmin() || isAuthenticated());
+
+      // Only admins can update/delete
+      allow update, delete: if isAdmin();
+    }
+
+    // Service records and invoices
+    // Path: /service_records/{appointmentId}/{documentId}
+    match /service_records/{appointmentId}/{documentId} {
+      // Only admins can read service records
+      allow read: if isAdmin();
+
+      // Only admins can upload service records and invoices
+      allow create, update: if isAdmin() && isValidDocumentFile();
+
+      // Only admins can delete service records
+      allow delete: if isAdmin();
+    }
+
+    // Business documents (dealer license, insurance, etc.)
+    // Path: /business_documents/{documentId}
+    match /business_documents/{documentId} {
+      // Only admins can read business documents
+      allow read: if isAdmin();
+
+      // Only admins can upload business documents
+      allow create, update: if isAdmin() && isValidDocumentFile();
+
+      // Only admins can delete business documents
+      allow delete: if isAdmin();
+    }
+
+    // Sales documents (bill of sale, contracts, etc.)
+    // Path: /sales/{saleId}/{documentId}
+    match /sales/{saleId}/{documentId} {
+      // Only admins can read sales documents
+      allow read: if isAdmin();
+
+      // Only admins can upload sales documents
+      allow create, update: if isAdmin() && isValidDocumentFile();
+
+      // Only admins can delete sales documents
+      allow delete: if isAdmin();
+    }
+
+    // User profile photos
+    // Path: /user_profiles/{userId}/profile_photo
+    match /user_profiles/{userId}/{imageId} {
+      // Users can read their own profile photo, admins can read all
+      allow read: if request.auth.uid == userId || isAdmin();
+
+      // Users can upload their own profile photo
+      allow create, update: if (request.auth.uid == userId || isAdmin()) &&
+                              isValidImageFile();
+
+      // Users can delete their own profile photo, admins can delete any
+      allow delete: if request.auth.uid == userId || isAdmin();
+    }
+
+    // Reports and exports
+    // Path: /reports/{reportId}
+    match /reports/{reportId} {
+      // Only admins can read reports
+      allow read: if isAdmin();
+
+      // Only admins can create reports
+      allow create: if isAdmin();
+
+      // Reports cannot be updated (create new version instead)
+      allow update: if false;
+
+      // Only admins can delete reports
+      allow delete: if isAdmin();
+    }
+
+    // Temporary uploads (for processing before moving to final location)
+    // Path: /temp/{userId}/{fileId}
+    match /temp/{userId}/{fileId} {
+      // Users can read their own temp files
+      allow read: if isAuthenticated() && request.auth.uid == userId;
+
+      // Users can upload to their temp folder
+      allow create: if isAuthenticated() &&
+                      request.auth.uid == userId &&
+                      (isValidImageFile() || isValidDocumentFile());
+
+      // Users can delete their own temp files
+      allow delete: if isAuthenticated() && request.auth.uid == userId;
+
+      // Temp files cannot be updated
+      allow update: if false;
+    }
+
+    // Default deny all other paths
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
