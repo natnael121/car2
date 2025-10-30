@@ -236,16 +236,6 @@ export const VehicleList: React.FC = () => {
     );
   }
 
-  if (vehicles.length === 0) {
-    return (
-      <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
-        <Car size={64} className="text-gray-400 mx-auto mb-4" />
-        <h3 className="text-xl font-semibold text-gray-700 mb-2">No Vehicles Yet</h3>
-        <p className="text-gray-600">Add your first vehicle to get started!</p>
-      </div>
-    );
-  }
-
   return (
     <>
       {activeTab === 'about' ? (
@@ -253,64 +243,79 @@ export const VehicleList: React.FC = () => {
       ) : (
         <div className="min-h-screen bg-black space-y-4 pb-24">
           <div className="px-4 pt-6 space-y-4">
-            <div className="flex items-center gap-2">
-              {!showSearch ? (
-                <button
-                  onClick={() => setShowSearch(true)}
-                  className="flex items-center gap-2 w-full bg-gray-900 text-gray-400 px-4 py-3 rounded-xl"
-                >
-                  <Search size={20} />
-                  <span>Type here to search</span>
-                </button>
-              ) : (
-                <div className="flex items-center gap-2 w-full bg-gray-900 px-4 py-3 rounded-xl">
-                  <Search size={20} className="text-gray-400" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Type here to search"
-                    className="flex-1 bg-transparent text-white placeholder-gray-400 outline-none"
-                    autoFocus
-                  />
-                  {searchQuery && (
-                    <button onClick={() => setSearchQuery('')} className="text-gray-400">
-                      <X size={20} />
+            {vehicles.length > 0 && (
+              <>
+                <div className="flex items-center gap-2">
+                  {!showSearch ? (
+                    <button
+                      onClick={() => setShowSearch(true)}
+                      className="flex items-center gap-2 w-full bg-gray-900 text-gray-400 px-4 py-3 rounded-xl"
+                    >
+                      <Search size={20} />
+                      <span>Type here to search</span>
                     </button>
+                  ) : (
+                    <div className="flex items-center gap-2 w-full bg-gray-900 px-4 py-3 rounded-xl">
+                      <Search size={20} className="text-gray-400" />
+                      <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="Type here to search"
+                        className="flex-1 bg-transparent text-white placeholder-gray-400 outline-none"
+                        autoFocus
+                      />
+                      {searchQuery && (
+                        <button onClick={() => setSearchQuery('')} className="text-gray-400">
+                          <X size={20} />
+                        </button>
+                      )}
+                      <button onClick={() => setShowSearch(false)} className="text-gray-400">
+                        <X size={20} />
+                      </button>
+                    </div>
                   )}
-                  <button onClick={() => setShowSearch(false)} className="text-gray-400">
-                    <X size={20} />
-                  </button>
                 </div>
-              )}
-            </div>
 
-            <div className="flex gap-2 overflow-x-auto scrollbar-hide">
-              {uniqueMakes.map((make) => (
-                <button
-                  key={make}
-                  onClick={() => setSelectedMake(selectedMake === make ? null : make)}
-                  className={`px-4 py-2 rounded-lg whitespace-nowrap font-medium transition ${
-                    selectedMake === make
-                      ? 'bg-yellow-400 text-black'
-                      : 'bg-gray-900 text-white'
-                  }`}
-                >
-                  {make}
-                </button>
-              ))}
-            </div>
+                {uniqueMakes.length > 0 && (
+                  <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+                    {uniqueMakes.map((make) => (
+                      <button
+                        key={make}
+                        onClick={() => setSelectedMake(selectedMake === make ? null : make)}
+                        className={`px-4 py-2 rounded-lg whitespace-nowrap font-medium transition ${
+                          selectedMake === make
+                            ? 'bg-yellow-400 text-black'
+                            : 'bg-gray-900 text-white'
+                        }`}
+                      >
+                        {make}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
           </div>
 
           <div className="px-4">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-white text-xl font-bold">
-                {selectedMake ? selectedMake : 'All Vehicles'}
-              </h2>
-              <button className="text-yellow-400 text-sm font-medium">See All</button>
-            </div>
+            {vehicles.length > 0 && (
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-white text-xl font-bold">
+                  {selectedMake ? selectedMake : 'All Vehicles'}
+                </h2>
+                <button className="text-yellow-400 text-sm font-medium">See All</button>
+              </div>
+            )}
 
-            {filteredVehicles.length === 0 ? (
+            {vehicles.length === 0 ? (
+              <div className="bg-gray-900 border-2 border-dashed border-gray-700 rounded-2xl p-12 text-center">
+                <Car size={64} className="text-gray-600 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-300 mb-2">No Vehicles Yet</h3>
+                <p className="text-gray-400 mb-4">Add your first vehicle to get started!</p>
+                <p className="text-gray-500 text-sm">Tap the Admin button below to login and add vehicles</p>
+              </div>
+            ) : filteredVehicles.length === 0 ? (
               <div className="bg-gray-900 border-2 border-dashed border-gray-700 rounded-2xl p-12 text-center">
                 <Car size={64} className="text-gray-600 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-gray-300 mb-2">No Vehicles Found</h3>
